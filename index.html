@@ -12,7 +12,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        /* ==================== Core Styling (University Light Theme) ==================== */
+        /* ==================== Core Styling ==================== */
         :root {
             --primary: #0056b3;        
             --primary-dark: #003d80;   
@@ -52,32 +52,22 @@
         .hidden { display: none !important; }
         html { scroll-behavior: smooth; }
 
-        /* Loader Styling */
+        /* Loader */
         #loader {
-            position: fixed; 
-            inset: 0; 
-            background-color: var(--dark);
+            position: fixed; inset: 0; background-color: var(--dark);
             background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), var(--bg-image);
-            background-size: cover;
-            z-index: 99999; 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center; 
-            align-items: center;
-            text-align: center;
+            background-size: cover; z-index: 99999; display: flex; 
+            flex-direction: column; justify-content: center; align-items: center; text-align: center;
         }
 
         /* --- Header --- */
         .main-banner {
             height: 220px; 
             background: linear-gradient(to bottom, rgba(0,86,179,0.3), rgba(0, 61, 128, 0.9)), url('https://a.top4top.io/p_36115ao3o1.jpg');
-            background-size: cover; 
-            background-position: center;
+            background-size: cover; background-position: center;
             display: flex; flex-direction: column; justify-content: flex-end; padding: 25px;
             border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; 
-            margin-bottom: 25px;
-            box-shadow: 0 10px 40px rgba(0,86,179,0.3);
-            position: relative;
+            margin-bottom: 25px; box-shadow: 0 10px 40px rgba(0,86,179,0.3); position: relative;
         }
 
         .header-top {
@@ -86,12 +76,9 @@
         }
 
         .bell-btn {
-            background: rgba(255,255,255,0.2);
-            width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; cursor: pointer; backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.3);
-            position: relative;
+            background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; 
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.3); position: relative;
         }
         .bell-badge {
             position: absolute; top: 8px; right: 8px; width: 8px; height: 8px;
@@ -109,12 +96,40 @@
             border: 1px solid rgba(255,255,255,0.4); backdrop-filter: blur(4px);
         }
 
-        .user-avatar-container img {
-            width: 85px; height: 85px; border-radius: 50%;
-            border: 4px solid rgba(255,255,255,0.3); object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); transition: transform 0.3s; background: #fff;
+        /* --- FIXED AVATAR & FRAMES --- */
+        .user-avatar-container { 
+            position: relative; 
+            width: 85px; 
+            height: 85px; 
+            border-radius: 50%;
+            margin-bottom: 5px;
         }
-        .user-avatar-container img:active { transform: scale(0.9); }
+        .user-avatar-container img {
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.3); object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: #fff;
+            display: block;
+        }
+        .user-avatar-container .frame-overlay {
+            position: absolute; 
+            inset: -5px; /* Ensures it wraps around perfectly */
+            pointer-events: none; 
+            border-radius: 50%; 
+            z-index: 2;
+        }
+        
+        /* Frame Options */
+        .frame-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .frame-option { 
+            width: 100%; aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--border); 
+            cursor: pointer; position: relative; overflow: hidden;
+        }
+        .frame-option.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,86,179,0.2); }
+        .f-gold { border: 5px solid #ffd700; box-shadow: inset 0 0 10px #ffd700, 0 0 10px rgba(255, 215, 0, 0.5); }
+        .f-blue { border: 5px dashed var(--primary); }
+        .f-grad { background: linear-gradient(45deg, var(--primary), var(--info)); padding: 4px; }
+        .f-grad-in { background: transparent; width: 100%; height: 100%; border-radius: 50%; }
+        .f-none { border: 1px solid #ccc; background: #eee; display: flex; align-items: center; justify-content: center; color: #777; font-size: 10px; }
 
         /* --- Cards --- */
         .glass-card {
@@ -142,18 +157,13 @@
 
         /* --- Auth Styling --- */
         .auth-logo-modern {
-            width: 90px; height: 90px;
-            border-radius: 20px; 
-            margin-bottom: 15px; 
-            object-fit: cover; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 90px; height: 90px; border-radius: 20px; 
+            margin-bottom: 15px; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-
         .auth-section-label {
             text-align: right; font-size: 12px; color: var(--text-muted); 
             margin-bottom: 8px; margin-top: 15px; display: block; font-weight: 700;
         }
-
         .auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
         .auth-card-input { display: none; }
         .auth-card {
@@ -187,23 +197,7 @@
         .btn-danger { background: linear-gradient(135deg, var(--error), #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2); }
         .btn-sm { padding: 8px 16px; font-size: 12px; width: auto; margin: 0; border-radius: 10px; min-height: 35px; }
         
-        /* Support Floating Action Button */
-        .support-fab {
-            position: fixed;
-            bottom: 85px; /* Above bottom nav */
-            left: 20px;
-            width: 55px; height: 55px;
-            background: linear-gradient(135deg, #25D366, #128C7E);
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 24px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-            z-index: 899;
-            text-decoration: none;
-            transition: transform 0.2s;
-            border: 2px solid white;
-        }
-        .support-fab:active { transform: scale(0.95); }
+        .support-fab { display: none !important; }
 
         /* Audio Recording Pulse */
         .mic-btn {
@@ -261,15 +255,12 @@
         .friend-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border-radius: 18px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; }
         .friend-item:hover { border-color: var(--primary); background: #f8fafc; }
         
-        /* Updated Z-Index for Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
         .modal-content { width: 100%; max-width: 450px; background: #fff; border: 1px solid var(--border); border-radius: 30px; padding: 30px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
         .close-btn { position: absolute; top: 20px; left: 20px; background: #f1f5f9; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
 
-        /* Specific Z-Index for Delete Modal to appear ON TOP of Friend Profile */
         #delete-friend-modal { z-index: 10000 !important; }
 
-        /* Status Pills */
         .status-pill { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 5px; width: fit-content; }
         .st-pending { background: #e0f2fe; color: var(--info); border: 1px solid #bae6fd; }
         .st-approved { background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; }
@@ -277,7 +268,6 @@
         .st-done { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
         .st-rejected { background: #fef2f2; color: var(--error); border: 1px solid #fecaca; }
 
-        /* Media & Image Updates */
         .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
         .media-item { aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border); position: relative; }
         .media-item img, .media-item video { width: 100%; height: 100%; object-fit: contain; background: #000; }
@@ -285,21 +275,25 @@
         .archive-thumbs { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
         .archive-thumbs img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); background: #fff; }
 
-        /* Modern Confirm Modal */
-        .confirm-icon-box {
-            width: 70px; height: 70px; margin: 0 auto 20px;
-            background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: var(--error); font-size: 30px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1);
-        }
+        .confirm-icon-box { width: 70px; height: 70px; margin: 0 auto 20px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--error); font-size: 30px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1); }
 
-        /* Modern Tech Selection */
         .tech-select-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
-        .tech-select-card {
-            border: 1px solid var(--border); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: var(--surface-light);
-        }
+        .tech-select-card { border: 1px solid var(--border); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: var(--surface-light); }
         .tech-select-card:hover { border-color: var(--primary); background: #fff; }
         .tech-select-card.selected { border-color: var(--primary); background: #eff6ff; box-shadow: 0 4px 12px rgba(0,86,179,0.1); }
         .tech-select-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid white; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+
+        .news-card { background: #fff; border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; }
+        .post-header { display: flex; gap: 10px; margin-bottom: 15px; }
+        .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; }
+        .post-content { font-size: 14px; line-height: 1.6; margin-bottom: 15px; color: var(--text); white-space: pre-wrap; }
+        .post-actions { display: flex; justify-content: space-between; border-top: 1px solid var(--surface-light); padding-top: 10px; }
+        .p-btn { border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 13px; display: flex; gap: 5px; align-items: center; font-family: 'Cairo', sans-serif; }
+        .p-btn.liked { color: var(--error); }
+        .comment-section { margin-top: 15px; background: var(--surface-light); padding: 10px; border-radius: 15px; }
+        .comment-item { display: flex; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+        .comment-del { color: var(--error); cursor: pointer; font-size: 10px; margin-right: auto; }
+        .post-delete-btn { position: absolute; top: 15px; left: 15px; color: var(--text-muted); cursor: pointer; }
 
     </style>
 </head>
@@ -308,10 +302,6 @@
 <div class="app-wrapper">
     
     <audio id="notify-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
-
-    <a href="mailto:zabdo723@gmail.com" id="support-fab" class="support-fab hidden">
-        <i class="fa-solid fa-headset"></i>
-    </a>
 
     <div id="loader">
         <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color:var(--primary);"></i>
@@ -336,10 +326,11 @@
                 <div class="input-group"><input type="tel" id="reg-phone" placeholder="01xxxxxxxxx"></div>
                 
                 <p class="auth-section-label">الوظيفة:</p>
-                <div class="auth-grid">
-                    <label><input type="radio" name="auth-role" value="employee" class="auth-card-input" checked><div class="auth-card"><i class="fa-solid fa-user-pen"></i><span>موظف</span></div></label>
-                    <label><input type="radio" name="auth-role" value="supervisor" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-user-tie"></i><span>مشرف</span></div></label>
-                    <label><input type="radio" name="auth-role" value="technician" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-helmet-safety"></i><span>فني</span></div></label>
+                <div class="auth-grid" style="grid-template-columns: repeat(4, 1fr);">
+                    <label><input type="radio" name="auth-role" value="employee" class="auth-card-input" checked><div class="auth-card"><i class="fa-solid fa-user-pen"></i><span style="font-size:10px;">موظف</span></div></label>
+                    <label><input type="radio" name="auth-role" value="supervisor" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-user-tie"></i><span style="font-size:10px;">مشرف</span></div></label>
+                    <label><input type="radio" name="auth-role" value="technician" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-helmet-safety"></i><span style="font-size:10px;">فني</span></div></label>
+                    <label><input type="radio" name="auth-role" value="manager" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-user-shield"></i><span style="font-size:10px;">مدير</span></div></label>
                 </div>
                 <div class="input-group" style="margin-top:15px;"><input type="text" id="reg-job" placeholder="المسمى الوظيفي"></div>
                 <div class="input-group"><input type="text" id="reg-loc" placeholder="مقر العمل"></div>
@@ -361,6 +352,7 @@
             <div class="header-top">
                 <div class="user-avatar-container" onclick="nav('profile', document.querySelector('.nav-item:nth-child(4)'))">
                     <img id="banner-img" src="https://cdn-icons-png.flaticon.com/512/4140/4140048.png">
+                    <div id="banner-frame" class="frame-overlay"></div>
                 </div>
                 <div class="bell-btn" onclick="toast('لا توجد إشعارات جديدة')">
                     <i class="fa-regular fa-bell"></i>
@@ -390,6 +382,17 @@
                      <button onclick="downloadArchivePDF()" class="btn-main btn-sm" style="background:var(--success); width:100%;"><i class="fa-solid fa-file-pdf"></i> تحميل تقرير الأرشيف (PDF)</button>
                 </div>
                 <div id="requests-feed" style="padding-bottom:100px;"></div>
+            </div>
+            
+            <div id="page-news" class="page-section hidden">
+                <div class="glass-card" style="margin-top:0;">
+                    <h3 style="color:var(--primary); margin-bottom:15px;">البيان (أخبار الجامعة)</h3>
+                    <div id="create-post-container" class="hidden" style="margin-bottom:20px;">
+                        <textarea id="new-post-content" rows="3" placeholder="ما الجديد؟ (للمدراء فقط)"></textarea>
+                        <button onclick="createPost()" class="btn-main btn-sm" style="margin-top:10px;">نشر</button>
+                    </div>
+                    <div id="news-feed" style="padding-bottom:80px;"></div>
+                </div>
             </div>
 
             <div id="page-create" class="page-section hidden">
@@ -471,11 +474,23 @@
             <div id="page-profile" class="page-section hidden">
                 <div class="glass-card" style="margin-top:20px;">
                     <div style="text-align:center;">
-                        <div style="position:relative; width:130px; height:130px; margin:0 auto 25px;">
-                            <img id="edit-current-pic" src="" style="width:100%; height:100%; border-radius:50%; object-fit:cover; border:4px solid var(--primary);">
-                            <div onclick="document.getElementById('edit-profile-file').click()" style="position:absolute; bottom:5px; right:5px; background:var(--primary); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:3px solid #fff;"><i class="fa-solid fa-camera" style="color:white;"></i></div>
+                        <div class="user-avatar-container" style="margin: 0 auto 25px;">
+                            <img id="edit-current-pic" src="">
+                            <div id="edit-frame-overlay" class="frame-overlay"></div>
+                            <div onclick="document.getElementById('edit-profile-file').click()" style="position:absolute; bottom:-5px; right:-5px; background:var(--primary); width:35px; height:35px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:2px solid #fff; z-index:3;"><i class="fa-solid fa-camera" style="color:white; font-size:14px;"></i></div>
                         </div>
                         <input type="file" id="edit-profile-file" hidden accept="image/*" onchange="previewProfilePic(this)">
+                        
+                        <div style="margin-bottom:20px;">
+                             <p style="font-size:12px; font-weight:bold;">اختر إطار للصورة:</p>
+                             <div class="frame-grid">
+                                 <div class="frame-option f-none selected" onclick="selectFrame(this, '')">بدون</div>
+                                 <div class="frame-option f-gold" onclick="selectFrame(this, 'f-gold')"></div>
+                                 <div class="frame-option f-blue" onclick="selectFrame(this, 'f-blue')"></div>
+                                 <div class="frame-option f-grad" onclick="selectFrame(this, 'f-grad')"><div class="f-grad-in"></div></div>
+                             </div>
+                        </div>
+
                         <div style="font-family:monospace; background:var(--surface-light); display:inline-block; padding:10px 25px; border-radius:30px; margin-bottom:30px; color:var(--primary-dark); border:1px solid var(--border);" onclick="copyId()">ID: <span id="edit-id-display">--</span> <i class="fa-regular fa-copy"></i></div>
                         <div style="text-align:right;">
                             <div class="input-group"><label>الاسم الكامل</label><input type="text" id="edit-name"></div>
@@ -504,9 +519,15 @@
                         <button onclick="openEmpReportModal()" class="btn-main" style="background:#4f46e5;"><i class="fa-solid fa-file-contract"></i> إنشاء تقرير إداري</button>
                     </div>
 
+                    <div id="full-report-btn-container" class="hidden" style="margin-top:15px;">
+                        <button onclick="generateFullReport()" class="btn-main" style="background:var(--primary-dark);"><i class="fa-solid fa-chart-pie"></i> التقرير الشامل للنظام</button>
+                    </div>
+
                     <div style="margin-top:20px; background:var(--surface-light); padding:15px; border-radius:16px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
                         <span>خدمة العملاء</span>
-                        <div style="color:var(--text-muted); font-size:12px;"><i class="fa-solid fa-headset" style="margin-left:5px;"></i> متاح دائمًا</div>
+                        <a href="mailto:zabdo723@gmail.com" style="text-decoration:none; color:var(--text-muted); font-size:12px; display:flex; align-items:center; gap:5px;">
+                             <i class="fa-solid fa-headset"></i> تواصل معنا
+                        </a>
                     </div>
 
                     <hr style="border-color:var(--border); margin:25px 0;">
@@ -517,13 +538,13 @@
 
         <div class="bottom-nav">
             <div class="nav-item active" onclick="nav('home', this)"><i class="fa-solid fa-list-check"></i>المهام</div>
+            <div class="nav-item" onclick="nav('news', this)"><i class="fa-regular fa-newspaper"></i>البيان</div> <div class="nav-add-btn" onclick="nav('create', null)"><i class="fa-solid fa-plus"></i></div>
             <div class="nav-item" onclick="nav('team', this)"><i class="fa-solid fa-users"></i>الفريق</div>
-            <div class="nav-add-btn" onclick="nav('create', null)"><i class="fa-solid fa-plus"></i></div>
             <div class="nav-item" onclick="nav('profile', this)"><i class="fa-solid fa-user"></i>حسابي</div>
             <div class="nav-item" onclick="nav('settings', this)"><i class="fa-solid fa-gear"></i>الإعدادات</div>
         </div>
     </div>
-
+    
     <div id="media-viewer" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
         <div class="close-btn" style="top:30px; right:30px; left:auto; background:rgba(255,255,255,0.1); color:white;" onclick="document.getElementById('media-viewer').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></div>
         <div id="media-content-container" style="max-width:95%; max-height:80vh;"></div>
@@ -677,6 +698,7 @@
     let newProfilePicFile = null;
     let isFirstLoad = true;
     let currentFriendDocId = null;
+    let selectedFrameClass = ''; // New state for frame
 
     // --- Audio Recording State ---
     let mediaRecorder = null;
@@ -720,13 +742,11 @@
                 showScreen('app-container');
                 setupRoleUI();
                 
-                // Show Support FAB
-                document.getElementById('support-fab').classList.remove('hidden');
-
                 loadFeed();
                 loadTeam(); 
                 loadFriendReqs();
                 loadProfilePageData();
+                loadPosts(); // Load News
                 
                 // Set default dates
                 document.getElementById('req-date').valueAsDate = new Date();
@@ -761,16 +781,28 @@
             };
             document.getElementById('page-create').innerHTML = "<div style='text-align:center; padding:50px;'><h3 style='color:var(--text-muted)'>حساب فني</h3><p>لا يمكنك إنشاء بلاغات، فقط متابعة المهام وإرسال التقارير.</p></div>";
         }
+
+        // Manager: Show Create Post & Full Report AND HIDE Create Request Button
+        if(userData.role === 'manager') {
+             document.getElementById('create-post-container').classList.remove('hidden');
+             document.getElementById('full-report-btn-container').classList.remove('hidden');
+             // Hide the (+) button for Manager
+             document.querySelector('.nav-add-btn').classList.add('hidden');
+        }
     }
-// =========================================================================
+    // =========================================================================
     // 3. UI RENDERING & FEED
     // =========================================================================
     function renderHeader() {
-        const roleMap = {'employee':'موظف', 'supervisor':'مشرف', 'technician':'فني'};
+        const roleMap = {'employee':'موظف', 'supervisor':'مشرف', 'technician':'فني', 'manager':'مدير'};
         document.getElementById('banner-name').innerText = userData.fullName;
         document.getElementById('banner-role').innerText = roleMap[userData.role];
         document.getElementById('banner-id').innerText = "ID: " + userData.shortId;
         document.getElementById('banner-img').src = userData.photoUrl;
+        
+        // Apply Frame
+        const frameEl = document.getElementById('banner-frame');
+        frameEl.className = 'frame-overlay ' + (userData.frame || '');
     }
 
     function checkAndPlaySound(newRequests) {
@@ -785,9 +817,12 @@
 
     function loadFeed() {
         let q = db.collection('requests'); 
+        
+        // Permissions Logic
         if(userData.role==='employee') q = q.where('userId','==',currentUser.uid);
         else if(userData.role==='supervisor') q = q.where('supervisorId','==',currentUser.uid);
         else if(userData.role==='technician') q = q.where('technicianId','==',currentUser.uid);
+        // Manager sees ALL, so no filter added for manager
         
         q.onSnapshot(snap => {
             const currentIds = requestsCache.map(r => r.id);
@@ -850,7 +885,7 @@
             let deleteBtn = "";
 
             if(currentTab !== 'trash') {
-                if(userData.role === 'employee' || userData.role === 'supervisor') {
+                if(userData.role === 'employee' || userData.role === 'supervisor' || userData.role === 'manager') {
                       deleteBtn = `<button onclick="event.stopPropagation(); softDelete('${d.id}')" class="btn-ghost btn-sm" style="color:var(--error); border-color:var(--border); margin-left:10px;"><i class="fa-solid fa-trash"></i></button>`;
                 }
 
@@ -879,16 +914,9 @@
             let prioIcon = d.priority === 'high' ? '<i class="fa-solid fa-fire" style="color:var(--error)"></i>' : '';
             let prioColor = d.priority === 'high' ? 'var(--error)' : d.priority === 'medium' ? 'var(--warning)' : 'var(--success)';
             
-            // Media Icons in Feed
-            let thumbsHtml = "";
-            if(d.media && d.media.length > 0) {
-                thumbsHtml = `<div class="archive-thumbs">`;
-                d.media.forEach(m => {
-                    if(m.type === 'audio') thumbsHtml += `<div style="width:45px; height:45px; background:var(--surface-light); border-radius:10px; display:flex; align-items:center; justify-content:center; border:1px solid var(--border); color:var(--primary);"><i class="fa-solid fa-microphone"></i></div>`;
-                    else thumbsHtml += `<img src="${m.url}">`;
-                });
-                thumbsHtml += `</div>`;
-            }
+            // Media Hidden in Feed - Only shows in details modal as requested
+            let thumbsHtml = ""; 
+            // Removed thumbs generation loop here
 
             container.innerHTML += `
             <div class="glass-card request-card ${cardClass}" onclick="openRequestDetails('${d.id}')" style="border-right-color:${prioColor};">
@@ -908,8 +936,6 @@
                     ${prioIcon} ${d.description}
                 </div>
                 
-                ${thumbsHtml}
-
                 <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; margin-top:8px;"><i class="fa-solid fa-location-dot"></i> ${d.location}</div>
                 
                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -1046,7 +1072,11 @@
                 updateData.rejectedBy = `الفني: ${userData.fullName}`;
                 updateData.supervisorComment = `رفض الفني: ${comment}`;
             }
-            else if(type === 'done') { updateData.status = 'done'; }
+            else if(type === 'done') { 
+                updateData.status = 'done';
+                // Record Done Time
+                updateData.completedAt = firebase.firestore.FieldValue.serverTimestamp();
+            }
 
             await db.collection('requests').doc(id).update(updateData);
             toast("✅ تم تنفيذ الإجراء"); closeModal('action-modal');
@@ -1236,7 +1266,7 @@
     }
 
     // =========================================================================
-    // 7. REPORTS (Tech & Employee)
+    // 7. REPORTS (Tech & Employee & Full)
     // =========================================================================
     
     // Tech Report
@@ -1267,7 +1297,7 @@
         document.getElementById('tech-report-content').value = "";
     }
 
-    // New: Employee Professional Report
+    // Employee Professional Report
     function openEmpReportModal() {
         document.getElementById('emp-report-modal').classList.remove('hidden');
     }
@@ -1333,6 +1363,54 @@
         document.getElementById('emp-rep-content').value = "";
     }
 
+    // New: Full System Report (For Manager)
+    async function generateFullReport() {
+        toast("جاري جلب البيانات...");
+        const snap = await db.collection('requests').orderBy('createdAt', 'desc').get();
+        let html = `
+        <div style="font-family:'Cairo'; padding:20px; direction:rtl;">
+            <h1 style="text-align:center; color:#0056b3;">التقرير الشامل لنظام الصيانة</h1>
+            <p style="text-align:center;">تاريخ: ${new Date().toLocaleDateString('ar-EG')}</p>
+            <table style="width:100%; border-collapse:collapse; margin-top:20px; font-size:10px;">
+                <thead>
+                    <tr style="background:#f1f5f9;">
+                        <th style="border:1px solid #ccc; padding:5px;">التاريخ</th>
+                        <th style="border:1px solid #ccc; padding:5px;">المقدم</th>
+                        <th style="border:1px solid #ccc; padding:5px;">النوع</th>
+                        <th style="border:1px solid #ccc; padding:5px;">الوصف</th>
+                        <th style="border:1px solid #ccc; padding:5px;">الحالة</th>
+                        <th style="border:1px solid #ccc; padding:5px;">وقت الاستجابة</th>
+                    </tr>
+                </thead>
+                <tbody>
+        `;
+        
+        snap.forEach(doc => {
+            const d = doc.data();
+            let dur = "-";
+            if(d.status === 'done' && d.completedAt && d.createdAt) {
+                const diffMs = d.completedAt.toDate() - d.createdAt.toDate();
+                const diffHrs = Math.floor(diffMs / 3600000);
+                const diffMins = Math.round((diffMs % 3600000) / 60000);
+                dur = `${diffHrs}س ${diffMins}د`;
+            }
+            
+            html += `
+            <tr>
+                <td style="border:1px solid #ccc; padding:5px;">${d.date}</td>
+                <td style="border:1px solid #ccc; padding:5px;">${d.userData.fullName}</td>
+                <td style="border:1px solid #ccc; padding:5px;">${d.type}</td>
+                <td style="border:1px solid #ccc; padding:5px;">${d.description.substring(0,50)}</td>
+                <td style="border:1px solid #ccc; padding:5px;">${getStatusLabel(d.status)}</td>
+                <td style="border:1px solid #ccc; padding:5px;">${dur}</td>
+            </tr>`;
+        });
+        
+        html += `</tbody></table></div>`;
+        const el = document.createElement('div'); el.innerHTML = html;
+        html2pdf().from(el).set({ margin:5, filename:'Full_System_Report.pdf', jsPDF:{format:'a4', orientation:'landscape'} }).save();
+    }
+
     // =========================================================================
     // 8. STANDARD HELPERS
     // =========================================================================
@@ -1372,6 +1450,14 @@
         return map[s] || s;
     }
 
+    function calculateDuration(start, end) {
+        if(!start || !end) return "غير محدد";
+        const diff = end.toDate() - start.toDate(); // ms
+        const hours = Math.floor(diff / (1000 * 60 * 60));
+        const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+        return `${hours} ساعة و ${minutes} دقيقة`;
+    }
+
     function openRequestDetails(id) {
         const d = requestsCache.find(r => r.id === id);
         document.getElementById('request-details-modal').classList.remove('hidden');
@@ -1379,7 +1465,6 @@
         let mediaHtml = "";
         if(d.media && d.media.length > 0) d.media.forEach(m => {
             if(m.type === 'audio') {
-                // Modified: Opens Modal Player
                  mediaHtml += `
                  <div class="media-item" onclick="openAudioPlayer('${m.url}')" style="background:#e0f2fe; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;">
                     <i class="fa-solid fa-play-circle" style="font-size:30px; color:var(--primary); margin-bottom:5px;"></i>
@@ -1424,8 +1509,17 @@
         }
         timelineHtml += '</div>';
 
+        // Response Time Calculation
+        let responseTimeHtml = "";
+        if(d.status === 'done' && d.completedAt && d.createdAt) {
+            responseTimeHtml = `<div style="background:#f0fdf4; color:#166534; padding:10px; border-radius:10px; font-size:12px; margin-bottom:15px; border:1px solid #bbf7d0; text-align:center;">
+                <i class="fa-solid fa-stopwatch"></i> وقت الاستجابة: <b>${calculateDuration(d.createdAt, d.completedAt)}</b>
+            </div>`;
+        }
+
         document.getElementById('req-details-content').innerHTML = `
             ${timelineHtml}
+            ${responseTimeHtml}
             <div style="background:var(--surface-light); padding:15px; border-radius:15px; margin-bottom:15px; border:1px solid var(--border);">
                 <p style="margin:0; font-size:15px; line-height:1.6; color:var(--text);">${d.description}</p>
             </div>
@@ -1467,6 +1561,7 @@
     }
 
     function reqNotifyPerm() { Notification.requestPermission().then(p => { if(p==="granted") toast("تم تفعيل الإشعارات"); }); }
+    
     function nav(p, el) { 
         document.querySelectorAll('.page-section').forEach(x=>x.classList.add('hidden')); 
         document.getElementById('page-'+p).classList.remove('hidden'); 
@@ -1486,7 +1581,7 @@
     
     function logout() { 
         auth.signOut(); 
-        document.getElementById('support-fab').classList.add('hidden');
+        // Support FAB is now handled via settings/css, logic remains same
         location.reload(); 
     }
     
@@ -1510,7 +1605,7 @@
         if(users.length === 0) { resDiv.innerHTML = '<p style="text-align:center; color:#999; font-size:12px;">لم يتم العثور على مستخدم</p>'; return; }
         users.forEach(u => {
             if(u.id === currentUser.uid) return;
-            const roleMap = {'employee':'موظف', 'supervisor':'مشرف', 'technician':'فني'};
+            const roleMap = {'employee':'موظف', 'supervisor':'مشرف', 'technician':'فني', 'manager':'مدير'};
             resDiv.innerHTML += `
             <div style="display:flex; align-items:center; justify-content:space-between; padding:10px; background:var(--surface-light); border-radius:10px; margin-bottom:5px; border:1px solid var(--border);">
                 <div style="display:flex; align-items:center; gap:10px;">
@@ -1592,6 +1687,19 @@
         document.getElementById('edit-phone').value = userData.phone;
         document.getElementById('edit-job').value = userData.jobTitle;
         document.getElementById('edit-loc').value = userData.location;
+        
+        // Load current frame
+        selectedFrameClass = userData.frame || '';
+        document.getElementById('edit-frame-overlay').className = 'frame-overlay ' + selectedFrameClass;
+        
+        // Highlight selected frame in grid
+        document.querySelectorAll('.frame-option').forEach(f => f.classList.remove('selected'));
+        if(selectedFrameClass) {
+             const sel = document.querySelector(`.frame-option.${selectedFrameClass}`);
+             if(sel) sel.classList.add('selected');
+        } else {
+             document.querySelector('.frame-option.f-none').classList.add('selected');
+        }
     }
 
     function previewProfilePic(input) {
@@ -1599,6 +1707,14 @@
             newProfilePicFile = input.files[0];
             document.getElementById('edit-current-pic').src = URL.createObjectURL(newProfilePicFile);
         }
+    }
+
+    // New: Frame Selection Logic
+    function selectFrame(el, frameClass) {
+        selectedFrameClass = frameClass;
+        document.querySelectorAll('.frame-option').forEach(f => f.classList.remove('selected'));
+        el.classList.add('selected');
+        document.getElementById('edit-frame-overlay').className = 'frame-overlay ' + frameClass;
     }
 
     async function saveProfile() {
@@ -1618,9 +1734,11 @@
                 const d = await res.json();
                 newUrl = d.secure_url;
             }
-            await db.collection('users').doc(currentUser.uid).update({ fullName: name, gender: gender, phone: phone, jobTitle: job, location: loc, photoUrl: newUrl });
+            await db.collection('users').doc(currentUser.uid).update({ 
+                fullName: name, gender: gender, phone: phone, jobTitle: job, location: loc, photoUrl: newUrl, frame: selectedFrameClass 
+            });
             userData.fullName = name; userData.gender = gender; userData.phone = phone; 
-            userData.jobTitle = job; userData.location = loc; userData.photoUrl = newUrl;
+            userData.jobTitle = job; userData.location = loc; userData.photoUrl = newUrl; userData.frame = selectedFrameClass;
             renderHeader(); 
             toast("✅ تم حفظ التعديلات بنجاح");
         } catch(e) { toast("❌ فشل الحفظ"); } 
@@ -1645,11 +1763,20 @@
             if(isLoginMode) {
                 await auth.signInWithEmailAndPassword(email, pass);
             } else {
+                const role = document.querySelector('input[name="auth-role"]:checked').value;
+                
+                // Manager Count Check
+                if(role === 'manager') {
+                     const managerSnap = await db.collection('users').where('role', '==', 'manager').get();
+                     if(managerSnap.size >= 4) {
+                         throw new Error("⛔ نأسف، تم اكتمال عدد المديرين المسموح به (4).");
+                     }
+                }
+
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 await cred.user.sendEmailVerification();
                 toast("✅ تم إنشاء الحساب. يجب تفعيل الرابط المرسل للإيميل قبل الدخول.");
                 
-                const role = document.querySelector('input[name="auth-role"]:checked').value;
                 const gender = document.querySelector('input[name="auth-gender"]:checked').value;
                 const defaultPic = gender === 'male' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png';
                 
@@ -1664,6 +1791,102 @@
         } catch(e) { toast(e.message); }
         finally { btn.disabled=false; btn.innerText = isLoginMode?"تسجيل الدخول":"إنشاء حساب"; }
     }
+
+    // =========================================================================
+    // 9. NEW FEATURE: NEWS FEED (البيان)
+    // =========================================================================
+    async function createPost() {
+        const content = document.getElementById('new-post-content').value;
+        if(!content) return toast("⚠️ اكتب شيئاً للنشر");
+        
+        await db.collection('posts').add({
+            content: content,
+            authorId: currentUser.uid,
+            authorName: userData.fullName,
+            authorPic: userData.photoUrl,
+            likes: [],
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        document.getElementById('new-post-content').value = "";
+        toast("✅ تم النشر");
+    }
+
+    function loadPosts() {
+        db.collection('posts').orderBy('createdAt', 'desc').onSnapshot(snap => {
+            const container = document.getElementById('news-feed');
+            container.innerHTML = "";
+            snap.forEach(doc => {
+                const p = doc.data();
+                const isLiked = p.likes && p.likes.includes(currentUser.uid);
+                const isAuthor = p.authorId === currentUser.uid;
+                
+                container.innerHTML += `
+                <div class="news-card">
+                    ${isAuthor ? `<i class="fa-solid fa-trash post-delete-btn" onclick="deletePost('${doc.id}')"></i>` : ''}
+                    <div class="post-header">
+                        <img src="${p.authorPic}" class="post-avatar">
+                        <div>
+                            <b style="font-size:14px;">${p.authorName}</b>
+                            <div style="font-size:10px; color:var(--text-muted);">مدير</div>
+                        </div>
+                    </div>
+                    <div class="post-content">${p.content}</div>
+                    <div class="post-actions">
+                        <button class="p-btn ${isLiked ? 'liked' : ''}" onclick="likePost('${doc.id}', ${isLiked})">
+                            <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> ${p.likes ? p.likes.length : 0}
+                        </button>
+                        <button class="p-btn" onclick="toggleComments('${doc.id}')">
+                            <i class="fa-regular fa-comment"></i> تعليق
+                        </button>
+                    </div>
+                    <div id="comments-${doc.id}" class="hidden comment-section">
+                        <div id="list-c-${doc.id}"></div>
+                        <div style="display:flex; gap:5px; margin-top:10px;">
+                            <input type="text" id="inp-c-${doc.id}" placeholder="اكتب تعليقاً..." style="padding:8px; font-size:12px; height:35px;">
+                            <button onclick="addComment('${doc.id}')" class="btn-main btn-sm" style="width:40px;"><i class="fa-regular fa-paper-plane"></i></button>
+                        </div>
+                    </div>
+                </div>`;
+                
+                // Load Comments
+                db.collection('posts').doc(doc.id).collection('comments').orderBy('createdAt').onSnapshot(cSnap => {
+                    const cList = document.getElementById(`list-c-${doc.id}`);
+                    if(cList) {
+                        cList.innerHTML = "";
+                        cSnap.forEach(cDoc => {
+                             const c = cDoc.data();
+                             cList.innerHTML += `
+                             <div class="comment-item">
+                                 <b style="color:var(--primary);">${c.authorName}:</b> ${c.text}
+                                 ${c.authorId === currentUser.uid ? `<i class="fa-solid fa-trash comment-del" onclick="deleteComment('${doc.id}', '${cDoc.id}')"></i>` : ''}
+                             </div>`;
+                        });
+                    }
+                });
+            });
+        });
+    }
+
+    async function likePost(pid, isLiked) {
+        const ref = db.collection('posts').doc(pid);
+        if(isLiked) await ref.update({ likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid) });
+        else await ref.update({ likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid) });
+    }
+
+    async function addComment(pid) {
+        const inp = document.getElementById(`inp-c-${pid}`);
+        if(!inp.value) return;
+        await db.collection('posts').doc(pid).collection('comments').add({
+            text: inp.value, authorId: currentUser.uid, authorName: userData.fullName, createdAt: firebase.firestore.FieldValue.serverTimestamp()
+        });
+        inp.value = "";
+    }
+
+    async function deletePost(pid) { if(confirm("حذف المنشور؟")) await db.collection('posts').doc(pid).delete(); }
+    async function deleteComment(pid, cid) { await db.collection('posts').doc(pid).collection('comments').doc(cid).delete(); }
+    function toggleComments(pid) { document.getElementById(`comments-${pid}`).classList.toggle('hidden'); }
+
+    // =========================================================================
 
     function downloadArchivePDF() {
         let list = requestsCache.filter(r => ['done','rejected'].includes(r.status));
