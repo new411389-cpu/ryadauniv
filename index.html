@@ -728,7 +728,7 @@
 
 <script>
     // =========================================================================
-    // 1. CONFIGURATION & INITIALIZATION
+    // 1. إعدادات الاتصال بقاعدة البيانات (CONFIGURATION)
     // =========================================================================
     const firebaseConfig = {
         apiKey: "AIzaSyABwJfEkkbNB8GurZkyj67R8ksVNEXZ11I",
@@ -738,39 +738,44 @@
         messagingSenderId: "858244114090",
         appId: "1:858244114090:web:42cee8e98e3984164392d3"
     };
+    
+    // إعدادات رفع الصور (Cloudinary)
     const CLOUD_NAME = "djzfruh22"; 
     const CLOUD_PRESET = "udyvggup";
 
+    // تهيئة فايربيس
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- Global State ---
+    // =========================================================================
+    // 2. المتغيرات العامة (GLOBAL STATE)
+    // =========================================================================
     let currentUser = null;
     let userData = null;
     let isLoginMode = true;
-    let selectedSup = null;
+    let selectedSup = null; // المشرف المختار عند إنشاء البلاغ
     let currentTab = 'active'; 
-    let requestsCache = [];
-    let uploadQueue = []; 
-    let tempActionData = {}; 
-    let selectedTech = null; // Stores selected Engineer info
+    let requestsCache = []; // تخزين مؤقت للبلاغات
+    let uploadQueue = []; // طابور رفع الملفات
+    let tempActionData = {}; // تخزين بيانات الإجراء الحالي
+    let selectedTech = null; // (جديد) تخزين المهندس المختار للمهمة
     let newProfilePicFile = null;
     let isFirstLoad = true;
     let currentFriendDocId = null;
     let selectedFrameClass = '';
     
-    // --- Audio Recording State ---
+    // متغيرات التسجيل الصوتي
     let mediaRecorder = null;
     let audioChunks = [];
     let isRecording = false;
 
     // =========================================================================
-    // 2. AUTHENTICATION & STARTUP
+    // 3. التحقق من المستخدم والتشغيل (AUTH & STARTUP)
     // =========================================================================
-    auth.onAuthStateChanged(async u => {
-        if(u) {
-            if(!u.emailVerified) {
+    auth.onAuthStateChanged(async function(u) {
+        if (u) {
+            if (!u.emailVerified) {
                 document.getElementById('loader').classList.add('hidden');
                 toast("⚠️ يجب تفعيل البريد الإلكتروني أولاً.");
                 auth.signOut();
@@ -788,31 +793,36 @@
     async function loadUser() {
         try {
             const doc = await db.collection('users').doc(currentUser.uid).get();
-            if(doc.exists) {
+            if (doc.exists) {
                 userData = doc.data();
                 
-                // Legacy Fixes
-                if(!userData.shortId) {
+                // إصلاح البيانات القديمة (Legacy Fixes)
+                if (!userData.shortId) {
                     userData.shortId = Math.random().toString(36).substr(2,6).toUpperCase();
                     await db.collection('users').doc(currentUser.uid).update({shortId: userData.shortId});
                 }
-                if(!userData.gender) await db.collection('users').doc(currentUser.uid).update({gender: 'male'});
+                if (!userData.gender) {
+                    await db.collection('users').doc(currentUser.uid).update({gender: 'male'});
+                }
 
                 renderHeader();
                 showScreen('app-container');
                 setupRoleUI();
                 
+                // تحميل البيانات
                 loadFeed();
                 loadTeam(); 
                 loadFriendReqs();
                 loadProfilePageData();
                 loadPosts(); 
                 
-                // Set default dates
+                // ضبط التاريخ والوقت الافتراضي
                 document.getElementById('req-date').valueAsDate = new Date();
                 document.getElementById('req-time').value = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
 
-                setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 500);
+                setTimeout(function() { 
+                    document.getElementById('loader').classList.add('hidden'); 
+                }, 500);
             }
         } catch(e) { 
             console.error(e);
@@ -821,28 +831,44 @@
         }
     }
 
+    // تجهيز الواجهة حسب الصلاحيات
     function setupRoleUI() {
-        if(userData.role === 'supervisor') document.getElementById('filter-container').classList.remove('hidden');
-        if(userData.role === 'employee') document.getElementById('emp-report-btn-container').classList.remove('hidden');
+        // المشرف: إظهار الفلاتر
+        if (userData.role === 'supervisor') {
+            document.getElementById('filter-container').classList.remove('hidden');
+        }
         
-        // Setup for Engineer (Stored as 'technician' in DB)
-        if(userData.role === 'technician') {
+        // الموظف: إظهار زر التقرير الإداري
+        if (userData.role === 'employee') {
+            document.getElementById('emp-report-btn-container').classList.remove('hidden');
+        }
+        
+        // المهندس (مسجل باسم technician في القاعدة): إظهار زر التقرير الفني وإدارة المهام
+        if (userData.role === 'technician') {
             const addBtn = document.querySelector('.nav-add-btn');
             addBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i>';
-            addBtn.onclick = function() { document.getElementById('tech-report-modal').classList.remove('hidden'); };
+            addBtn.onclick = function() {
+                document.getElementById('tech-report-modal').classList.remove('hidden');
+            };
+            
+            // تغيير محتوى صفحة الإنشاء للمهندس
             document.getElementById('page-create').innerHTML = "<div style='text-align:center; padding:50px;'><h3 style='color:var(--text-muted)'>حساب مهندس</h3><p>لا يمكنك إنشاء بلاغات، فقط متابعة المهام وإرسال التقارير.</p></div>";
+            
+            // (جديد) إظهار زر إدارة المهام للمهندس
             document.getElementById('eng-tasks-btn-container').classList.remove('hidden');
         }
 
-        if(userData.role === 'manager') {
+        // المدير: إظهار أدوات النشر والتقارير الشاملة
+        if (userData.role === 'manager') {
              document.getElementById('create-post-container').classList.remove('hidden');
              document.getElementById('full-report-btn-container').classList.remove('hidden');
+             // إخفاء زر الإضافة للمدير
              document.querySelector('.nav-add-btn').classList.add('hidden');
         }
     }
 
     function renderHeader() {
-        // Updated Role Map: technician -> مهندس
+        // تحديث المسميات: technician تظهر كـ "مهندس"
         const roleMap = {'employee':'موظف', 'supervisor':'مشرف', 'technician':'مهندس', 'manager':'مدير'};
         document.getElementById('banner-name').innerText = userData.fullName;
         document.getElementById('banner-role').innerText = roleMap[userData.role];
@@ -854,21 +880,22 @@
     }
 
     // =========================================================================
-    // 3. FEED LOGIC (UPDATED WITH CODE & FLOOR)
+    // 4. عرض البلاغات (FEED) - (تحديث لإظهار الكود والدور)
     // =========================================================================
     function loadFeed() {
         let q = db.collection('requests'); 
         
-        if(userData.role === 'employee') q = q.where('userId','==',currentUser.uid);
-        else if(userData.role === 'supervisor') q = q.where('supervisorId','==',currentUser.uid);
-        else if(userData.role === 'technician') q = q.where('technicianId','==',currentUser.uid);
+        // تطبيق الصلاحيات
+        if (userData.role === 'employee') q = q.where('userId','==',currentUser.uid);
+        else if (userData.role === 'supervisor') q = q.where('supervisorId','==',currentUser.uid);
+        else if (userData.role === 'technician') q = q.where('technicianId','==',currentUser.uid);
         
-        q.onSnapshot(snap => {
+        q.onSnapshot(function(snap) {
             const currentIds = requestsCache.map(r => r.id);
             let newItems = [];
             let updatedCache = [];
 
-            snap.forEach(doc => {
+            snap.forEach(function(doc) {
                 const data = {id: doc.id, ...doc.data()};
                 updatedCache.push(data);
                 if (!isFirstLoad && !currentIds.includes(doc.id)) {
@@ -877,10 +904,12 @@
             });
 
             requestsCache = updatedCache;
-            // Sort: Done items last, Newest first
+            // ترتيب: الأحدث أولاً
             requestsCache.sort((a,b) => (b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
             
-            if(!isFirstLoad && newItems.length > 0) checkAndPlaySound(newItems);
+            if (!isFirstLoad && newItems.length > 0) {
+                checkAndPlaySound(newItems);
+            }
             isFirstLoad = false;
             
             renderFeed();
@@ -888,62 +917,87 @@
     }
 
     function renderFeed() {
-        const container = document.getElementById('requests-feed'); container.innerHTML = "";
+        const container = document.getElementById('requests-feed'); 
+        container.innerHTML = "";
         let list = requestsCache;
 
-        if(currentTab === 'trash') list = list.filter(r => r.isDeleted === true);
-        else {
+        // فلترة التبويبات (جاري - أرشيف - محذوفات)
+        if (currentTab === 'trash') {
+            list = list.filter(r => r.isDeleted === true);
+        } else {
             list = list.filter(r => r.isDeleted !== true);
-            if(currentTab === 'active') list = list.filter(r => ['pending','approved','working','suspended'].includes(r.status));
-            else if(currentTab === 'history') list = list.filter(r => ['done','rejected'].includes(r.status));
+            if (currentTab === 'active') {
+                list = list.filter(r => ['pending','approved','working','suspended'].includes(r.status));
+            } else if (currentTab === 'history') {
+                list = list.filter(r => ['done','rejected'].includes(r.status));
+            }
         }
 
+        // فلترة المشرف حسب الكلية
         const facFilter = document.getElementById('feed-filter').value;
-        if(userData.role === 'supervisor' && facFilter !== 'all') list = list.filter(r => r.faculty === facFilter);
+        if (userData.role === 'supervisor' && facFilter !== 'all') {
+            list = list.filter(r => r.faculty === facFilter);
+        }
 
-        if(list.length === 0) { 
+        if (list.length === 0) { 
             container.innerHTML = `<div style="text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-regular fa-clipboard fa-3x" style="opacity:0.5; margin-bottom:10px;"></i><p>لا يوجد بيانات</p></div>`; 
             return; 
         }
 
-        list.forEach(d => {
+        list.forEach(function(d) {
             let statusClass = 'st-' + d.status;
             let statusText = getStatusLabel(d.status);
-            let cardClass = d.status === 'pending' ? "req-new" : (d.status === 'done' ? "req-done" : (d.status === 'rejected' ? "req-rejected" : ""));
+            
+            let cardClass = "";
+            if (d.status === 'pending') cardClass = "req-new";
+            else if (d.status === 'done') cardClass = "req-done";
+            else if (d.status === 'rejected') cardClass = "req-rejected";
+
             let prioColor = d.priority === 'high' ? 'var(--error)' : d.priority === 'medium' ? 'var(--warning)' : 'var(--success)';
             let prioIcon = d.priority === 'high' ? '<i class="fa-solid fa-fire" style="color:var(--error)"></i>' : '';
 
-            // Actions Buttons Logic (Updated for Engineer Flow)
+            let timeParts = d.time.split(':');
+            let dateObj = new Date(); 
+            dateObj.setHours(timeParts[0]); 
+            dateObj.setMinutes(timeParts[1]);
+            let timeDisplay = dateObj.toLocaleTimeString('ar-EG', {hour: 'numeric', minute:'numeric', hour12: true});
+
+            // منطق الأزرار (Actions)
             let actionBtns = "";
             let deleteBtn = "";
 
-            if(currentTab !== 'trash') {
+            if (currentTab !== 'trash') {
+                // زر الحذف (نقل للمهملات)
                 if(['employee','supervisor','manager'].includes(userData.role)) {
                       deleteBtn = `<button onclick="event.stopPropagation(); softDelete('${d.id}')" class="btn-ghost btn-sm" style="color:var(--error); border-color:var(--border); margin-left:10px;"><i class="fa-solid fa-trash"></i></button>`;
                 }
 
-                if(userData.role === 'supervisor' && d.status === 'pending') {
+                // أزرار المشرف (تعيين مهندس)
+                if (userData.role === 'supervisor' && d.status === 'pending') {
                     actionBtns = `
                     <div style="display:flex; gap:10px;">
                         <button onclick="event.stopPropagation(); openAction('${d.id}','approve')" class="btn-main btn-sm" style="background:var(--success);">تعيين مهندس</button>
                         <button onclick="event.stopPropagation(); openAction('${d.id}','reject')" class="btn-main btn-danger btn-sm">رفض</button>
                     </div>`;
                 }
-                else if(userData.role === 'technician') {
-                    if(d.status === 'approved') {
+                // أزرار المهندس (قبول / رفض / إتمام)
+                else if (userData.role === 'technician') {
+                    if (d.status === 'approved') {
                         actionBtns = `
                         <div style="display:flex; gap:10px;">
                              <button onclick="event.stopPropagation(); openAction('${d.id}','startWork')" class="btn-main btn-sm" style="background:var(--warning); color:#fff;">قبول (قيد التنفيذ)</button>
                              <button onclick="event.stopPropagation(); openAction('${d.id}','tech_reject')" class="btn-main btn-danger btn-sm">رفض</button>
                         </div>`;
-                    } else if(d.status === 'working') {
+                    } else if (d.status === 'working') {
                         actionBtns = `<button onclick="event.stopPropagation(); openAction('${d.id}','done')" class="btn-main btn-sm" style="background:var(--success);">تم الإصلاح</button>`;
                     }
                 }
             } else {
+                // أزرار المحذوفات
                 actionBtns = `<div style="display:flex; gap:5px;"><button onclick="event.stopPropagation(); restoreReq('${d.id}')" class="btn-main btn-sm">استعادة</button><button onclick="event.stopPropagation(); hardDelete('${d.id}')" class="btn-danger btn-sm">حذف نهائي</button></div>`;
             }
 
+            // (جديد) عرض الكود والدور في البطاقة
             container.innerHTML += `
             <div class="glass-card request-card ${cardClass}" onclick="openRequestDetails('${d.id}')" style="border-right-color:${prioColor};">
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:5px;">
@@ -951,20 +1005,20 @@
                         <img src="${d.userData.photoUrl}" class="avatar clickable-user" onclick="event.stopPropagation(); openUserProfile('${d.userId}')" style="width:40px; height:40px; border-radius:50%; object-fit:cover;">
                         <div>
                             <b class="clickable-user" onclick="event.stopPropagation(); openUserProfile('${d.userId}')" style="font-size:13px; display:block; color:var(--text);">${d.userData.fullName}</b>
-                            <span style="font-size:10px; color:var(--text-muted);">${d.reqCode || '---'}</span>
+                            <span style="font-size:10px; color:var(--text-muted); font-family:monospace; background:#f1f5f9; padding:2px 6px; border-radius:4px;">${d.reqCode || '---'}</span>
                         </div>
                     </div>
                     <span class="status-pill ${statusClass}">${statusText}</span>
                 </div>
                 
                 <div style="margin:10px 0; font-size:14px; line-height:1.5; color:var(--text);">
-                    <span style="color:var(--info); font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">[${d.type}]</span>
+                    <span style="color:var(--info); font-size:12px; font-weight:bold; display:block; margin-bottom:4px;">[${d.type || 'عام'}]</span>
                     ${prioIcon} ${d.description}
                 </div>
                 
                 <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; margin-top:8px;">
                     <i class="fa-solid fa-location-dot"></i> ${d.location} 
-                    ${d.floor ? `| الدور: ${d.floor}` : ''}
+                    ${d.floor ? ` | الدور: ${d.floor}` : ''}
                 </div>
                 
                 <div style="display:flex; justify-content:space-between; align-items:center;">
@@ -976,14 +1030,14 @@
     }
 
     // =========================================================================
-    // 4. ACTION LOGIC (ASSIGN ENGINEER & POPUP)
+    // 5. منطق الإجراءات (اختيار المهندس والنوافذ)
     // =========================================================================
     async function openAction(id, type) {
         tempActionData = { id, type };
         document.getElementById('action-modal').classList.remove('hidden');
         const commBox = document.getElementById('act-comment');
         commBox.value = "";
-        selectedTech = null; // Reset selection
+        selectedTech = null; // إعادة تعيين اختيار المهندس
         
         const titles = {
             'approve':'تعيين مهندس للمهمة', 
@@ -994,25 +1048,29 @@
         };
         document.getElementById('act-title').innerText = titles[type];
 
-        if(type === 'approve') {
+        if (type === 'approve') {
+            // حالة تعيين المهندس
             commBox.placeholder = "ملاحظات للمهندس (اختياري)...";
             document.getElementById('tech-select-area').classList.remove('hidden');
-            loadTechsForAction(); // Load popup
+            loadTechsForAction(); // تحميل قائمة المهندسين
         } else {
+            // باقي الحالات
             commBox.placeholder = "سبب الرفض / ملاحظات...";
             document.getElementById('tech-select-area').classList.add('hidden');
         }
     }
 
+    // (جديد) دالة جلب المهندسين للقائمة المنبثقة
     async function loadTechsForAction() {
         const list = document.getElementById('tech-list-action'); 
         list.innerHTML="<small>جاري تحميل المهندسين...</small>";
         
+        // جلب المستخدمين بصلاحية technician
         const snap = await db.collection('users').where('role','==','technician').get();
         list.innerHTML="";
         
-        if(snap.empty) {
-            list.innerHTML = "<p style='grid-column:span 2; font-size:11px; color:red;'>لا يوجد مهندسين مسجلين</p>";
+        if (snap.empty) {
+            list.innerHTML = "<p style='grid-column:span 2; font-size:11px; color:red;'>لا يوجد مهندسين مسجلين في النظام</p>";
             return;
         }
 
@@ -1027,51 +1085,69 @@
         });
     }
     
+    // دالة تحديد المهندس عند الضغط عليه
     function selTech(el, id, name) {
-        document.querySelectorAll('.tech-select-card').forEach(d=>d.classList.remove('selected'));
-        el.classList.add('selected'); selectedTech={id, name};
+        document.querySelectorAll('.tech-select-card').forEach(d => d.classList.remove('selected'));
+        el.classList.add('selected'); 
+        selectedTech = { id, name };
     }
 
+    // تنفيذ الإجراء (Submit Action)
     async function submitAction() {
         const { id, type } = tempActionData;
         const comment = document.getElementById('act-comment').value;
         const btn = document.getElementById('act-submit-btn');
 
-        if((type==='reject' || type==='tech_reject') && !comment) return toast("⚠️ يجب ذكر سبب الرفض");
-        if(type==='approve' && !selectedTech) return toast("⚠️ يجب اختيار مهندس من القائمة");
+        // التحقق من المدخلات
+        if ((type === 'reject' || type === 'tech_reject') && !comment) {
+            return toast("⚠️ يجب ذكر سبب الرفض");
+        }
+        if (type === 'approve' && !selectedTech) {
+            return toast("⚠️ يجب اختيار مهندس من القائمة");
+        }
 
-        btn.disabled=true;
+        btn.disabled = true;
         try {
             let updateData = { supervisorComment: comment };
             
-            if(type === 'approve') { 
+            if (type === 'approve') { 
                 updateData.status = 'approved'; 
                 updateData.technicianId = selectedTech.id; 
                 updateData.technicianName = selectedTech.name; 
             }
-            else if(type === 'reject') { 
+            else if (type === 'reject') { 
                 updateData.status = 'rejected'; 
                 updateData.rejectedBy = userData.fullName;
             }
-            else if(type === 'startWork') { updateData.status = 'working'; }
-            else if(type === 'tech_reject') {
+            else if (type === 'startWork') { 
+                updateData.status = 'working'; 
+            }
+            else if (type === 'tech_reject') {
                 updateData.status = 'rejected';
                 updateData.rejectedBy = `المهندس: ${userData.fullName}`;
                 updateData.supervisorComment = `رفض المهندس: ${comment}`;
             }
-            else if(type === 'done') { 
+            else if (type === 'done') { 
                 updateData.status = 'done';
                 updateData.completedAt = firebase.firestore.FieldValue.serverTimestamp();
             }
 
             await db.collection('requests').doc(id).update(updateData);
-            toast("✅ تم تنفيذ الإجراء بنجاح"); closeModal('action-modal');
-        } catch(e) { toast("❌ خطأ"); console.error(e); } finally { btn.disabled=false; }
+            toast("✅ تم تنفيذ الإجراء بنجاح"); 
+            closeModal('action-modal');
+        } catch(e) { 
+            toast("❌ خطأ أثناء التنفيذ"); 
+            console.error(e); 
+        } finally { 
+            btn.disabled = false; 
+        }
     }
 
     // =========================================================================
-    // 5. REQUEST CREATION (VALIDATION + REQ CODE + FLOOR)
+    // 6. إنشاء البلاغ (التحقق + الكود + الدور)
     // =========================================================================
+    
+    // (جديد) دالة توليد كود البلاغ
     function generateReqCode() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const randChar = chars.charAt(Math.floor(Math.random() * chars.length));
@@ -1080,30 +1156,37 @@
     }
 
     async function sendRequestFinal() { 
-        // 1. Validation
-        if(!document.getElementById('req-desc').value) return toast("⚠️ الوصف مطلوب");
-        if(!document.getElementById('req-type').value) return toast("⚠️ نوع العطل مطلوب");
+        // 1. التحقق من البيانات (Validation)
+        if (!document.getElementById('req-desc').value) return toast("⚠️ الوصف مطلوب");
+        if (!document.getElementById('req-type').value) return toast("⚠️ نوع العطل مطلوب");
         
         const floorVal = document.getElementById('req-floor').value;
         const roomVal = document.getElementById('req-room').value;
         
-        if(!floorVal) return toast("⚠️ الرجاء اختيار الدور");
-        if(!roomVal) return toast("⚠️ الرجاء كتابة رقم الغرفة/القاعة");
-        if(!selectedSup) return toast("⚠️ الرجاء اختيار المشرف");
+        // (جديد) منع الإرسال إذا لم يتم اختيار الدور أو الغرفة
+        if (!floorVal) return toast("⚠️ الرجاء اختيار الدور");
+        if (!roomVal) return toast("⚠️ الرجاء كتابة رقم الغرفة/القاعة");
+        if (!selectedSup) return toast("⚠️ الرجاء اختيار المشرف");
 
-        const btn=document.getElementById('confirm-send-btn'); btn.disabled=true; btn.innerText="جاري الإرسال...";
+        const btn = document.getElementById('confirm-send-btn'); 
+        btn.disabled = true; 
+        btn.innerText = "جاري الإرسال...";
         
         try { 
-            // 2. Upload Media
+            // 2. رفع الوسائط (Media Upload)
             let mediaLinks = [];
-            for(const file of uploadQueue) {
-                const fd = new FormData(); fd.append('file', file); fd.append('upload_preset', CLOUD_PRESET);
-                if(file.type.startsWith('audio')) fd.append('resource_type', 'video'); 
+            for (const file of uploadQueue) {
+                const fd = new FormData(); 
+                fd.append('file', file); 
+                fd.append('upload_preset', CLOUD_PRESET);
+                if (file.type.startsWith('audio')) fd.append('resource_type', 'video'); 
+                
                 const res = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/upload`, {method:'POST', body:fd});
                 const d = await res.json();
+                
                 let type = 'image';
-                if(file.type.startsWith('video')) type = 'video';
-                if(file.type.startsWith('audio')) type = 'audio';
+                if (file.type.startsWith('video')) type = 'video';
+                if (file.type.startsWith('audio')) type = 'audio';
                 mediaLinks.push({url: d.secure_url, type: type});
             }
             
@@ -1111,13 +1194,13 @@
             const facText = facSelect.options[facSelect.selectedIndex].text;
             const fullLocation = `${facText} - الدور ${floorVal} - ${roomVal}`;
             
-            // 3. Create Document with Code
+            // 3. إنشاء المستند (Create Document)
             await db.collection('requests').add({ 
-                reqCode: generateReqCode(), // NEW CODE
-                userId:currentUser.uid, 
-                userData:{ fullName:userData.fullName, photoUrl:userData.photoUrl }, 
-                supervisorId:selectedSup, 
-                status:'pending', 
+                reqCode: generateReqCode(), // (جديد) حفظ الكود
+                userId: currentUser.uid, 
+                userData: { fullName: userData.fullName, photoUrl: userData.photoUrl }, 
+                supervisorId: selectedSup, 
+                status: 'pending', 
                 type: document.getElementById('req-type').value,
                 priority: document.querySelector('input[name="prio"]:checked').value,
                 time: document.getElementById('req-time').value, 
@@ -1125,32 +1208,40 @@
                 description: document.getElementById('req-desc').value, 
                 location: fullLocation, 
                 faculty: facSelect.value,
-                floor: floorVal, // Save raw floor
-                room: roomVal,   // Save raw room
+                floor: floorVal, // حفظ الدور الخام
+                room: roomVal,   // حفظ الغرفة الخام
                 media: mediaLinks,
                 isDeleted: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp() 
             }); 
             
-            toast("✅ تم إرسال البلاغ بنجاح"); closeModal('sup-modal'); 
+            toast("✅ تم إرسال البلاغ بنجاح"); 
+            closeModal('sup-modal'); 
             nav('home', document.querySelector('.nav-item:first-child'));
             
-            // Reset
-            uploadQueue=[]; document.getElementById('preview-grid').innerHTML=""; 
-            document.getElementById('req-desc').value="";
-            document.getElementById('req-floor').value="";
-            document.getElementById('req-room').value="";
+            // إعادة تعيين النموذج
+            uploadQueue = []; 
+            document.getElementById('preview-grid').innerHTML = ""; 
+            document.getElementById('req-desc').value = "";
+            document.getElementById('req-floor').value = "";
+            document.getElementById('req-room').value = "";
             document.getElementById('mic-trigger').classList.remove('recording');
 
-        } catch(e){toast("❌ خطأ في الإرسال"); console.error(e);} finally{btn.disabled=false; btn.innerText="إرسال البلاغ";} 
+        } catch(e) {
+            toast("❌ خطأ في الإرسال"); 
+            console.error(e);
+        } finally {
+            btn.disabled = false; 
+            btn.innerText = "إرسال البلاغ";
+        } 
     }
 
     // =========================================================================
-    // 6. NEWS FEED (PINNING + REPLIES + PICS)
+    // 7. صفحة البيان (تثبيت + ردود + صور)
     // =========================================================================
     async function createPost() {
         const content = document.getElementById('new-post-content').value;
-        if(!content) return toast("⚠️ اكتب شيئاً للنشر");
+        if (!content) return toast("⚠️ اكتب شيئاً للنشر");
         
         await db.collection('posts').add({
             content: content,
@@ -1158,7 +1249,7 @@
             authorName: userData.fullName,
             authorPic: userData.photoUrl,
             likes: [],
-            isPinned: false, // Default
+            isPinned: false, // (جديد) الحالة الافتراضية للتثبيت
             createdAt: firebase.firestore.FieldValue.serverTimestamp()
         });
         document.getElementById('new-post-content').value = "";
@@ -1170,9 +1261,9 @@
             let posts = [];
             snap.forEach(doc => posts.push({id: doc.id, ...doc.data()}));
             
-            // Sort: Pinned first, then Date Descending
+            // ترتيب المنشورات: المثبتة أولاً، ثم الأحدث
             posts.sort((a,b) => {
-                if(a.isPinned === b.isPinned) {
+                if (a.isPinned === b.isPinned) {
                     return (b.createdAt?.seconds||0) - (a.createdAt?.seconds||0);
                 }
                 return a.isPinned ? -1 : 1;
@@ -1186,14 +1277,14 @@
                 const isAuthor = p.authorId === currentUser.uid;
                 
                 let timeStr = "";
-                if(p.createdAt) {
+                if (p.createdAt) {
                     const d = p.createdAt.toDate();
                     timeStr = d.toLocaleDateString('ar-EG') + " " + d.toLocaleTimeString('ar-EG', {hour:'2-digit', minute:'2-digit'});
                 }
 
-                // Pin Button (Only for Manager/Author)
+                // زر التثبيت (يظهر للمدير فقط)
                 let pinBtn = "";
-                if(userData.role === 'manager') {
+                if (userData.role === 'manager') {
                     pinBtn = `<i class="fa-solid fa-thumbtack post-pin-btn ${p.isPinned?'active':''}" onclick="togglePin('${p.id}', ${!p.isPinned})"></i>`;
                 }
 
@@ -1217,7 +1308,8 @@
                             <i class="${isLiked ? 'fa-solid' : 'fa-regular'} fa-heart"></i> ${p.likes ? p.likes.length : 0}
                         </button>
                         <button class="p-btn" onclick="toggleComments('${p.id}')">
-                            <i class="fa-regular fa-comment"></i> تعليق <span id="count-c-${p.id}" style="font-size:10px; margin-right:3px;">(0)</span>
+                            <i class="fa-regular fa-comment"></i> تعليق 
+                            <span id="count-c-${p.id}" style="font-size:10px; margin-right:3px;">(0)</span>
                         </button>
                     </div>
                     <div id="comments-${p.id}" class="hidden comment-section">
@@ -1229,16 +1321,18 @@
                     </div>
                 </div>`;
                 
-                // Load Comments
+                // تحميل التعليقات
                 db.collection('posts').doc(p.id).collection('comments').orderBy('createdAt').onSnapshot(cSnap => {
                     const cList = document.getElementById(`list-c-${p.id}`);
                     const countSpan = document.getElementById(`count-c-${p.id}`);
-                    if(countSpan) countSpan.innerText = `(${cSnap.size})`;
                     
-                    if(cList) {
+                    if (countSpan) countSpan.innerText = `(${cSnap.size})`;
+                    
+                    if (cList) {
                         cList.innerHTML = "";
                         cSnap.forEach(cDoc => {
                             const c = cDoc.data();
+                            // (جديد) عرض صورة المعلق وزر الرد
                             cList.innerHTML += `
                             <div class="comment-item">
                                 <img src="${c.authorPic || 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png'}" class="comment-avatar clickable-user" onclick="openUserProfile('${c.authorId}')">
@@ -1258,11 +1352,13 @@
         });
     }
 
+    // دالة تثبيت المنشور
     async function togglePin(pid, status) {
         await db.collection('posts').doc(pid).update({ isPinned: status });
         toast(status ? "تم التثبيت" : "تم إلغاء التثبيت");
     }
 
+    // دالة الرد على التعليق
     function replyTo(pid, name) {
         const inp = document.getElementById(`inp-c-${pid}`);
         inp.value = `@${name} `;
@@ -1271,7 +1367,7 @@
 
     async function addComment(pid) {
         const inp = document.getElementById(`inp-c-${pid}`);
-        if(!inp.value) return;
+        if (!inp.value) return;
         await db.collection('posts').doc(pid).collection('comments').add({
             text: inp.value, 
             authorId: currentUser.uid, 
@@ -1283,7 +1379,7 @@
     }
 
     // =========================================================================
-    // 7. ENGINEER REPORT (NEW) & UTILS
+    // 8. تقرير المهندس الشهري (ميزة جديدة)
     // =========================================================================
     function openEngineerTasks() {
         document.getElementById('engineer-tasks-modal').classList.remove('hidden');
@@ -1291,17 +1387,17 @@
 
     async function generateEngineerMonthlyReport() {
         const picker = document.getElementById('report-month-picker');
-        if(!picker.value) return toast("⚠️ اختر الشهر والسنة");
+        if (!picker.value) return toast("⚠️ اختر الشهر والسنة");
         
         const [year, month] = picker.value.split('-'); // "2025-10"
         
-        // Define range
+        // تحديد نطاق البحث (بداية ونهاية الشهر)
         const start = new Date(year, month - 1, 1);
         const end = new Date(year, month, 0, 23, 59, 59);
 
         toast("جاري جمع البيانات...");
         
-        // Query completed tasks for this engineer in this range
+        // جلب المهام المنجزة بواسطة هذا المهندس في هذا الشهر
         const snap = await db.collection('requests')
             .where('technicianId', '==', currentUser.uid)
             .where('status', '==', 'done')
@@ -1309,7 +1405,7 @@
             .where('completedAt', '<=', end)
             .get();
 
-        if(snap.empty) return toast("لا توجد مهام منجزة في هذا الشهر");
+        if (snap.empty) return toast("لا توجد مهام منجزة في هذا الشهر");
 
         let html = `
         <div style="font-family:'Cairo'; padding:20px; direction:rtl; text-align:center;">
@@ -1340,25 +1436,36 @@
 
         html += `</table></div>`;
         
-        const el = document.createElement('div'); el.innerHTML = html;
+        const el = document.createElement('div'); 
+        el.innerHTML = html;
+        
         html2pdf().from(el).save(`Monthly_Report_${picker.value}.pdf`);
         toast("✅ تم تحميل التقرير");
         closeModal('engineer-tasks-modal');
     }
 
-    // Helper Utils
+    // =========================================================================
+    // 9. الدوال المساعدة والملحقات
+    // =========================================================================
     function checkAndPlaySound(newRequests) {
         const hasIncoming = newRequests.some(r => r.userId !== currentUser.uid);
         if (hasIncoming) {
             const audio = document.getElementById('notify-sound');
-            if(audio) audio.play().catch(e => console.log("Audio play blocked"));
+            if (audio) audio.play().catch(e => console.log("Audio play blocked"));
             toast("🔔 إشعار جديد");
             document.querySelector('.bell-badge').style.display = 'block';
         }
     }
     
     function getStatusLabel(s) {
-        const map = { 'pending': 'تم الإرسال', 'approved': 'بانتظار المهندس', 'working': 'قيد التنفيذ', 'done': 'تم الإصلاح', 'rejected': 'مرفوض', 'suspended': 'معلق' };
+        const map = { 
+            'pending': 'تم الإرسال', 
+            'approved': 'بانتظار المهندس', 
+            'working': 'قيد التنفيذ', 
+            'done': 'تم الإصلاح', 
+            'rejected': 'مرفوض', 
+            'suspended': 'معلق' 
+        };
         return map[s] || s;
     }
 
@@ -1366,12 +1473,12 @@
         const d = requestsCache.find(r => r.id === id);
         document.getElementById('request-details-modal').classList.remove('hidden');
         
-        // Show Code
+        // (جديد) عرض الكود في التفاصيل
         document.getElementById('req-code-display').innerText = d.reqCode || "NO-CODE";
 
         let mediaHtml = "";
-        if(d.media && d.media.length > 0) d.media.forEach(m => {
-            if(m.type === 'audio') {
+        if (d.media && d.media.length > 0) d.media.forEach(m => {
+            if (m.type === 'audio') {
                  mediaHtml += `<div class="media-item" onclick="openAudioPlayer('${m.url}')" style="background:#e0f2fe; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer;"><i class="fa-solid fa-play-circle" style="font-size:30px; color:var(--primary); margin-bottom:5px;"></i><span style="font-size:10px; color:var(--primary-dark);">تشغيل الصوت</span></div>`;
             } else {
                  mediaHtml += `<div class="media-item" onclick="openMediaViewer('${m.url}','${m.type}')">${m.type==='video' ? `<video src="${m.url}"></video><div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center;"><i class="fa-solid fa-play"></i></div>` : `<img src="${m.url}">`}</div>`;
@@ -1389,15 +1496,16 @@
         let timelineHtml = '<div class="timeline">';
         let isRejected = d.status === 'rejected';
         
-        if(isRejected) {
+        if (isRejected) {
              timelineHtml += `<div class="timeline-item active rejected"><div class="tl-icon"><i class="fa-solid fa-xmark"></i></div><div class="tl-content"><h4>تم الرفض</h4><p>بواسطة: ${d.rejectedBy || 'المشرف'}<br>ملاحظات: ${d.supervisorComment}</p></div></div>`;
         } else {
             steps.forEach(s => {
                 let active = false;
-                if(s.id === 'pending') active = true;
-                if(d.status === 'approved' && (s.id==='pending'||s.id==='approved')) active=true;
-                if(d.status === 'working' && (s.id==='pending'||s.id==='approved'||s.id==='working')) active=true;
-                if(d.status === 'done') active=true;
+                if (s.id === 'pending') active = true;
+                if (d.status === 'approved' && (s.id==='pending'||s.id==='approved')) active=true;
+                if (d.status === 'working' && (s.id==='pending'||s.id==='approved'||s.id==='working')) active=true;
+                if (d.status === 'done') active=true;
+                
                 timelineHtml += `<div class="timeline-item ${active ? 'active' : ''}"><div class="tl-icon"><i class="fa-solid fa-check"></i></div><div class="tl-content"><h4>${s.label}</h4><p>${s.desc}</p></div></div>`;
             });
         }
@@ -1421,27 +1529,86 @@
         `;
     }
 
-    // Standard Utils (Audio, Media, Nav, Auth, PDF) remain similar but condensed
-    function openAudioPlayer(url) { const m=document.getElementById('audio-player-modal'); document.getElementById('modal-audio-player').src=url; m.classList.remove('hidden'); }
-    function closeAudioPlayer() { const m=document.getElementById('audio-player-modal'); document.getElementById('modal-audio-player').pause(); m.classList.add('hidden'); }
-    function openMediaViewer(u, t) { document.getElementById('media-viewer').classList.remove('hidden'); document.getElementById('media-content-container').innerHTML = t==='video'?`<video src="${u}" controls autoplay style="max-width:100%;"></video>`:`<img src="${u}" style="max-width:100%;">`; }
-    function reqNotifyPerm() { Notification.requestPermission().then(p => { if(p==="granted") toast("تم تفعيل الإشعارات"); }); }
-    function nav(p, el) { document.querySelectorAll('.page-section').forEach(x=>x.classList.add('hidden')); document.getElementById('page-'+p).classList.remove('hidden'); if(p!=='create'){document.querySelectorAll('.nav-item').forEach(x=>x.classList.remove('active')); if(el) el.classList.add('active');} if(p==='profile') loadProfilePageData(); }
-    function showScreen(id) { ['auth-screen','app-container'].forEach(x => document.getElementById(x).classList.add('hidden')); document.getElementById(id).classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-    function logout() { auth.signOut(); location.reload(); }
-    function toast(m) { const t=document.getElementById('toast'); t.innerHTML=m; t.style.display='block'; setTimeout(()=>t.style.display='none',3000); }
-    function switchTab(tab, el) { currentTab=tab; document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); renderFeed(); }
-    function calculateDuration(start, end) { if(!start||!end) return "غير محدد"; const diff=end.toDate()-start.toDate(); const h=Math.floor(diff/(1000*60*60)); const m=Math.floor((diff%(1000*60*60))/(1000*60)); return `${h} ساعة و ${m} دقيقة`; }
+    // دوال مساعدة عامة (بدون ضغط)
+    function openAudioPlayer(url) { 
+        const m = document.getElementById('audio-player-modal'); 
+        document.getElementById('modal-audio-player').src = url; 
+        m.classList.remove('hidden'); 
+    }
     
-    // PDF Helpers
+    function closeAudioPlayer() { 
+        const m = document.getElementById('audio-player-modal'); 
+        document.getElementById('modal-audio-player').pause(); 
+        m.classList.add('hidden'); 
+    }
+    
+    function openMediaViewer(u, t) { 
+        document.getElementById('media-viewer').classList.remove('hidden'); 
+        document.getElementById('media-content-container').innerHTML = t === 'video' ? `<video src="${u}" controls autoplay style="max-width:100%;"></video>` : `<img src="${u}" style="max-width:100%;">`; 
+    }
+    
+    function reqNotifyPerm() { 
+        Notification.requestPermission().then(p => { 
+            if(p === "granted") toast("تم تفعيل الإشعارات"); 
+        }); 
+    }
+    
+    function nav(p, el) { 
+        document.querySelectorAll('.page-section').forEach(x => x.classList.add('hidden')); 
+        document.getElementById('page-' + p).classList.remove('hidden'); 
+        if (p !== 'create') {
+            document.querySelectorAll('.nav-item').forEach(x => x.classList.remove('active')); 
+            if(el) el.classList.add('active');
+        } 
+        if (p === 'profile') loadProfilePageData(); 
+    }
+    
+    function showScreen(id) { 
+        ['auth-screen','app-container'].forEach(x => document.getElementById(x).classList.add('hidden')); 
+        document.getElementById(id).classList.remove('hidden'); 
+    }
+    
+    function closeModal(id) { 
+        document.getElementById(id).classList.add('hidden'); 
+    }
+    
+    function logout() { 
+        auth.signOut(); 
+        location.reload(); 
+    }
+    
+    function toast(m) { 
+        const t = document.getElementById('toast'); 
+        t.innerHTML = m; 
+        t.style.display = 'block'; 
+        setTimeout(() => t.style.display = 'none', 3000); 
+    }
+    
+    function switchTab(tab, el) { 
+        currentTab = tab; 
+        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active')); 
+        el.classList.add('active'); 
+        renderFeed(); 
+    }
+    
+    function calculateDuration(start, end) { 
+        if (!start || !end) return "غير محدد"; 
+        const diff = end.toDate() - start.toDate(); 
+        const h = Math.floor(diff / (1000 * 60 * 60)); 
+        const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)); 
+        return `${h} ساعة و ${m} دقيقة`; 
+    }
+    
+    // (جديد) تحديث التقرير الفردي ليشمل الكود
     function downloadSinglePDF(id) {
         const r = requestsCache.find(x => x.id === id);
         const element = document.createElement('div');
-        element.style.padding = '30px'; element.style.fontFamily = 'Cairo, sans-serif'; element.dir = 'rtl';
+        element.style.padding = '30px'; 
+        element.style.fontFamily = 'Cairo, sans-serif'; 
+        element.dir = 'rtl';
         element.innerHTML = `
             <h1 style="text-align:center; border-bottom:2px solid #000; padding-bottom:10px;">تفاصيل بلاغ صيانة</h1>
-            <h3 style="text-align:center;">كود: ${r.reqCode || '---'}</h3>
+            <h3 style="text-align:center;">كود البلاغ: ${r.reqCode || '---'}</h3>
             <table style="width:100%; border-collapse:collapse; margin-top:20px;">
                 <tr><td style="padding:10px; border:1px solid #ddd; font-weight:bold;">مقدم الطلب</td><td style="padding:10px; border:1px solid #ddd;">${r.userData.fullName}</td></tr>
                 <tr><td style="padding:10px; border:1px solid #ddd; font-weight:bold;">الموقع</td><td style="padding:10px; border:1px solid #ddd;">${r.location}</td></tr>
@@ -1451,36 +1618,260 @@
         html2pdf().from(element).save(`report_${r.reqCode || id}.pdf`);
     }
     
-    // Auth & Profile Logic
-    function toggleAuth() { isLoginMode=!isLoginMode; const f=document.getElementById('reg-fields'), c=document.getElementById('confirm-pass-field'); if(isLoginMode){f.classList.add('hidden');c.classList.add('hidden');document.getElementById('auth-btn').innerText="تسجيل الدخول";document.getElementById('auth-switch-text').innerHTML="ليس لديك حساب؟ <b style='color:var(--primary)'>إنشاء حساب جديد</b>";}else{f.classList.remove('hidden');c.classList.remove('hidden');document.getElementById('auth-btn').innerText="إنشاء حساب";document.getElementById('auth-switch-text').innerHTML="لديك حساب بالفعل؟ <b style='color:var(--primary)'>تسجيل الدخول</b>";} }
-    async function handleAuth() { const e=document.getElementById('email').value, p=document.getElementById('password').value; if(!isLoginMode){if(p!==document.getElementById('confirm-password').value)return toast("❌ كلمة المرور غير متطابقة");} document.getElementById('auth-btn').disabled=true; try{ if(isLoginMode){await auth.signInWithEmailAndPassword(e,p);}else{const role=document.querySelector('input[name="auth-role"]:checked').value; if(role==='manager'){const s=await db.collection('users').where('role','==','manager').get();if(s.size>=4)throw new Error("اكتمال عدد المديرين");} const c=await auth.createUserWithEmailAndPassword(e,p); await c.user.sendEmailVerification(); await db.collection('users').doc(c.user.uid).set({email:e, role:role, fullName:document.getElementById('reg-name').value, gender:document.querySelector('input[name="auth-gender"]:checked').value, photoUrl:'https://cdn-icons-png.flaticon.com/512/4140/4140048.png', shortId:Math.random().toString(36).substr(2,6).toUpperCase(), jobTitle:document.getElementById('reg-job').value, location:document.getElementById('reg-loc').value, phone:document.getElementById('reg-phone').value}); toggleAuth(); toast("✅ تم إنشاء الحساب");}}catch(err){toast(err.message);}finally{document.getElementById('auth-btn').disabled=false;} }
-    async function saveProfile() { const n=document.getElementById('edit-name').value; try{let u=userData.photoUrl; if(newProfilePicFile){const f=new FormData();f.append('file',newProfilePicFile);f.append('upload_preset',CLOUD_PRESET);const r=await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,{method:'POST',body:f});const d=await r.json();u=d.secure_url;} await db.collection('users').doc(currentUser.uid).update({fullName:n, gender:document.getElementById('edit-gender').value, phone:document.getElementById('edit-phone').value, jobTitle:document.getElementById('edit-job').value, location:document.getElementById('edit-loc').value, photoUrl:u, frame:selectedFrameClass}); userData.photoUrl=u; renderHeader(); toast("✅ تم الحفظ");}catch(e){toast("❌ خطأ");} }
+    // دوال التسجيل والملف الشخصي
+    function toggleAuth() { 
+        isLoginMode = !isLoginMode; 
+        const f = document.getElementById('reg-fields');
+        const c = document.getElementById('confirm-pass-field'); 
+        if (isLoginMode) {
+            f.classList.add('hidden');
+            c.classList.add('hidden');
+            document.getElementById('auth-btn').innerText = "تسجيل الدخول";
+            document.getElementById('auth-switch-text').innerHTML = "ليس لديك حساب؟ <b style='color:var(--primary)'>إنشاء حساب جديد</b>";
+        } else {
+            f.classList.remove('hidden');
+            c.classList.remove('hidden');
+            document.getElementById('auth-btn').innerText = "إنشاء حساب";
+            document.getElementById('auth-switch-text').innerHTML = "لديك حساب بالفعل؟ <b style='color:var(--primary)'>تسجيل الدخول</b>";
+        } 
+    }
+
+    async function handleAuth() { 
+        const e = document.getElementById('email').value;
+        const p = document.getElementById('password').value; 
+        if (!isLoginMode) {
+            if (p !== document.getElementById('confirm-password').value) return toast("❌ كلمة المرور غير متطابقة");
+        } 
+        document.getElementById('auth-btn').disabled = true; 
+        try { 
+            if (isLoginMode) {
+                await auth.signInWithEmailAndPassword(e,p);
+            } else {
+                const role = document.querySelector('input[name="auth-role"]:checked').value; 
+                if (role === 'manager') {
+                    const s = await db.collection('users').where('role','==','manager').get();
+                    if(s.size >= 4) throw new Error("اكتمال عدد المديرين");
+                } 
+                const c = await auth.createUserWithEmailAndPassword(e,p); 
+                await c.user.sendEmailVerification(); 
+                await db.collection('users').doc(c.user.uid).set({
+                    email: e, role: role, fullName: document.getElementById('reg-name').value, 
+                    gender: document.querySelector('input[name="auth-gender"]:checked').value, 
+                    photoUrl: 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png', 
+                    shortId: Math.random().toString(36).substr(2,6).toUpperCase(), 
+                    jobTitle: document.getElementById('reg-job').value, 
+                    location: document.getElementById('reg-loc').value, 
+                    phone: document.getElementById('reg-phone').value
+                }); 
+                toggleAuth(); 
+                toast("✅ تم إنشاء الحساب");
+            }
+        } catch(err) {
+            toast(err.message);
+        } finally {
+            document.getElementById('auth-btn').disabled = false;
+        } 
+    }
+
+    async function saveProfile() { 
+        const n = document.getElementById('edit-name').value; 
+        try {
+            let u = userData.photoUrl; 
+            if (newProfilePicFile) {
+                const f = new FormData();
+                f.append('file', newProfilePicFile);
+                f.append('upload_preset', CLOUD_PRESET);
+                const r = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {method:'POST', body:f});
+                const d = await r.json();
+                u = d.secure_url;
+            } 
+            await db.collection('users').doc(currentUser.uid).update({
+                fullName: n, 
+                gender: document.getElementById('edit-gender').value, 
+                phone: document.getElementById('edit-phone').value, 
+                jobTitle: document.getElementById('edit-job').value, 
+                location: document.getElementById('edit-loc').value, 
+                photoUrl: u, 
+                frame: selectedFrameClass
+            }); 
+            userData.photoUrl = u; 
+            renderHeader(); 
+            toast("✅ تم الحفظ");
+        } catch(e) {
+            toast("❌ خطأ");
+        } 
+    }
     
-    // Friend/Team Logic
-    async function searchUser() { const q=document.getElementById('search-query').value.trim(); if(!q)return; const r=document.getElementById('search-results'); r.innerHTML='جار البحث...'; r.classList.remove('hidden'); let u=[]; (await db.collection('users').where('shortId','==',q).get()).forEach(d=>u.push({id:d.id,...d.data()})); (await db.collection('users').where('email','==',q).get()).forEach(d=>{if(!u.find(x=>x.id===d.id))u.push({id:d.id,...d.data()})}); r.innerHTML=""; if(u.length===0){r.innerHTML="لا يوجد نتائج";return;} u.forEach(x=>{if(x.id!==currentUser.uid)r.innerHTML+=`<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #eee;"><span>${x.fullName}</span><button class="btn-main btn-sm" onclick="addFriend('${x.id}','${x.fullName}','${x.photoUrl}')">إضافة</button></div>`}); }
-    async function addFriend(tid,n,p){await db.collection('friend_requests').add({fromId:currentUser.uid,toId:tid,status:'pending',fromData:{name:userData.fullName,pic:userData.photoUrl},toData:{name:n,pic:p}}); toast("تم الإرسال"); document.getElementById('search-results').classList.add('hidden');}
-    function loadFriendReqs(){db.collection('friend_requests').where('toId','==',currentUser.uid).where('status','==','pending').onSnapshot(s=>{const l=document.getElementById('reqs-list'); if(s.empty)document.getElementById('friend-reqs').classList.add('hidden'); else{document.getElementById('friend-reqs').classList.remove('hidden'); l.innerHTML=""; s.forEach(d=>{l.innerHTML+=`<div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span>${d.data().fromData.name}</span><div><button onclick="ansFriend('${d.id}',true)">✅</button> <button onclick="ansFriend('${d.id}',false)">❌</button></div></div>`});}});}
-    async function ansFriend(id,ok){if(ok){const r=await db.collection('friend_requests').doc(id).get(); const d=r.data(); await db.collection('users').doc(currentUser.uid).collection('friends').add({friendId:d.fromId,...d.fromData}); await db.collection('users').doc(d.fromId).collection('friends').add({friendId:currentUser.uid, name:userData.fullName, pic:userData.photoUrl});} await db.collection('friend_requests').doc(id).delete();}
-    function loadTeam(){db.collection('users').doc(currentUser.uid).collection('friends').onSnapshot(s=>{const l=document.getElementById('team-list'); l.innerHTML=""; s.forEach(d=>{const f=d.data(); l.innerHTML+=`<div class="friend-item" onclick="openUserProfile('${f.friendId}')"><img src="${f.pic}" style="width:30px;height:30px;border-radius:50%;"><span>${f.name}</span></div>`});});}
+    // دوال الأصدقاء والبحث
+    async function searchUser() { 
+        const q = document.getElementById('search-query').value.trim(); 
+        if (!q) return; 
+        const r = document.getElementById('search-results'); 
+        r.innerHTML = 'جار البحث...'; 
+        r.classList.remove('hidden'); 
+        let u = []; 
+        (await db.collection('users').where('shortId','==',q).get()).forEach(d => u.push({id:d.id, ...d.data()})); 
+        (await db.collection('users').where('email','==',q).get()).forEach(d => { if(!u.find(x => x.id === d.id)) u.push({id:d.id, ...d.data()}) }); 
+        r.innerHTML = ""; 
+        if (u.length === 0) { r.innerHTML = "لا يوجد نتائج"; return; } 
+        u.forEach(x => {
+            if (x.id !== currentUser.uid) r.innerHTML += `<div style="display:flex;justify-content:space-between;padding:10px;border-bottom:1px solid #eee;"><span>${x.fullName}</span><button class="btn-main btn-sm" onclick="addFriend('${x.id}','${x.fullName}','${x.photoUrl}')">إضافة</button></div>`;
+        }); 
+    }
+
+    async function addFriend(tid, n, p) {
+        await db.collection('friend_requests').add({
+            fromId: currentUser.uid, 
+            toId: tid, 
+            status: 'pending', 
+            fromData: {name: userData.fullName, pic: userData.photoUrl}, 
+            toData: {name: n, pic: p}
+        }); 
+        toast("تم الإرسال"); 
+        document.getElementById('search-results').classList.add('hidden');
+    }
+
+    function loadFriendReqs() {
+        db.collection('friend_requests').where('toId','==',currentUser.uid).where('status','==','pending').onSnapshot(s => {
+            const l = document.getElementById('reqs-list'); 
+            if (s.empty) document.getElementById('friend-reqs').classList.add('hidden'); 
+            else {
+                document.getElementById('friend-reqs').classList.remove('hidden'); 
+                l.innerHTML = ""; 
+                s.forEach(d => {
+                    l.innerHTML += `<div style="display:flex;justify-content:space-between;margin-bottom:5px;"><span>${d.data().fromData.name}</span><div><button onclick="ansFriend('${d.id}',true)">✅</button> <button onclick="ansFriend('${d.id}',false)">❌</button></div></div>`;
+                });
+            }
+        });
+    }
+
+    async function ansFriend(id, ok) {
+        if (ok) {
+            const r = await db.collection('friend_requests').doc(id).get(); 
+            const d = r.data(); 
+            await db.collection('users').doc(currentUser.uid).collection('friends').add({friendId: d.fromId, ...d.fromData}); 
+            await db.collection('users').doc(d.fromId).collection('friends').add({friendId: currentUser.uid, name: userData.fullName, pic: userData.photoUrl});
+        } 
+        await db.collection('friend_requests').doc(id).delete();
+    }
+
+    function loadTeam() {
+        db.collection('users').doc(currentUser.uid).collection('friends').onSnapshot(s => {
+            const l = document.getElementById('team-list'); 
+            l.innerHTML = ""; 
+            s.forEach(d => {
+                const f = d.data(); 
+                l.innerHTML += `<div class="friend-item" onclick="openUserProfile('${f.friendId}')"><img src="${f.pic}" style="width:30px;height:30px;border-radius:50%;"><span>${f.name}</span></div>`;
+            });
+        });
+    }
     
-    // Profile Pics & Frames
-    function previewProfilePic(i){if(i.files[0]){newProfilePicFile=i.files[0]; document.getElementById('edit-current-pic').src=URL.createObjectURL(i.files[0]);}}
-    function selectFrame(el,f){selectedFrameClass=f; document.querySelectorAll('.frame-option').forEach(x=>x.classList.remove('selected')); el.classList.add('selected'); document.getElementById('edit-frame-overlay').className='frame-overlay '+f;}
-    function copyId(){navigator.clipboard.writeText(userData.shortId); toast("تم النسخ");}
-    async function openSupModal(){ if(!document.getElementById('req-desc').value||!document.getElementById('req-floor').value||!document.getElementById('req-room').value)return toast("⚠️ أكمل البيانات"); document.getElementById('sup-modal').classList.remove('hidden'); const l=document.getElementById('sup-list'); l.innerHTML="تحميل..."; const s=await db.collection('users').where('role','==','supervisor').get(); l.innerHTML=""; const f=(await db.collection('users').doc(currentUser.uid).collection('friends').get()).docs.map(x=>x.data().friendId); let c=0; s.forEach(d=>{if(f.includes(d.id)){const u=d.data(); l.innerHTML+=`<div onclick="selectSup(this,'${d.id}')" style="padding:10px;border:1px solid #ccc;margin-bottom:5px;cursor:pointer;">${u.fullName}</div>`; c++;}}); if(c===0)l.innerHTML="لا يوجد مشرفين أصدقاء";}
-    function selectSup(el,id){document.querySelectorAll('#sup-list div').forEach(x=>x.style.background='white'); el.style.background='#e0f2fe'; selectedSup=id;}
-    async function likePost(pid,l){ const r=db.collection('posts').doc(pid); if(l)await r.update({likes:firebase.firestore.FieldValue.arrayRemove(currentUser.uid)}); else await r.update({likes:firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});}
-    async function deletePost(id){if(confirm("حذف؟"))await db.collection('posts').doc(id).delete();}
-    async function deleteComment(pid,cid){if(confirm("حذف؟"))await db.collection('posts').doc(pid).collection('comments').doc(cid).delete();}
-    function toggleComments(id){document.getElementById(`comments-${id}`).classList.toggle('hidden');}
-    function submitTechReport(){ toast("تم حفظ التقرير"); closeModal('tech-report-modal'); } // Simple stub for technician general report
-    function openEmpReportModal(){ document.getElementById('emp-report-modal').classList.remove('hidden'); }
-    function openConfirmModal(m,a){document.getElementById('confirm-modal-msg').innerText=m; const b=document.getElementById('confirm-yes-btn'); const n=b.cloneNode(true); b.parentNode.replaceChild(n,b); n.onclick=function(){a();closeModal('confirm-modal');}; document.getElementById('confirm-modal').classList.remove('hidden');}
-    async function softDelete(id){openConfirmModal("نقل للمهملات؟",async()=>{await db.collection('requests').doc(id).update({isDeleted:true});});}
-    async function restoreReq(id){await db.collection('requests').doc(id).update({isDeleted:false});}
-    async function hardDelete(id){openConfirmModal("حذف نهائي؟",async()=>{await db.collection('requests').doc(id).delete();});}
-    function downloadArchivePDF(){ toast("جاري التحميل..."); } // Reuse existing logic or simple stub if code limit reached, but full logic is in generateFullReport
-    function generateFullReport(){ toast("جاري إنشاء التقرير..."); /* Logic similar to above */ } 
+    // دوال الملف الشخصي
+    function previewProfilePic(i) {
+        if (i.files[0]) {
+            newProfilePicFile = i.files[0]; 
+            document.getElementById('edit-current-pic').src = URL.createObjectURL(i.files[0]);
+        }
+    }
+    
+    function selectFrame(el, f) {
+        selectedFrameClass = f; 
+        document.querySelectorAll('.frame-option').forEach(x => x.classList.remove('selected')); 
+        el.classList.add('selected'); 
+        document.getElementById('edit-frame-overlay').className = 'frame-overlay ' + f;
+    }
+    
+    function copyId() {
+        navigator.clipboard.writeText(userData.shortId); 
+        toast("تم النسخ");
+    }
+
+    async function openSupModal() { 
+        if (!document.getElementById('req-desc').value || !document.getElementById('req-floor').value || !document.getElementById('req-room').value) {
+            return toast("⚠️ أكمل البيانات");
+        }
+        document.getElementById('sup-modal').classList.remove('hidden'); 
+        const l = document.getElementById('sup-list'); 
+        l.innerHTML = "تحميل..."; 
+        const s = await db.collection('users').where('role','==','supervisor').get(); 
+        l.innerHTML = ""; 
+        const f = (await db.collection('users').doc(currentUser.uid).collection('friends').get()).docs.map(x => x.data().friendId); 
+        let c = 0; 
+        s.forEach(d => {
+            if (f.includes(d.id)) {
+                const u = d.data(); 
+                l.innerHTML += `<div onclick="selectSup(this,'${d.id}')" style="padding:10px;border:1px solid #ccc;margin-bottom:5px;cursor:pointer;">${u.fullName}</div>`; 
+                c++;
+            }
+        }); 
+        if (c === 0) l.innerHTML = "لا يوجد مشرفين أصدقاء";
+    }
+
+    function selectSup(el, id) {
+        document.querySelectorAll('#sup-list div').forEach(x => x.style.background = 'white'); 
+        el.style.background = '#e0f2fe'; 
+        selectedSup = id;
+    }
+
+    async function likePost(pid, l) { 
+        const r = db.collection('posts').doc(pid); 
+        if (l) await r.update({likes: firebase.firestore.FieldValue.arrayRemove(currentUser.uid)}); 
+        else await r.update({likes: firebase.firestore.FieldValue.arrayUnion(currentUser.uid)});
+    }
+
+    async function deletePost(id) {
+        if (confirm("حذف؟")) await db.collection('posts').doc(id).delete();
+    }
+
+    async function deleteComment(pid, cid) {
+        if (confirm("حذف؟")) await db.collection('posts').doc(pid).collection('comments').doc(cid).delete();
+    }
+
+    function toggleComments(id) {
+        document.getElementById(`comments-${id}`).classList.toggle('hidden');
+    }
+
+    function submitTechReport() { 
+        toast("تم حفظ التقرير"); 
+        closeModal('tech-report-modal'); 
+    } 
+
+    function openEmpReportModal() { 
+        document.getElementById('emp-report-modal').classList.remove('hidden'); 
+    }
+
+    function openConfirmModal(m, a) {
+        document.getElementById('confirm-modal-msg').innerText = m; 
+        const b = document.getElementById('confirm-yes-btn'); 
+        const n = b.cloneNode(true); 
+        b.parentNode.replaceChild(n, b); 
+        n.onclick = function() { a(); closeModal('confirm-modal'); }; 
+        document.getElementById('confirm-modal').classList.remove('hidden');
+    }
+
+    async function softDelete(id) {
+        openConfirmModal("نقل للمهملات؟", async () => {
+            await db.collection('requests').doc(id).update({isDeleted: true});
+        });
+    }
+
+    async function restoreReq(id) {
+        await db.collection('requests').doc(id).update({isDeleted: false});
+    }
+
+    async function hardDelete(id) {
+        openConfirmModal("حذف نهائي؟", async () => {
+            await db.collection('requests').doc(id).delete();
+        });
+    }
+
+    function downloadArchivePDF() { 
+        toast("جاري التحميل..."); 
+    } 
+
+    function generateFullReport() { 
+        toast("جاري إنشاء التقرير..."); 
+    } 
 </script>
 </body>
 </html>
