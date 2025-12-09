@@ -4,55 +4,67 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="theme-color" content="#0056b3">
     <title>نظام الصيانة الذكي - جامعة الريادة</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
         /* ==========================================================================
-           1. CORE SYSTEM VARIABLES (متغيرات النظام الأساسية)
+           1. ROOT VARIABLES & PALETTE (لوحة الألوان والمتغيرات)
            ==========================================================================
         */
         :root {
-            /* Palette Colours */
+            /* الألوان الأساسية */
             --primary: #0056b3;        
             --primary-dark: #003366;   
             --primary-soft: #e3f2fd;
+            --accent: #0ea5e9;
             
+            /* ألوان الخلفيات */
             --bg-body: #f3f4f6;            
-            --surface: #ffffff;        
+            --bg-card: #ffffff;        
+            --bg-input: #f9fafb;
             
-            --border-color: #e5e7eb;          
+            /* ألوان النصوص */
             --text-main: #111827;            
             --text-secondary: #6b7280;      
+            --text-light: #9ca3af;
             
-            /* Status Colors */
+            /* ألوان الحالات (Status) */
             --gold: #f59e0b;            
+            --gold-light: #fef3c7;
             --success: #10b981;        
+            --success-bg: #ecfdf5;
             --danger: #ef4444;            
+            --danger-bg: #fef2f2;
             --warning: #f97316;        
             --info: #3b82f6;            
             
-            /* Backgrounds */
+            /* الصور والمؤثرات */
             --bg-image: url('https://a.top4top.io/p_36115ao3o1.jpg');
-            --glass-effect: rgba(255, 255, 255, 0.92);
             
-            /* Shadows & Radius */
-            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            /* الظلال (Shadows) */
+            --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.05);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.1), 0 1px 2px rgba(0,0,0,0.06);
             --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
             --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+            --shadow-glow: 0 0 15px rgba(0, 86, 179, 0.3);
             
+            /* الحدود والانحناءات */
+            --border-color: #e5e7eb;
             --radius-sm: 8px;
             --radius-md: 12px;
             --radius-lg: 20px;
             --radius-xl: 30px;
         }
         
+        /* تصفير الإعدادات الافتراضية */
         * { 
             box-sizing: border-box; 
             outline: none; 
@@ -61,52 +73,60 @@
             padding: 0; 
         }
         
+        /* إعدادات الجسم الرئيسية */
         body {
             font-family: 'Cairo', sans-serif; 
             background-color: var(--bg-body); 
             color: var(--text-main); 
             min-height: 100vh;
-            background-image: linear-gradient(rgba(243,244,246,0.9), rgba(243,244,246,0.9)), var(--bg-image);
+            background-image: linear-gradient(
+                rgba(243,244,246,0.92), 
+                rgba(243,244,246,0.92)
+            ), var(--bg-image);
             background-size: cover; 
             background-position: center; 
             background-attachment: fixed;
             overflow-x: hidden;
             line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
         }
         
+        /* الحاوية الرئيسية للهاتف */
         .app-wrapper { 
             max-width: 550px; 
             margin: 0 auto; 
             min-height: 100vh; 
             position: relative; 
             padding-bottom: 100px; 
+            background: transparent;
         }
 
         .hidden { display: none !important; }
         
         /* ==========================================================================
-           2. HEADER & BANNER (الهيدر المطور)
+           2. HEADER & BANNER STYLES (تصميم البانر والهيدر الجديد)
            ==========================================================================
         */
         .main-banner {
-            height: 200px; 
-            /* تخفيف اللون لزيادة وضوح الصورة */
+            height: 220px; 
+            /* تخفيف التدرج اللوني لإظهار الجامعة */
             background: linear-gradient(
                 to bottom, 
-                rgba(0, 50, 100, 0.3), 
-                rgba(0, 20, 50, 0.85)
+                rgba(0, 50, 100, 0.2), 
+                rgba(0, 20, 50, 0.8)
             ), url('https://a.top4top.io/p_36115ao3o1.jpg');
             background-size: cover; 
             background-position: center;
             display: flex; 
             flex-direction: column; 
             justify-content: space-between; 
-            padding: 20px;
+            padding: 20px 25px;
             border-bottom-left-radius: var(--radius-xl); 
             border-bottom-right-radius: var(--radius-xl); 
             margin-bottom: 25px; 
             box-shadow: var(--shadow-lg); 
             position: relative;
+            z-index: 10;
         }
 
         .header-top {
@@ -121,20 +141,32 @@
             justify-content: space-between;
         }
 
-        /* تنسيق المستخدم في الهيدر */
+        /* تنسيق بروفايل المستخدم العائم */
         .user-profile-header {
             display: flex;
             align-items: center;
             gap: 12px;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 8px 15px 8px 8px;
+            border-radius: 50px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(8px);
+            transition: 0.3s;
+            cursor: pointer;
+        }
+        
+        .user-profile-header:active {
+            transform: scale(0.98);
+            background: rgba(255, 255, 255, 0.25);
         }
 
         .user-avatar-header {
-            width: 65px;
-            height: 65px;
+            width: 50px;
+            height: 50px;
             position: relative;
             border-radius: 50%;
-            border: 3px solid rgba(255,255,255,0.8);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            border: 2px solid #fff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
         }
         
         .user-avatar-header img {
@@ -144,27 +176,27 @@
             object-fit: cover;
         }
 
+        .user-info-text {
+            display: flex;
+            flex-direction: column;
+        }
+
         .user-info-text h1 {
-            font-size: 20px;
+            font-size: 16px;
             color: white;
             font-weight: 800;
             margin: 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
         }
 
         .role-badge-header {
-            background: rgba(255,255,255,0.2);
-            backdrop-filter: blur(5px);
-            padding: 4px 12px;
-            border-radius: 20px;
-            color: white;
+            color: rgba(255,255,255,0.9);
             font-size: 11px;
-            font-weight: 700;
-            border: 1px solid rgba(255,255,255,0.3);
-            display: inline-block;
-            margin-top: 4px;
+            font-weight: 600;
         }
 
+        /* زر الإشعارات */
         .bell-btn {
             background: rgba(255,255,255,0.2); 
             width: 40px; height: 40px; border-radius: 50%;
@@ -178,38 +210,55 @@
         .bell-badge {
             position: absolute; top: 10px; right: 8px; width: 8px; height: 8px;
             background: var(--danger); border-radius: 50%; display: none;
+            border: 1px solid #fff;
+        }
+
+        .banner-id-tag {
+            color: rgba(255,255,255,0.8); 
+            font-family: 'Courier New', monospace; 
+            font-size: 12px; 
+            background: rgba(0,0,0,0.4); 
+            padding: 4px 8px; 
+            border-radius: 6px;
+            font-weight: bold;
+            letter-spacing: 1px;
         }
 
         /* ==========================================================================
-           3. MODERN REQUEST CARDS (تصميم البلاغات الحديث)
+           3. MODERN REQUEST CARDS (تصميم بطاقات البلاغات الاحترافي)
            ==========================================================================
         */
         .request-card { 
-            background: #fff; 
-            border-radius: var(--radius-md);
+            background: var(--bg-card); 
+            border-radius: var(--radius-lg);
             margin-bottom: 16px; 
-            border: 1px solid var(--border-color); 
+            border: 1px solid white; 
             box-shadow: var(--shadow-sm); 
-            transition: all 0.2s ease; 
+            transition: all 0.25s cubic-bezier(0.25, 0.8, 0.25, 1); 
             overflow: hidden;
             position: relative;
             cursor: pointer;
         }
 
-        .request-card:active { transform: scale(0.99); }
-        .request-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-md); border-color: var(--primary); }
+        .request-card:active { transform: scale(0.98); }
+        .request-card:hover { 
+            transform: translateY(-3px); 
+            box-shadow: var(--shadow-md); 
+            border-color: var(--primary-soft); 
+        }
 
         /* الشريط الملون الجانبي للحالة */
         .card-status-bar {
             position: absolute;
-            right: 0; top: 0; bottom: 0; width: 5px;
+            right: 0; top: 0; bottom: 0; width: 6px;
         }
         .st-bar-pending { background: var(--info); }
         .st-bar-done { background: var(--success); }
         .st-bar-rejected { background: var(--danger); }
         .st-bar-working { background: var(--warning); }
+        .st-bar-approved { background: var(--primary); }
 
-        .card-body { padding: 16px 20px 16px 16px; }
+        .card-body { padding: 18px 20px 18px 18px; }
 
         .card-header {
             display: flex;
@@ -221,12 +270,13 @@
         .card-user-info {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .card-avatar {
-            width: 40px; height: 40px; border-radius: 50%; object-fit: cover;
+            width: 42px; height: 42px; border-radius: 50%; object-fit: cover;
             border: 2px solid var(--bg-body);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
 
         .card-meta {
@@ -234,12 +284,12 @@
             flex-direction: column;
         }
 
-        .user-name { font-size: 13px; font-weight: 700; color: var(--text-main); }
+        .user-name { font-size: 14px; font-weight: 700; color: var(--text-main); }
         
-        /* كود البلاغ المودرن */
+        /* كود البلاغ المودرن (Ticket ID) */
         .ticket-code { 
             font-family: 'Courier New', monospace; 
-            font-size: 12px; 
+            font-size: 13px; 
             color: var(--primary); 
             font-weight: 800; 
             background: var(--primary-soft);
@@ -248,17 +298,26 @@
             width: fit-content;
             margin-top: 2px;
             letter-spacing: 1px;
+            border: 1px solid rgba(0, 86, 179, 0.1);
         }
 
-        .card-content {
-            margin-bottom: 12px;
+        .time-tag {
+            font-size: 11px;
+            color: var(--text-light);
+            background: var(--bg-body);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 600;
         }
+
+        .card-content { margin-bottom: 15px; }
 
         .request-desc {
             font-size: 14px;
             color: var(--text-main);
             line-height: 1.6;
             font-weight: 500;
+            margin-bottom: 10px;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
@@ -269,39 +328,54 @@
             display: flex;
             flex-wrap: wrap;
             gap: 8px;
-            margin-top: 8px;
         }
 
         .tag {
-            font-size: 10px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            background: var(--bg-body);
+            font-size: 11px;
+            padding: 5px 12px;
+            border-radius: 8px;
+            background: var(--bg-input);
             color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
             font-weight: 600;
+            border: 1px solid var(--border-color);
         }
+        .tag i { color: var(--primary); font-size: 10px; }
         
-        .tag-priority-high { background: #fee2e2; color: #991b1b; }
+        .tag-priority-high { background: #fee2e2; color: #991b1b; border-color: #fecaca; }
+        .tag-priority-high i { color: #dc2626; }
         
         .card-footer {
             border-top: 1px solid var(--border-color);
-            padding-top: 10px;
-            margin-top: 10px;
+            padding-top: 12px;
+            margin-top: 5px;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .status-text {
+            font-size: 12px; 
+            font-weight: 800; 
+            display: flex; 
+            align-items: center; 
+            gap: 5px;
+        }
+        
+        .st-txt-pending { color: var(--info); }
+        .st-txt-done { color: var(--success); }
+        .st-txt-rejected { color: var(--danger); }
+        .st-txt-working { color: var(--warning); }
+
         /* ==========================================================================
-           4. MODERN BUTTONS & INPUTS (الأزرار وحقول الإدخال)
+           4. MODERN BUTTONS & INPUTS (الأزرار الصغيرة والمنظمة)
            ==========================================================================
         */
         .btn-main {
             width: 100%;
-            padding: 12px 20px; /* حجم أصغر ومنظم */
+            padding: 12px 20px; /* تصغير الحواف */
             background: var(--primary);
             border: none;
             border-radius: var(--radius-md);
@@ -316,34 +390,41 @@
             box-shadow: 0 4px 12px rgba(0, 86, 179, 0.2);
             transition: all 0.2s;
         }
-        .btn-main:active { transform: scale(0.97); }
+        .btn-main:active { transform: scale(0.97); box-shadow: none; }
+        .btn-main:disabled { opacity: 0.7; cursor: not-allowed; }
         
+        /* أزرار صغيرة ومنظمة للبطاقات */
         .btn-sm {
-            padding: 6px 12px;
+            padding: 6px 14px;
             font-size: 11px;
             border-radius: 8px;
             min-height: 32px;
             width: auto;
+            box-shadow: none;
         }
 
         .btn-ghost {
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-secondary);
-            padding: 6px 12px;
+            padding: 6px 14px;
             border-radius: 8px;
             font-size: 11px;
             cursor: pointer;
+            font-weight: 600;
+            transition: 0.2s;
         }
+        .btn-ghost:hover { background: var(--bg-input); color: var(--text-main); }
+        
         .btn-danger { background: var(--danger); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.2); }
 
         /* Modern Select & Inputs */
-        .input-group { margin-bottom: 20px; }
-        .input-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 6px; font-weight: 700; }
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-secondary); margin-bottom: 8px; font-weight: 700; }
         
         input, textarea, .modern-select {
             width: 100%;
-            padding: 12px 15px;
+            padding: 12px 16px;
             background: #fff;
             border: 1px solid var(--border-color);
             border-radius: var(--radius-md);
@@ -352,22 +433,25 @@
             font-size: 13px;
             font-weight: 600;
             transition: 0.2s;
+            box-shadow: var(--shadow-xs);
         }
         
-        /* تصميم القائمة المنسدلة الاحترافي */
+        /* تصميم القائمة المنسدلة الاحترافي (سهم مخصص) */
         select.modern-select {
             appearance: none;
+            -webkit-appearance: none;
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230056b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
-            background-position: left 12px center;
+            background-position: left 15px center;
             background-size: 16px;
-            padding-left: 40px !important;
+            padding-left: 45px !important;
             cursor: pointer;
         }
         
         input:focus, textarea:focus, .modern-select:focus {
             border-color: var(--primary);
             box-shadow: 0 0 0 3px rgba(0, 86, 179, 0.1);
+            background-color: #fff;
         }
 
         /* ==========================================================================
@@ -377,14 +461,15 @@
         .glass-card {
             background: rgba(255, 255, 255, 0.95);
             border-radius: var(--radius-lg);
-            padding: 20px;
+            padding: 25px;
             box-shadow: var(--shadow-md);
             border: 1px solid white;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(12px);
+            margin-bottom: 20px;
         }
 
         .auth-logo-modern {
-            width: 80px; height: 80px; border-radius: 20px;
+            width: 85px; height: 85px; border-radius: 22px;
             margin-bottom: 15px; object-fit: cover;
             box-shadow: var(--shadow-lg);
         }
@@ -392,31 +477,33 @@
         .auth-card {
             background: #fff;
             border: 1px solid var(--border-color);
-            padding: 12px;
-            border-radius: 12px;
+            padding: 15px;
+            border-radius: 14px;
             text-align: center;
             cursor: pointer;
             transition: 0.2s;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 5px;
+            gap: 6px;
         }
+        .auth-card:hover { transform: translateY(-2px); border-color: var(--primary-soft); }
         .auth-card-input:checked + .auth-card {
             background: var(--primary-soft);
             border-color: var(--primary);
             color: var(--primary);
+            box-shadow: inset 0 0 0 1px var(--primary);
         }
-        .auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
+        .auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
 
         /* Priority Select */
-        .priority-grid { display: flex; gap: 8px; }
+        .priority-grid { display: flex; gap: 10px; }
         .prio-card {
-            flex: 1; padding: 12px; background: #fff; border: 1px solid var(--border-color);
+            flex: 1; padding: 10px; background: #fff; border: 1px solid var(--border-color);
             border-radius: 12px; text-align: center; cursor: pointer; color: var(--text-secondary);
-            font-size: 12px; transition: 0.2s; display: flex; flex-direction: column; align-items: center;
+            font-size: 12px; transition: 0.2s; display: flex; flex-direction: column; align-items: center; gap: 5px;
         }
-        .prio-radio:checked + .prio-card.p-low { background: #ecfdf5; border-color: var(--success); color: var(--success-dark); }
+        .prio-radio:checked + .prio-card.p-low { background: #ecfdf5; border-color: var(--success); color: var(--success); }
         .prio-radio:checked + .prio-card.p-med { background: #fff7ed; border-color: var(--warning); color: var(--warning); }
         .prio-radio:checked + .prio-card.p-high { background: #fef2f2; border-color: var(--danger); color: var(--danger); }
 
@@ -433,51 +520,55 @@
         */
         .bottom-nav {
             position: fixed; bottom: 0; left: 0; right: 0; max-width: 550px; margin: 0 auto;
-            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            background: rgba(255, 255, 255, 0.96); backdrop-filter: blur(15px);
             border-top: 1px solid var(--border-color);
             display: flex; justify-content: space-between; align-items: flex-end;
-            padding: 8px 20px 20px; z-index: 900;
-            border-top-left-radius: 25px; border-top-right-radius: 25px;
-            box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
+            padding: 8px 25px 25px; z-index: 900;
+            border-top-left-radius: 30px; border-top-right-radius: 30px;
+            box-shadow: 0 -10px 40px rgba(0,0,0,0.06);
         }
-        .nav-item { text-align: center; color: #9ca3af; font-size: 10px; cursor: pointer; width: 60px; transition: 0.2s; }
-        .nav-item i { font-size: 20px; margin-bottom: 4px; display: block; }
+        .nav-item { text-align: center; color: #9ca3af; font-size: 10px; cursor: pointer; width: 65px; transition: 0.2s; }
+        .nav-item i { font-size: 22px; margin-bottom: 5px; display: block; transition: 0.2s; }
         .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item.active i { transform: translateY(-3px); }
+        .nav-item.active i { transform: translateY(-4px); }
         
         .nav-add-btn {
-            width: 55px; height: 55px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 22px; box-shadow: 0 8px 20px rgba(0,86,179,0.3);
-            transform: translateY(-25px); border: 4px solid var(--bg-body);
+            color: white; font-size: 24px; box-shadow: 0 10px 25px rgba(0,86,179,0.35);
+            transform: translateY(-30px); border: 5px solid var(--bg-body);
+            cursor: pointer;
         }
+        .nav-add-btn:active { transform: translateY(-25px); }
 
         /* Modals */
         .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
-        .modal-content { width: 100%; max-width: 400px; background: #fff; border-radius: 25px; padding: 25px; max-height: 85vh; overflow-y: auto; position: relative; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+        .modal-content { width: 100%; max-width: 420px; background: #fff; border-radius: 30px; padding: 30px; max-height: 85vh; overflow-y: auto; position: relative; animation: popUp 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); box-shadow: 0 20px 50px rgba(0,0,0,0.2); }
         @keyframes popUp { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
         
-        .close-btn { position: absolute; top: 15px; left: 15px; width: 30px; height: 30px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 14px; }
+        .close-btn { position: absolute; top: 20px; left: 20px; width: 35px; height: 35px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-secondary); transition: 0.2s; }
+        .close-btn:hover { background: var(--danger); color: white; }
 
         /* Tabs */
-        .tabs-container { display: flex; margin: 15px 0; background: #e5e7eb; padding: 4px; border-radius: 16px; }
-        .tab-btn { flex: 1; padding: 10px; font-size: 12px; border-radius: 12px; border: none; background: transparent; color: #6b7280; font-weight: 600; cursor: pointer; font-family: 'Cairo'; }
+        .tabs-container { display: flex; margin: 15px 0; background: #e5e7eb; padding: 5px; border-radius: 18px; }
+        .tab-btn { flex: 1; padding: 10px; font-size: 13px; border-radius: 14px; border: none; background: transparent; color: #6b7280; font-weight: 700; cursor: pointer; font-family: 'Cairo'; transition: 0.2s; }
         .tab-btn.active { background: #fff; color: var(--primary); box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
 
-        .mic-btn { width: 60px; height: 60px; border-radius: 50%; background: #fff; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 20px; color: var(--text-secondary); cursor: pointer; }
+        .mic-btn { width: 65px; height: 65px; border-radius: 50%; background: #fff; border: 2px solid var(--border-color); display: flex; align-items: center; justify-content: center; font-size: 22px; color: var(--text-secondary); cursor: pointer; transition: 0.2s; }
+        .mic-btn:active { transform: scale(0.95); }
         .mic-btn.recording { border-color: var(--danger); color: var(--danger); background: #fef2f2; animation: pulse 1.5s infinite; }
-        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 70% { box-shadow: 0 0 0 10px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0 rgba(239,68,68,0.4); } 70% { box-shadow: 0 0 0 12px rgba(239,68,68,0); } 100% { box-shadow: 0 0 0 0 rgba(239,68,68,0); } }
 
         /* Media & Files */
-        .media-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-top: 10px; }
-        .media-item { aspect-ratio: 1; border-radius: 12px; background: #eee; position: relative; overflow: hidden; }
+        .media-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
+        .media-item { aspect-ratio: 1; border-radius: 14px; background: #eee; position: relative; overflow: hidden; border: 1px solid var(--border-color); }
         .media-item img { width: 100%; height: 100%; object-fit: cover; }
-        .remove-file { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; background: rgba(0,0,0,0.5); color: white; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+        .remove-file { position: absolute; top: 4px; right: 4px; width: 20px; height: 20px; background: rgba(239, 68, 68, 0.9); color: white; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
 
         /* User Profile & Frames */
         .frame-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
         .frame-option { aspect-ratio: 1; border-radius: 50%; border: 2px solid #eee; cursor: pointer; position: relative; }
-        .frame-option.selected { border-color: var(--primary); }
+        .frame-option.selected { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
         
     </style>
 </head>
@@ -487,15 +578,16 @@
     <audio id="notify-sound" src="https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3" preload="auto"></audio>
 
     <div id="loader">
-        <i class="fa-solid fa-spinner fa-spin fa-3x" style="color:var(--primary);"></i>
-        <h3 style="margin-top:15px; color:var(--primary-dark);">جامعة الريادة</h3>
+        <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color:var(--primary);"></i>
+        <h3 style="margin-top:20px; color:var(--primary-dark); font-weight:800;">جامعة الريادة</h3>
+        <p style="color:var(--text-light); font-size:14px;">نظام الصيانة الذكي</p>
     </div>
 
-    <div id="auth-screen" class="hidden" style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:20px;">
+    <div id="auth-screen" class="hidden" style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:25px;">
         <div class="glass-card" style="text-align:center;">
-            <img src="https://a.top4top.io/p_36115ao3o1.jpg" style="width:90px; height:90px; border-radius:20px; box-shadow:0 10px 20px rgba(0,0,0,0.1); margin-bottom:20px;">
-            <h2 style="color:var(--primary-dark); font-weight:800; margin-bottom:5px;">نظام الصيانة الذكي</h2>
-            <p style="color:var(--text-secondary); font-size:13px; margin-bottom:30px;">سجل الدخول للمتابعة</p>
+            <img src="https://a.top4top.io/p_36115ao3o1.jpg" style="width:95px; height:95px; border-radius:24px; box-shadow:0 15px 30px rgba(0,0,0,0.1); margin-bottom:25px;">
+            <h2 style="color:var(--primary-dark); font-weight:800; margin-bottom:5px;">أهلاً بك</h2>
+            <p style="color:var(--text-secondary); font-size:14px; margin-bottom:35px;">سجل الدخول للمتابعة إلى النظام</p>
 
             <div id="reg-fields" class="hidden">
                 <div class="auth-grid" style="grid-template-columns: 1fr 1fr;">
@@ -505,7 +597,7 @@
                 <div class="input-group"><input type="text" id="reg-name" placeholder="الاسم الكامل"></div>
                 <div class="input-group"><input type="tel" id="reg-phone" placeholder="رقم الهاتف"></div>
                 
-                <p style="text-align:right; font-size:12px; font-weight:bold; margin:10px 0 5px; color:var(--primary);">الوظيفة:</p>
+                <p style="text-align:right; font-size:12px; font-weight:bold; margin:15px 0 8px; color:var(--primary);">حدد الوظيفة:</p>
                 <div class="auth-grid" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
                     <label><input type="radio" name="auth-role" value="employee" class="auth-card-input" checked><div class="auth-card"><i class="fa-solid fa-user"></i><span style="font-size:10px;">موظف</span></div></label>
                     <label><input type="radio" name="auth-role" value="supervisor" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-user-tie"></i><span style="font-size:10px;">مشرف</span></div></label>
@@ -521,9 +613,9 @@
             <div class="input-group"><input type="password" id="password" placeholder="كلمة المرور"></div>
             <div id="confirm-pass-field" class="hidden input-group"><input type="password" id="confirm-password" placeholder="تأكيد كلمة المرور"></div>
             
-            <button onclick="handleAuth()" id="auth-btn" class="btn-main" style="margin-top:20px;">دخول</button>
-            <div onclick="toggleAuth()" style="margin-top:20px; font-size:13px; cursor:pointer; color:var(--text-secondary);">
-                <span id="auth-switch-text">جديد هنا؟ <b style="color:var(--primary)">إنشاء حساب</b></span>
+            <button onclick="handleAuth()" id="auth-btn" class="btn-main" style="margin-top:20px;">تسجيل الدخول</button>
+            <div onclick="toggleAuth()" style="margin-top:25px; font-size:13px; cursor:pointer; color:var(--text-secondary);">
+                <span id="auth-switch-text">ليس لديك حساب؟ <b style="color:var(--primary)">إنشاء حساب جديد</b></span>
             </div>
         </div>
     </div>
@@ -531,7 +623,7 @@
     <div id="app-container" class="hidden">
         <div class="main-banner">
             <div class="header-top">
-                <div class="bell-btn" onclick="toast('لا توجد إشعارات')">
+                <div class="bell-btn" onclick="toast('لا توجد إشعارات جديدة')">
                     <i class="fa-regular fa-bell"></i>
                     <div class="bell-badge"></div>
                 </div>
@@ -544,12 +636,12 @@
                         <div id="banner-frame" class="frame-overlay"></div>
                     </div>
                     <div class="user-info-text">
-                        <h1 id="banner-name">Guest</h1>
-                        <span id="banner-role" class="role-badge-header">User</span>
+                        <h1 id="banner-name">User Name</h1>
+                        <span id="banner-role" class="role-badge-header">Role</span>
                     </div>
                 </div>
                 <div style="text-align:left;">
-                    <span id="banner-id" style="color:rgba(255,255,255,0.7); font-family:monospace; font-size:12px; background:rgba(0,0,0,0.3); padding:2px 6px; border-radius:4px;">ID: --</span>
+                    <span id="banner-id" class="banner-id-tag">ID: --</span>
                 </div>
             </div>
         </div>
@@ -563,7 +655,7 @@
                         <button class="tab-btn" onclick="switchTab('trash', this)" style="color:var(--danger);">سلة المحذوفات</button>
                     </div>
                     
-                    <div id="filter-container" class="hidden" style="margin-bottom:15px;">
+                    <div id="filter-container" class="hidden" style="margin-bottom:20px;">
                         <select id="feed-filter" onchange="renderFeed()" class="modern-select">
                             <option value="all">كل المواقع</option>
                             <option value="Admin">المبني الاداري</option>
@@ -576,7 +668,7 @@
                         </select>
                     </div>
                     
-                    <div id="archive-actions" class="hidden" style="margin-bottom:15px;">
+                    <div id="archive-actions" class="hidden" style="margin-bottom:20px;">
                          <button onclick="downloadArchivePDF()" class="btn-main btn-sm" style="background:var(--success); width:100%;"><i class="fa-solid fa-file-pdf"></i> تحميل تقرير الأرشيف</button>
                     </div>
                     
@@ -586,8 +678,8 @@
             
             <div id="page-news" class="page-section hidden">
                 <div style="padding:20px;">
-                    <h3 style="color:var(--primary); margin-bottom:20px; font-weight:800;">البيان (أخبار الجامعة)</h3>
-                    <div id="create-post-container" class="hidden" style="margin-bottom:20px;">
+                    <h3 style="color:var(--primary); margin-bottom:25px; font-weight:800; padding-right:10px; border-right:4px solid var(--gold);">البيان (أخبار الجامعة)</h3>
+                    <div id="create-post-container" class="hidden" style="margin-bottom:25px;">
                         <textarea id="new-post-content" rows="3" placeholder="اكتب خبراً جديداً..."></textarea>
                         <button onclick="createPost()" class="btn-main btn-sm" style="margin-top:10px;">نشر</button>
                     </div>
@@ -597,10 +689,10 @@
 
             <div id="page-create" class="page-section hidden">
                 <div style="padding:20px;">
-                    <div class="glass-card" style="background:#fff; margin:0; padding:20px;">
-                        <h3 style="margin:0 0 20px; color:var(--primary-dark); border-right:4px solid var(--primary); padding-right:10px;">بلاغ صيانة جديد</h3>
+                    <div class="glass-card" style="background:#fff; margin:0; padding:25px;">
+                        <h3 style="margin:0 0 25px; color:var(--primary-dark); border-right:5px solid var(--primary); padding-right:12px;">بلاغ صيانة جديد</h3>
                         
-                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:15px;">
+                        <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:15px;">
                             <div class="input-group">
                                 <label>التاريخ</label>
                                 <input type="date" id="req-date">
@@ -645,19 +737,19 @@
 
                         <div class="input-group">
                             <label>الموقع (إجباري)</label>
-                            <select id="req-faculty" class="modern-select" style="margin-bottom:10px;">
+                            <select id="req-faculty" class="modern-select" style="margin-bottom:12px;">
                                 <option value="">اختر المبنى...</option>
                                 <option value="Admin">المبني الاداري</option>
                                 <option value="Nursing">مبني كلية التمريض</option>
-                                <option value="CS">حاسبات ومعلومات</option>
-                                <option value="PT">علاج طبيعي</option>
-                                <option value="Pharmacy">صيدلة</option>
-                                <option value="Dentistry">أسنان</option>
-                                <option value="Business">إدارة أعمال</option>
-                                <option value="Other">آخر...</option>
+                                <option value="CS">مبني كليه الحاسبات والمعلومات</option>
+                                <option value="PT">مبني كلية العلاج الطبيعي</option>
+                                <option value="Pharmacy">مبني كليه الصيدلة</option>
+                                <option value="Dentistry">مبني كلية الاسنان</option>
+                                <option value="Business">مبني كلية ادراة اعمال</option>
+                                <option value="Other">موقع آخر...</option>
                             </select>
                             
-                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:12px;">
                                 <select id="req-floor" class="modern-select">
                                     <option value="">الدور...</option>
                                     <option value="G">الأرضي G</option>
@@ -674,12 +766,13 @@
 
                         <div class="input-group">
                             <label>وصف المشكلة</label>
-                            <textarea id="req-desc" rows="3" placeholder="تفاصيل العطل..."></textarea>
+                            <textarea id="req-desc" rows="4" placeholder="اكتب تفاصيل العطل بدقة..."></textarea>
                         </div>
                         
-                        <div style="display:flex; gap:10px; margin-bottom:20px;">
-                            <div style="flex:1; background:var(--bg-body); padding:15px; border-radius:12px; border:2px dashed var(--border-color); text-align:center; cursor:pointer;" onclick="document.getElementById('req-files').click()">
-                                <i class="fa-solid fa-paperclip" style="color:var(--text-secondary);"></i> <span style="font-size:12px;">إرفاق وسائط</span>
+                        <div style="display:flex; gap:12px; margin-bottom:25px;">
+                            <div style="flex:1; background:var(--bg-input); padding:20px; border-radius:16px; border:2px dashed var(--border-color); text-align:center; cursor:pointer;" onclick="document.getElementById('req-files').click()">
+                                <i class="fa-solid fa-paperclip" style="color:var(--text-secondary); margin-bottom:5px;"></i> 
+                                <p style="font-size:11px; margin:0;">إرفاق صور/فيديو</p>
                                 <input type="file" id="req-files" hidden multiple accept="image/*,video/*" onchange="handleFiles(this)">
                             </div>
                             <div id="mic-trigger" class="mic-btn" onclick="toggleRecording()">
@@ -687,7 +780,7 @@
                             </div>
                         </div>
                         
-                        <div id="preview-grid" class="media-grid" style="margin-bottom:20px;"></div>
+                        <div id="preview-grid" class="media-grid" style="margin-bottom:25px;"></div>
                         <button onclick="openSupModal()" class="btn-main">التالي <i class="fa-solid fa-arrow-left"></i></button>
                     </div>
                 </div>
@@ -695,20 +788,20 @@
 
             <div id="page-team" class="page-section hidden">
                 <div style="padding:20px;">
-                    <h3 style="margin-bottom:20px; color:var(--text-main);">فريق العمل</h3>
-                    <div style="display:flex; gap:10px; margin-bottom:20px;">
-                        <input type="text" id="search-query" placeholder="بحث ID..." style="margin:0;">
+                    <h3 style="margin-bottom:20px; color:var(--text-main); font-weight:800;">فريق العمل</h3>
+                    <div style="display:flex; gap:10px; margin-bottom:25px;">
+                        <input type="text" id="search-query" placeholder="بحث بالـ ID..." style="margin:0;">
                         <button onclick="searchUser()" class="btn-main btn-sm"><i class="fa-solid fa-search"></i></button>
                     </div>
                     <div id="search-results" class="hidden" style="margin-bottom:20px;"></div>
-                    <div id="friend-reqs" class="hidden" style="background:#fffbeb; padding:15px; border-radius:12px; margin-bottom:20px; border:1px solid var(--gold);">
-                        <h5 style="margin:0 0 10px; color:var(--gold);">طلبات جديدة:</h5>
+                    <div id="friend-reqs" class="hidden" style="background:#fffbeb; padding:15px; border-radius:16px; margin-bottom:25px; border:1px solid var(--gold);">
+                        <h5 style="margin:0 0 10px; color:var(--gold); font-size:13px;">طلبات صداقة جديدة:</h5>
                         <div id="reqs-list"></div>
                     </div>
                     <div id="team-list"></div>
                 </div>
             </div>
-            <div id="page-profile" class="page-section hidden">
+           <div id="page-profile" class="page-section hidden">
                 <div style="padding: 20px;">
                     <div class="glass-card" style="text-align: center;">
                         
@@ -1534,4 +1627,4 @@
     // (Codes for saveProfile, loadProfilePageData, searchUser, addFriend are included in logic flow)
 </script>
 </body>
-</html>
+</html> 
