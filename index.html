@@ -3,127 +3,296 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>نظام الصيانة الذكي المطور - جامعة الريادة</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>نظام الصيانة الذكي المطور - جامعة الريادة للعلوم والتكنولوجيا</title>
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
     <style>
-        /* ==================== Core Styling & Modern Reset ==================== */
+        /* ==========================================================================
+           1. CORE VARIABLES & RESET (إعدادات المتغيرات الأساسية)
+           ==========================================================================
+        */
         :root {
+            /* الألوان الرئيسية */
             --primary: #0056b3;        
             --primary-dark: #003d80;   
+            --primary-light: #e0f2fe;
+            
+            /* ألوان الخلفيات */
             --dark: #f8fafc;            
             --surface: #ffffff;        
             --surface-light: #f1f5f9;  
+            
+            /* ألوان النصوص والحدود */
             --border: #e2e8f0;          
             --text: #1e293b;            
             --text-muted: #64748b;      
+            
+            /* ألوان الحالات */
             --gold: #d97706;            
             --success: #10b981;        
+            --success-dark: #047857;
             --error: #ef4444;            
+            --error-dark: #b91c1c;
             --warning: #f59e0b;        
             --info: #0ea5e9;            
+            
+            /* الصور والمؤثرات */
             --bg-image: url('https://a.top4top.io/p_36115ao3o1.jpg');
             --glass: rgba(255, 255, 255, 0.95);
             --shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 20px 40px rgba(0, 0, 0, 0.12);
             --radius-md: 16px;
             --radius-lg: 24px;
+            --radius-full: 50px;
         }
         
-        * { box-sizing: border-box; outline: none; -webkit-tap-highlight-color: transparent; }
+        /* تصفير الهوامش والحواف لجميع العناصر */
+        * { 
+            box-sizing: border-box; 
+            outline: none; 
+            -webkit-tap-highlight-color: transparent; 
+            margin: 0;
+            padding: 0;
+        }
         
+        /* تنسيق جسم الصفحة */
         body {
             font-family: 'Cairo', sans-serif; 
             background-color: var(--dark); 
             color: var(--text); 
-            margin: 0; 
             min-height: 100vh;
-            background-image: linear-gradient(rgba(248,250,252,0.8), rgba(248,250,252,0.8)), var(--bg-image);
+            background-image: linear-gradient(
+                rgba(248, 250, 252, 0.85), 
+                rgba(248, 250, 252, 0.85)
+            ), var(--bg-image);
             background-size: cover; 
             background-position: center; 
             background-attachment: fixed;
             position: relative; 
             overflow-x: hidden;
+            line-height: 1.6;
         }
         
-        .app-wrapper { max-width: 600px; margin: 0 auto; min-height: 100vh; position: relative; padding-bottom: 100px; }
-        .hidden { display: none !important; }
-        html { scroll-behavior: smooth; }
-
-        /* Loader */
-        #loader {
-            position: fixed; inset: 0; background-color: var(--dark);
-            background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), var(--bg-image);
-            background-size: cover; z-index: 99999; display: flex; 
-            flex-direction: column; justify-content: center; align-items: center; text-align: center;
+        /* حاوية التطبيق الرئيسية */
+        .app-wrapper { 
+            max-width: 600px; 
+            margin: 0 auto; 
+            min-height: 100vh; 
+            position: relative; 
+            padding-bottom: 120px; 
+            background: transparent;
         }
 
-        /* --- Modern Header --- */
+        .hidden { 
+            display: none !important; 
+        }
+
+        html { 
+            scroll-behavior: smooth; 
+        }
+
+        /* ==========================================================================
+           2. LOADER STYLES (شاشة التحميل)
+           ==========================================================================
+        */
+        #loader {
+            position: fixed; 
+            inset: 0; 
+            background-color: var(--dark);
+            background-image: linear-gradient(
+                rgba(255, 255, 255, 0.95), 
+                rgba(255, 255, 255, 0.95)
+            ), var(--bg-image);
+            background-size: cover; 
+            z-index: 99999; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            text-align: center;
+        }
+
+        #loader i {
+            color: var(--primary);
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 5px 15px rgba(0, 86, 179, 0.3));
+        }
+
+        #loader h2 {
+            margin-top: 10px;
+            color: var(--primary-dark);
+            font-size: 22px;
+            font-weight: 900;
+        }
+
+        /* ==========================================================================
+           3. HEADER & BANNER (الهيدر والشريط العلوي)
+           ==========================================================================
+        */
         .main-banner {
-            height: 240px; 
-            background: linear-gradient(135deg, rgba(0,86,179,0.9), rgba(0, 61, 128, 0.95)), url('https://a.top4top.io/p_36115ao3o1.jpg');
-            background-size: cover; background-position: center;
-            display: flex; flex-direction: column; justify-content: flex-end; padding: 25px;
-            border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; 
-            margin-bottom: 25px; box-shadow: 0 15px 40px rgba(0,86,179,0.4); position: relative;
+            height: 260px; 
+            background: linear-gradient(
+                135deg, 
+                rgba(0, 86, 179, 0.9), 
+                rgba(0, 61, 128, 0.95)
+            ), url('https://a.top4top.io/p_36115ao3o1.jpg');
+            background-size: cover; 
+            background-position: center;
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-end; 
+            padding: 30px 25px;
+            border-bottom-left-radius: 45px; 
+            border-bottom-right-radius: 45px; 
+            margin-bottom: 30px; 
+            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.25); 
+            position: relative;
             overflow: hidden;
         }
+
+        /* تأثير الحركة الخلفية في الهيدر */
         .main-banner::before {
-            content: ''; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 60%);
-            animation: rotate 20s linear infinite; pointer-events: none;
+            content: ''; 
+            position: absolute; 
+            top: -50%; 
+            left: -50%; 
+            width: 200%; 
+            height: 200%;
+            background: radial-gradient(
+                circle, 
+                rgba(255, 255, 255, 0.1) 0%, 
+                transparent 60%
+            );
+            animation: rotateBanner 25s linear infinite; 
+            pointer-events: none;
         }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+        @keyframes rotateBanner { 
+            from { transform: rotate(0deg); } 
+            to { transform: rotate(360deg); } 
+        }
 
         .header-top {
-            position: absolute; top: 20px; left: 20px; right: 20px; z-index: 10;
-            display: flex; justify-content: space-between; align-items: center;
+            position: absolute; 
+            top: 25px; 
+            left: 25px; 
+            right: 25px; 
+            z-index: 10;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
         }
 
         .bell-btn {
-            background: rgba(255,255,255,0.15); width: 45px; height: 45px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; 
-            backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.2); position: relative;
-            transition: 0.3s;
+            background: rgba(255, 255, 255, 0.15); 
+            width: 48px; 
+            height: 48px; 
+            border-radius: 50%;
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            cursor: pointer; 
+            backdrop-filter: blur(10px); 
+            border: 1px solid rgba(255, 255, 255, 0.25); 
+            position: relative;
+            transition: all 0.3s ease;
         }
-        .bell-btn:active { transform: scale(0.95); background: rgba(255,255,255,0.25); }
+
+        .bell-btn:active { 
+            transform: scale(0.92); 
+            background: rgba(255, 255, 255, 0.3); 
+        }
+
         .bell-badge {
-            position: absolute; top: 10px; right: 10px; width: 10px; height: 10px;
-            background: var(--error); border-radius: 50%; display: none; border: 2px solid var(--primary-dark);
+            position: absolute; 
+            top: 12px; 
+            right: 12px; 
+            width: 10px; 
+            height: 10px;
+            background: var(--error); 
+            border-radius: 50%; 
+            display: none; 
+            border: 2px solid var(--primary-dark);
+            box-shadow: 0 0 10px var(--error);
         }
 
-        .header-content { display: flex; align-items: flex-end; justify-content: space-between; width: 100%; padding-bottom: 10px; position: relative; z-index: 5; }
+        .header-content { 
+            display: flex; 
+            align-items: flex-end; 
+            justify-content: space-between; 
+            width: 100%; 
+            padding-bottom: 10px; 
+            position: relative; 
+            z-index: 5; 
+        }
 
-        /* User Info */
-        .user-minimal { display: flex; flex-direction: column; gap: 8px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
-        .user-minimal h1 { margin: 0; font-size: 28px; font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.5px; }
+        /* ==========================================================================
+           4. USER INFO & AVATAR (معلومات المستخدم والصورة)
+           ==========================================================================
+        */
+        .user-minimal { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 8px; 
+            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.4); 
+        }
+
+        .user-minimal h1 { 
+            margin: 0; 
+            font-size: 28px; 
+            font-weight: 900; 
+            color: #fff; 
+            line-height: 1.1; 
+            letter-spacing: -0.5px; 
+        }
+
         .user-minimal .role-badge { 
-            background: rgba(255, 255, 255, 0.2); color: white; padding: 6px 16px; 
-            border-radius: 30px; font-size: 12px; font-weight: 800; width: fit-content;
-            border: 1px solid rgba(255,255,255,0.3); backdrop-filter: blur(5px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            background: rgba(255, 255, 255, 0.25); 
+            color: white; 
+            padding: 6px 18px; 
+            border-radius: 30px; 
+            font-size: 12px; 
+            font-weight: 800; 
+            width: fit-content;
+            border: 1px solid rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(8px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
         }
 
-        /* --- FIXED AVATAR & FRAMES --- */
         .user-avatar-container { 
             position: relative; 
-            width: 90px; 
-            height: 90px; 
+            width: 95px; 
+            height: 95px; 
             border-radius: 50%;
             margin-bottom: 5px;
-            transition: transform 0.3s;
+            transition: transform 0.3s ease;
+            cursor: pointer;
         }
-        .user-avatar-container:active { transform: scale(0.95); }
+
+        .user-avatar-container:active { 
+            transform: scale(0.95); 
+        }
+
         .user-avatar-container img {
-            width: 100%; height: 100%; border-radius: 50%;
-            border: 4px solid rgba(255,255,255,0.3); object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3); background: #fff;
+            width: 100%; 
+            height: 100%; 
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.4); 
+            object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            background: #fff;
             display: block;
         }
+
         .user-avatar-container .frame-overlay {
             position: absolute; 
             inset: -6px;
@@ -132,250 +301,815 @@
             z-index: 2;
         }
         
-        /* Frame Options */
-        .frame-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-top: 15px; }
-        .frame-option { 
-            width: 100%; aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--border); 
-            cursor: pointer; position: relative; overflow: hidden; transition: 0.2s;
+        /* إطارات الصورة الشخصية */
+        .frame-grid { 
+            display: grid; 
+            grid-template-columns: repeat(4, 1fr); 
+            gap: 15px; 
+            margin-top: 20px; 
         }
-        .frame-option:hover { transform: translateY(-2px); }
-        .frame-option.selected { border-color: var(--primary); box-shadow: 0 0 0 4px rgba(0,86,179,0.15); }
+
+        .frame-option { 
+            width: 100%; 
+            aspect-ratio: 1; 
+            border-radius: 50%; 
+            border: 2px solid var(--border); 
+            cursor: pointer; 
+            position: relative; 
+            overflow: hidden; 
+            transition: 0.3s;
+        }
+
+        .frame-option:hover { 
+            transform: translateY(-3px); 
+            border-color: var(--primary);
+        }
+
+        .frame-option.selected { 
+            border-color: var(--primary); 
+            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.2); 
+        }
+
         .f-gold { border: 5px solid #ffd700; box-shadow: inset 0 0 10px #ffd700, 0 0 10px rgba(255, 215, 0, 0.5); }
         .f-blue { border: 5px dashed var(--primary); }
         .f-grad { background: linear-gradient(45deg, var(--primary), var(--info)); padding: 4px; }
         .f-grad-in { background: transparent; width: 100%; height: 100%; border-radius: 50%; }
-        .f-none { border: 1px solid #ccc; background: #eee; display: flex; align-items: center; justify-content: center; color: #777; font-size: 10px; }
+        .f-none { border: 1px solid #ccc; background: #eee; display: flex; align-items: center; justify-content: center; color: #777; font-size: 12px; font-weight: bold; }
 
-        /* --- Modern Cards & Ticket ID --- */
+        /* ==========================================================================
+           5. CARDS & MODERN UI ELEMENTS (البطاقات والعناصر الحديثة)
+           ==========================================================================
+        */
         .glass-card {
-            background: var(--surface); border: 1px solid var(--border);
-            border-radius: var(--radius-lg); padding: 24px; margin: 15px;
-            box-shadow: var(--shadow); position: relative; overflow: hidden; transition: 0.3s;
+            background: var(--surface); 
+            border: 1px solid var(--border);
+            border-radius: var(--radius-lg); 
+            padding: 28px; 
+            margin: 20px;
+            box-shadow: var(--shadow); 
+            position: relative; 
+            overflow: hidden; 
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             background: rgba(255, 255, 255, 0.98); 
         }
-        .glass-card h2, .glass-card h3 { color: var(--primary-dark); font-weight: 800; letter-spacing: -0.5px; }
+
+        .glass-card h2, .glass-card h3 { 
+            color: var(--primary-dark); 
+            font-weight: 800; 
+            letter-spacing: -0.5px; 
+        }
         
-        /* Ticket ID Badge */
+        /* Ticket ID Badge (كود البلاغ المميز)
+           تصميم مودرن يشبه التذاكر الرقمية
+        */
         .ticket-badge {
-            background: linear-gradient(135deg, #1e293b, #334155);
+            background: linear-gradient(135deg, #334155, #1e293b);
             color: #fff;
-            padding: 4px 12px;
+            padding: 5px 14px;
             border-radius: 8px;
-            font-family: 'Courier New', monospace;
-            font-size: 11px;
+            font-family: 'Courier New', monospace; /* خط الآلة الكاتبة للأكواد */
+            font-size: 13px;
             font-weight: bold;
-            letter-spacing: 1px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            letter-spacing: 1.5px;
+            box-shadow: 0 4px 10px rgba(30, 41, 59, 0.2);
             display: inline-block;
             margin-bottom: 8px;
-            border: 1px solid rgba(255,255,255,0.1);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .ticket-badge::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 5px; height: 100%;
+            background: var(--gold);
         }
 
         .request-card { 
-            cursor: pointer; border-right: 4px solid transparent; margin-bottom: 18px; 
-            background: #fff; transition: all 0.2s ease; border: 1px solid var(--border); 
+            cursor: pointer; 
+            border-right: 5px solid transparent; 
+            margin-bottom: 20px; 
+            background: #fff; 
+            transition: all 0.25s ease; 
+            border: 1px solid var(--border); 
             border-radius: 20px;
         }
-        .request-card:active { transform: scale(0.98); }
-        .request-card:hover { transform: translateY(-3px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
-        
-        .req-new { border-left: 4px solid var(--info); }
-        .req-done { border-left: 4px solid var(--success); background: linear-gradient(to right, #f0fdf4, #fff); }
-        .req-rejected { border-left: 4px solid var(--error); background: linear-gradient(to right, #fef2f2, #fff); }
 
-        /* --- Modern Inputs & Selects --- */
-        .input-group { margin-bottom: 22px; position: relative; }
-        .input-group label { display: block; font-size: 13px; color: var(--text-dark); margin-bottom: 10px; font-weight: 700; }
-        
-        input, textarea, .modern-select {
-            width: 100%; padding: 16px 20px; background: var(--surface-light); 
-            border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--text); 
-            font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; transition: 0.3s;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+        .request-card:active { 
+            transform: scale(0.98); 
         }
-        input:focus, textarea:focus, .modern-select:focus { 
-            border-color: var(--primary); background: #fff; 
+
+        .request-card:hover { 
+            transform: translateY(-4px); 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08); 
+        }
+        
+        /* ألوان الحالات في البطاقات */
+        .req-new { border-left: 5px solid var(--info); }
+        .req-done { border-left: 5px solid var(--success); background: linear-gradient(to right, #f0fdf4, #fff); }
+        .req-rejected { border-left: 5px solid var(--error); background: linear-gradient(to right, #fef2f2, #fff); }
+
+        /* ==========================================================================
+           6. MODERN INPUTS & SELECTS (حقول الإدخال والقوائم المنسدلة الحديثة)
+           ==========================================================================
+        */
+        .input-group { 
+            margin-bottom: 25px; 
+            position: relative; 
+        }
+
+        .input-group label { 
+            display: block; 
+            font-size: 14px; 
+            color: var(--text); 
+            margin-bottom: 12px; 
+            font-weight: 700; 
+        }
+        
+        /* تنسيق الحقول */
+        input, textarea {
+            width: 100%; 
+            padding: 18px 20px; 
+            background: var(--surface-light); 
+            border: 1px solid var(--border); 
+            border-radius: var(--radius-md); 
+            color: var(--text); 
+            font-family: 'Cairo', sans-serif; 
+            font-size: 15px; 
+            font-weight: 600; 
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
+        }
+
+        input:focus, textarea:focus { 
+            border-color: var(--primary); 
+            background: #fff; 
             box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1); 
         }
 
-        /* Custom Modern Select Styling */
-        select {
-            appearance: none; -webkit-appearance: none;
+        /* CUSTOM MODERN SELECT STYLING 
+           (تصميم القوائم المنسدلة المودرن)
+        */
+        select.modern-select {
+            width: 100%;
+            padding: 18px 20px;
+            padding-left: 45px !important; /* مساحة للأيقونة */
+            background-color: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: var(--radius-md);
+            color: var(--text);
+            font-family: 'Cairo', sans-serif;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            appearance: none; 
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            /* أيقونة السهم المخصص */
             background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230056b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
             background-repeat: no-repeat;
             background-position: left 15px center;
-            background-size: 18px;
-            padding-left: 45px !important;
+            background-size: 20px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.02);
         }
 
-        /* --- Auth Styling --- */
+        select.modern-select:focus {
+            border-color: var(--primary);
+            background-color: #ffffff;
+            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.15);
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230056b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='18 15 12 9 6 15'%3e%3c/polyline%3e%3c/svg%3e");
+        }
+
+        /* ==========================================================================
+           7. AUTH SCREEN STYLES (شاشة التسجيل والدخول)
+           ==========================================================================
+        */
         .auth-logo-modern {
-            width: 100px; height: 100px; border-radius: 25px; 
-            margin-bottom: 20px; object-fit: cover; box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            width: 110px; 
+            height: 110px; 
+            border-radius: 28px; 
+            margin-bottom: 25px; 
+            object-fit: cover; 
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
         }
+
         .auth-section-label {
-            text-align: right; font-size: 13px; color: var(--primary); 
-            margin-bottom: 12px; margin-top: 20px; display: block; font-weight: 800;
-            border-bottom: 2px solid var(--surface-light); padding-bottom: 5px;
+            text-align: right; 
+            font-size: 14px; 
+            color: var(--primary); 
+            margin-bottom: 15px; 
+            margin-top: 25px; 
+            display: block; 
+            font-weight: 800;
+            border-bottom: 2px solid var(--surface-light); 
+            padding-bottom: 8px;
         }
-        .auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 15px; }
+
+        .auth-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 12px; 
+            margin-bottom: 20px; 
+        }
+
         .auth-card-input { display: none; }
+
         .auth-card {
-            background: var(--surface-light); border: 2px solid transparent;
-            padding: 15px 5px; border-radius: 16px; text-align: center; cursor: pointer; transition: 0.2s;
-            display: flex; flex-direction: column; align-items: center; gap: 8px;
+            background: var(--surface-light); 
+            border: 2px solid transparent;
+            padding: 18px 5px; 
+            border-radius: 18px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            gap: 10px;
             color: var(--text-muted);
         }
-        .auth-card:hover { background: #e2e8f0; }
+
+        .auth-card:hover { 
+            background: #e2e8f0; 
+            transform: translateY(-2px);
+        }
+
         .auth-card-input:checked + .auth-card { 
-            background: rgba(0, 86, 179, 0.08); border-color: var(--primary); color: var(--primary); 
-            box-shadow: 0 5px 15px rgba(0,86,179,0.1); transform: translateY(-2px);
+            background: rgba(0, 86, 179, 0.08); 
+            border-color: var(--primary); 
+            color: var(--primary); 
+            box-shadow: 0 8px 20px rgba(0, 86, 179, 0.15); 
+            transform: translateY(-4px);
         }
-        .auth-card i { font-size: 20px; margin-bottom: 5px; }
 
-        /* Priority Grid */
-        .priority-grid { display: flex; gap: 12px; }
-        .prio-card {
-            flex: 1; padding: 18px 5px; background: var(--surface-light); border: 1px solid var(--border);
-            border-radius: 18px; text-align: center; cursor: pointer; transition: 0.3s; 
-            display: flex; flex-direction: column; align-items: center; gap: 8px; color: var(--text-muted);
+        .auth-card i { 
+            font-size: 22px; 
+            margin-bottom: 5px; 
         }
-        .prio-radio:checked + .prio-card.p-low { background: #ecfdf5; border-color: var(--success); color: var(--success); box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2); }
-        .prio-radio:checked + .prio-card.p-med { background: #fff7ed; border-color: var(--warning); color: var(--warning); box-shadow: 0 5px 15px rgba(245, 158, 11, 0.2); }
-        .prio-radio:checked + .prio-card.p-high { background: #fef2f2; border-color: var(--error); color: var(--error); box-shadow: 0 5px 15px rgba(239, 68, 68, 0.2); }
 
-        /* Buttons */
+        /* ==========================================================================
+           8. BUTTONS & INTERACTIVE ELEMENTS (الأزرار والعناصر التفاعلية)
+           ==========================================================================
+        */
         .btn-main {
-            width: 100%; padding: 18px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none; border-radius: 18px; color: white; font-weight: 800; cursor: pointer;
-            display: flex; justify-content: center; align-items: center; gap: 12px;
-            box-shadow: 0 10px 25px rgba(0, 86, 179, 0.25); font-size: 16px; font-family: 'Cairo', sans-serif; transition: 0.2s;
+            width: 100%; 
+            padding: 20px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none; 
+            border-radius: 20px; 
+            color: white; 
+            font-weight: 800; 
+            cursor: pointer;
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            gap: 12px;
+            box-shadow: 0 12px 30px rgba(0, 86, 179, 0.3); 
+            font-size: 16px; 
+            font-family: 'Cairo', sans-serif; 
+            transition: all 0.2s ease;
         }
-        .btn-main:active { transform: scale(0.97); box-shadow: 0 5px 15px rgba(0, 86, 179, 0.2); }
-        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 14px; font-family: 'Cairo', sans-serif; cursor: pointer; padding: 10px; font-weight: 600; transition: 0.2s; }
-        .btn-ghost:hover { background: var(--surface-light); color: var(--text); border-color: var(--text-muted); }
-        .btn-danger { background: linear-gradient(135deg, var(--error), #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3); }
-        .btn-sm { padding: 10px 20px; font-size: 13px; width: auto; margin: 0; border-radius: 12px; min-height: 40px; }
+
+        .btn-main:active { 
+            transform: scale(0.96); 
+            box-shadow: 0 5px 15px rgba(0, 86, 179, 0.2); 
+        }
+
+        .btn-ghost { 
+            background: transparent; 
+            border: 2px solid var(--border); 
+            color: var(--text-muted); 
+            border-radius: 16px; 
+            font-family: 'Cairo', sans-serif; 
+            cursor: pointer; 
+            padding: 12px; 
+            font-weight: 700; 
+            transition: all 0.2s; 
+        }
+
+        .btn-ghost:hover { 
+            background: var(--surface-light); 
+            color: var(--text); 
+            border-color: var(--text-muted); 
+        }
+
+        .btn-danger { 
+            background: linear-gradient(135deg, var(--error), #b91c1c); 
+            box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); 
+        }
+
+        .btn-sm { 
+            padding: 10px 22px; 
+            font-size: 13px; 
+            width: auto; 
+            margin: 0; 
+            border-radius: 14px; 
+            min-height: 42px; 
+        }
         
         .support-fab { display: none !important; }
 
-        /* Audio Recording Pulse */
+        /* أيقونة التسجيل الصوتي */
         .mic-btn {
-            background: var(--surface-light); border: 2px solid var(--border); color: var(--text-muted);
-            width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            cursor: pointer; transition: 0.3s; font-size: 24px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+            background: var(--surface-light); 
+            border: 2px solid var(--border); 
+            color: var(--text-muted);
+            width: 75px; 
+            height: 75px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            cursor: pointer; 
+            transition: all 0.3s; 
+            font-size: 26px; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
+
         .mic-btn.recording {
-            background: #fef2f2; border-color: var(--error); color: var(--error);
+            background: #fef2f2; 
+            border-color: var(--error); 
+            color: var(--error);
             animation: pulse 1.5s infinite;
         }
+
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(239, 68, 68, 0); }
+            70% { box-shadow: 0 0 0 20px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        /* Timeline */
-        .timeline { margin: 25px 0; padding: 0 15px; }
-        .timeline-item { display: flex; gap: 18px; padding-bottom: 35px; position: relative; }
-        .timeline-item::before { content: ''; position: absolute; right: 17px; top: 35px; bottom: 0; width: 3px; background: var(--border); border-radius: 5px; }
-        .timeline-item:last-child::before { display: none; }
-        .tl-icon {
-            width: 36px; height: 36px; border-radius: 50%; background: var(--surface-light); 
-            border: 3px solid var(--border); display: flex; align-items: center; justify-content: center;
-            font-size: 14px; color: var(--text-muted); z-index: 2; flex-shrink: 0; transition: 0.3s;
+        /* ==========================================================================
+           9. TIMELINE & NAVIGATION (المخطط الزمني وشريط التنقل)
+           ==========================================================================
+        */
+        .timeline { 
+            margin: 30px 0; 
+            padding: 0 15px; 
         }
-        .tl-content h4 { margin: 0 0 6px; font-size: 15px; font-weight: 800; color: var(--text); }
-        .tl-content p { margin: 0; font-size: 13px; color: var(--text-muted); line-height: 1.5; }
+
+        .timeline-item { 
+            display: flex; 
+            gap: 20px; 
+            padding-bottom: 40px; 
+            position: relative; 
+        }
+
+        .timeline-item::before { 
+            content: ''; 
+            position: absolute; 
+            right: 19px; 
+            top: 40px; 
+            bottom: 0; 
+            width: 4px; 
+            background: var(--border); 
+            border-radius: 5px; 
+        }
+
+        .timeline-item:last-child::before { display: none; }
+
+        .tl-icon {
+            width: 42px; 
+            height: 42px; 
+            border-radius: 50%; 
+            background: var(--surface-light); 
+            border: 3px solid var(--border); 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            font-size: 16px; 
+            color: var(--text-muted); 
+            z-index: 2; 
+            flex-shrink: 0; 
+            transition: 0.3s;
+        }
+
+        .tl-content h4 { 
+            margin: 0 0 8px; 
+            font-size: 16px; 
+            font-weight: 800; 
+            color: var(--text); 
+        }
+
+        .tl-content p { 
+            margin: 0; 
+            font-size: 14px; 
+            color: var(--text-muted); 
+            line-height: 1.6; 
+        }
         
         .timeline-item.active .tl-icon { 
-            background: var(--primary); border-color: rgba(0,86,179,0.3); color: white; 
-            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.2); transform: scale(1.1);
+            background: var(--primary); 
+            border-color: rgba(0, 86, 179, 0.3); 
+            color: white; 
+            box-shadow: 0 0 0 6px rgba(0, 86, 179, 0.15); 
+            transform: scale(1.1);
         }
+
         .timeline-item.rejected .tl-icon { 
-            background: var(--error); border-color: rgba(239, 68, 68, 0.3); color: white;
-            box-shadow: 0 0 0 4px rgba(239, 68, 68, 0.2);
+            background: var(--error); 
+            border-color: rgba(239, 68, 68, 0.3); 
+            color: white;
+            box-shadow: 0 0 0 6px rgba(239, 68, 68, 0.15);
         }
 
-        /* Tabs & Nav */
-        .tabs-container { display: flex; margin: 20px 15px; background: #fff; padding: 8px; border-radius: 25px; border: 1px solid var(--border); box-shadow: var(--shadow); }
-        .tab-btn { flex: 1; padding: 14px; color: var(--text-muted); font-size: 14px; font-weight: 700; cursor: pointer; border-radius: 18px; background: transparent; border: none; font-family: 'Cairo', sans-serif; transition: 0.3s; }
-        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(0, 86, 179, 0.25); transform: translateY(-1px); }
+        /* التبويبات */
+        .tabs-container { 
+            display: flex; 
+            margin: 25px 20px; 
+            background: #fff; 
+            padding: 10px; 
+            border-radius: 25px; 
+            border: 1px solid var(--border); 
+            box-shadow: var(--shadow); 
+        }
 
+        .tab-btn { 
+            flex: 1; 
+            padding: 16px; 
+            color: var(--text-muted); 
+            font-size: 14px; 
+            font-weight: 700; 
+            cursor: pointer; 
+            border-radius: 20px; 
+            background: transparent; 
+            border: none; 
+            font-family: 'Cairo', sans-serif; 
+            transition: all 0.3s; 
+        }
+
+        .tab-btn.active { 
+            background: var(--primary); 
+            color: white; 
+            box-shadow: 0 5px 20px rgba(0, 86, 179, 0.25); 
+            transform: translateY(-2px); 
+        }
+
+        /* شريط التنقل السفلي */
         .bottom-nav { 
-            position: fixed; bottom: 0; left: 0; right: 0; max-width: 600px; margin: 0 auto; 
-            background: rgba(255, 255, 255, 0.98); backdrop-filter: blur(20px);
-            border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; 
-            padding: 10px 20px 30px; z-index: 900; border-top-left-radius: 35px; border-top-right-radius: 35px;
-            box-shadow: 0 -10px 40px rgba(0,0,0,0.06);
+            position: fixed; 
+            bottom: 0; 
+            left: 0; 
+            right: 0; 
+            max-width: 600px; 
+            margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.98); 
+            backdrop-filter: blur(25px);
+            border-top: 1px solid var(--border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: flex-end; 
+            padding: 12px 25px 35px; 
+            z-index: 900; 
+            border-top-left-radius: 40px; 
+            border-top-right-radius: 40px;
+            box-shadow: 0 -15px 50px rgba(0, 0, 0, 0.08);
         }
-        .nav-item { text-align: center; color: #94a3b8; font-size: 11px; cursor: pointer; width: 65px; transition: 0.2s; }
-        .nav-item i { font-size: 22px; margin-bottom: 6px; display: block; transition: 0.2s; }
-        .nav-item.active { color: var(--primary); font-weight: 700; }
-        .nav-item.active i { transform: translateY(-3px); }
+
+        .nav-item { 
+            text-align: center; 
+            color: #94a3b8; 
+            font-size: 11px; 
+            cursor: pointer; 
+            width: 70px; 
+            transition: 0.2s; 
+        }
+
+        .nav-item i { 
+            font-size: 24px; 
+            margin-bottom: 8px; 
+            display: block; 
+            transition: 0.2s; 
+        }
+
+        .nav-item.active { 
+            color: var(--primary); 
+            font-weight: 800; 
+        }
+
+        .nav-item.active i { 
+            transform: translateY(-5px); 
+        }
         
         .nav-add-btn {
-            width: 65px; height: 65px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 28px;
-            box-shadow: 0 10px 30px rgba(0, 86, 179, 0.4); transform: translateY(-35px); border: 6px solid var(--dark);
-            cursor: pointer; transition: 0.2s;
+            width: 70px; 
+            height: 70px; 
+            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: white; 
+            font-size: 30px;
+            box-shadow: 0 15px 40px rgba(0, 86, 179, 0.4); 
+            transform: translateY(-40px); 
+            border: 8px solid var(--dark);
+            cursor: pointer; 
+            transition: 0.3s;
         }
-        .nav-add-btn:active { transform: translateY(-30px) scale(0.95); }
 
-        /* --- Friends & Modals --- */
-        .friend-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border-radius: 18px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; }
-        .friend-item:hover { border-color: var(--primary); background: #f8fafc; transform: translateX(-5px); }
-        
-        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(8px); }
-        .modal-content { width: 100%; max-width: 450px; background: #fff; border: 1px solid var(--border); border-radius: 30px; padding: 30px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.25); animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1); }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .nav-add-btn:active { 
+            transform: translateY(-35px) scale(0.95); 
+        }
 
-        .close-btn { position: absolute; top: 20px; left: 20px; background: #f1f5f9; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); transition: 0.2s; }
-        .close-btn:hover { background: #e2e8f0; color: var(--error); }
+        /* ==========================================================================
+           10. MODALS & POPUPS (النوافذ المنبثقة)
+           ==========================================================================
+        */
+        .modal-overlay { 
+            position: fixed; 
+            inset: 0; 
+            background: rgba(0, 0, 0, 0.8); 
+            z-index: 2000; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            padding: 25px; 
+            backdrop-filter: blur(10px); 
+        }
+
+        .modal-content { 
+            width: 100%; 
+            max-width: 480px; 
+            background: #fff; 
+            border: 1px solid var(--border); 
+            border-radius: 35px; 
+            padding: 35px; 
+            max-height: 90vh; 
+            overflow-y: auto; 
+            position: relative; 
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3); 
+            animation: slideUpModal 0.4s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+
+        @keyframes slideUpModal { 
+            from { opacity: 0; transform: translateY(30px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        .close-btn { 
+            position: absolute; 
+            top: 25px; 
+            left: 25px; 
+            background: #f1f5f9; 
+            width: 45px; 
+            height: 45px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            color: var(--text-muted); 
+            transition: 0.3s; 
+        }
+
+        .close-btn:hover { 
+            background: #e2e8f0; 
+            color: var(--error); 
+        }
 
         #delete-friend-modal, #confirm-modal { z-index: 10000 !important; }
 
-        .status-pill { padding: 8px 16px; border-radius: 25px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 6px; width: fit-content; letter-spacing: 0.5px; box-shadow: 0 3px 10px rgba(0,0,0,0.03); }
+        /* ==========================================================================
+           11. STATUS PILLS & MEDIA (كبسولات الحالة والوسائط)
+           ==========================================================================
+        */
+        .status-pill { 
+            padding: 8px 20px; 
+            border-radius: 30px; 
+            font-size: 12px; 
+            font-weight: 800; 
+            display: flex; 
+            align-items: center; 
+            gap: 8px; 
+            width: fit-content; 
+            letter-spacing: 0.5px; 
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); 
+        }
+
         .st-pending { background: #e0f2fe; color: var(--info); border: 1px solid #bae6fd; }
         .st-approved { background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; }
         .st-working { background: #fff7ed; color: var(--warning); border: 1px solid #fed7aa; }
         .st-done { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
         .st-rejected { background: #fef2f2; color: var(--error); border: 1px solid #fecaca; }
 
-        .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 15px; }
-        .media-item { aspect-ratio: 1; border-radius: 18px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border); position: relative; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .media-item img, .media-item video { width: 100%; height: 100%; object-fit: cover; background: #000; }
-        .remove-file { position: absolute; top: 5px; right: 5px; background: var(--error); color: white; width: 24px; height: 24px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 12px; border: 2px solid white; }
-        .archive-thumbs { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
-        .archive-thumbs img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); background: #fff; }
+        .media-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 15px; 
+            margin-top: 20px; 
+        }
 
-        .confirm-icon-box { width: 80px; height: 80px; margin: 0 auto 25px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--error); font-size: 36px; border: 6px solid #fff; box-shadow: 0 15px 30px rgba(239, 68, 68, 0.15); }
+        .media-item { 
+            aspect-ratio: 1; 
+            border-radius: 20px; 
+            overflow: hidden; 
+            background: #f8fafc; 
+            border: 2px solid var(--border); 
+            position: relative; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); 
+        }
 
-        .tech-select-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; }
-        .tech-select-card { border: 2px solid var(--border); border-radius: 18px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: var(--surface-light); }
-        .tech-select-card:hover { border-color: var(--primary); background: #fff; transform: translateY(-2px); }
-        .tech-select-card.selected { border-color: var(--primary); background: #eff6ff; box-shadow: 0 4px 12px rgba(0,86,179,0.15); transform: scale(1.02); }
-        .tech-select-card img { width: 55px; height: 55px; border-radius: 50%; object-fit: cover; margin-bottom: 10px; border: 3px solid white; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .media-item img, .media-item video { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            background: #000; 
+        }
 
-        /* News Feed Styling */
-        .news-card { background: #fff; border-radius: 24px; padding: 24px; margin-bottom: 24px; border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; transition: 0.3s; }
-        .news-card:hover { transform: translateY(-2px); }
-        .post-header { display: flex; gap: 12px; margin-bottom: 18px; align-items: center; }
-        .post-avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; cursor: pointer; border: 2px solid var(--surface-light); }
-        .post-content { font-size: 15px; line-height: 1.7; margin-bottom: 18px; color: var(--text); white-space: pre-wrap; font-weight: 500; }
-        .post-actions { display: flex; justify-content: space-between; border-top: 1px solid var(--surface-light); padding-top: 12px; }
-        .p-btn { border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 14px; display: flex; gap: 8px; align-items: center; font-family: 'Cairo', sans-serif; font-weight: 600; padding: 8px 12px; border-radius: 10px; transition: 0.2s; }
-        .p-btn:hover { background: var(--surface-light); color: var(--primary); }
-        .p-btn.liked { color: var(--error); background: #fef2f2; }
-        .comment-section { margin-top: 18px; background: var(--surface-light); padding: 15px; border-radius: 18px; border: 1px solid var(--border); }
-        .comment-item { display: flex; gap: 10px; margin-bottom: 12px; font-size: 13px; align-items: flex-start; }
-        .comment-del { color: var(--error); cursor: pointer; font-size: 11px; margin-right: auto; opacity: 0.7; }
+        .remove-file { 
+            position: absolute; 
+            top: 8px; 
+            right: 8px; 
+            background: var(--error); 
+            color: white; 
+            width: 28px; 
+            height: 28px; 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            cursor: pointer; 
+            font-size: 14px; 
+            border: 2px solid white; 
+        }
+
+        /* ==========================================================================
+           12. WORKER & TECH SELECT (اختيار الفنيين والعمال)
+           ==========================================================================
+        */
+        .tech-select-grid { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 15px; 
+        }
+
+        .tech-select-card { 
+            border: 2px solid var(--border); 
+            border-radius: 20px; 
+            padding: 20px; 
+            text-align: center; 
+            cursor: pointer; 
+            transition: 0.3s; 
+            background: var(--surface-light); 
+        }
+
+        .tech-select-card:hover { 
+            border-color: var(--primary); 
+            background: #fff; 
+            transform: translateY(-4px); 
+        }
+
+        .tech-select-card.selected { 
+            border-color: var(--primary); 
+            background: #eff6ff; 
+            box-shadow: 0 5px 15px rgba(0, 86, 179, 0.15); 
+            transform: scale(1.03); 
+        }
+
+        .tech-select-card img { 
+            width: 60px; 
+            height: 60px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            margin-bottom: 12px; 
+            border: 3px solid white; 
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1); 
+        }
+
+        /* ==========================================================================
+           13. NEWS FEED STYLING (تنسيق الأخبار)
+           ==========================================================================
+        */
+        .news-card { 
+            background: #fff; 
+            border-radius: 28px; 
+            padding: 25px; 
+            margin-bottom: 25px; 
+            border: 1px solid var(--border); 
+            box-shadow: var(--shadow); 
+            position: relative; 
+            transition: 0.3s; 
+        }
+
+        .news-card:hover { 
+            transform: translateY(-3px); 
+        }
+
+        .post-header { 
+            display: flex; 
+            gap: 15px; 
+            margin-bottom: 20px; 
+            align-items: center; 
+        }
+
+        .post-avatar { 
+            width: 55px; 
+            height: 55px; 
+            border-radius: 50%; 
+            object-fit: cover; 
+            cursor: pointer; 
+            border: 2px solid var(--surface-light); 
+        }
+
+        .post-content { 
+            font-size: 15px; 
+            line-height: 1.8; 
+            margin-bottom: 20px; 
+            color: var(--text); 
+            white-space: pre-wrap; 
+            font-weight: 500; 
+        }
+
+        .post-actions { 
+            display: flex; 
+            justify-content: space-between; 
+            border-top: 1px solid var(--surface-light); 
+            padding-top: 15px; 
+        }
+
+        .p-btn { 
+            border: none; 
+            background: transparent; 
+            cursor: pointer; 
+            color: var(--text-muted); 
+            font-size: 14px; 
+            display: flex; 
+            gap: 8px; 
+            align-items: center; 
+            font-family: 'Cairo', sans-serif; 
+            font-weight: 600; 
+            padding: 10px 15px; 
+            border-radius: 12px; 
+            transition: 0.2s; 
+        }
+
+        .p-btn:hover { 
+            background: var(--surface-light); 
+            color: var(--primary); 
+        }
+
+        .p-btn.liked { 
+            color: var(--error); 
+            background: #fef2f2; 
+        }
+
+        .comment-section { 
+            margin-top: 20px; 
+            background: var(--surface-light); 
+            padding: 20px; 
+            border-radius: 20px; 
+            border: 1px solid var(--border); 
+        }
+
+        .comment-item { 
+            display: flex; 
+            gap: 12px; 
+            margin-bottom: 15px; 
+            font-size: 13px; 
+            align-items: flex-start; 
+        }
+
+        .comment-del { 
+            color: var(--error); 
+            cursor: pointer; 
+            font-size: 12px; 
+            margin-right: auto; 
+            opacity: 0.7; 
+        }
+
         .comment-del:hover { opacity: 1; }
-        .post-delete-btn { position: absolute; top: 20px; left: 20px; color: var(--text-muted); cursor: pointer; font-size: 14px; padding: 5px; }
+
+        .post-delete-btn { 
+            position: absolute; 
+            top: 25px; 
+            left: 25px; 
+            color: var(--text-muted); 
+            cursor: pointer; 
+            font-size: 16px; 
+            padding: 5px; 
+        }
+
         .post-delete-btn:hover { color: var(--error); }
-        .post-date { font-size: 11px; color: var(--text-muted); display: block; margin-top: 2px; }
-        .clickable-user { cursor: pointer; transition: color 0.2s; }
-        .clickable-user:hover { color: var(--primary); text-decoration: underline; }
+
+        .post-date { 
+            font-size: 11px; 
+            color: var(--text-muted); 
+            display: block; 
+            margin-top: 4px; 
+        }
+
+        .clickable-user { 
+            cursor: pointer; 
+            transition: color 0.2s; 
+        }
+
+        .clickable-user:hover { 
+            color: var(--primary); 
+            text-decoration: underline; 
+        }
     </style>
 </head>
 <body>
@@ -386,45 +1120,83 @@
 
     <div id="loader">
         <i class="fa-solid fa-circle-notch fa-spin fa-3x" style="color:var(--primary);"></i>
-        <h2 style="margin-top:25px; color:var(--primary-dark); font-size:20px; font-weight:800;">نظام الصيانة الذكي</h2>
-        <p style="color:var(--text-muted); font-size:15px; margin:0;">جامعة الريادة للعلوم والتكنولوجيا</p>
+        <h2 style="margin-top:25px; color:var(--primary-dark); font-size:22px; font-weight:800;">نظام الصيانة الذكي</h2>
+        <p style="color:var(--text-muted); font-size:16px; margin:0;">جامعة الريادة للعلوم والتكنولوجيا</p>
     </div>
 
     <div id="auth-screen" class="hidden" style="min-height:100vh; display:flex; flex-direction:column; justify-content:center; padding:25px;">
-        <div class="glass-card" style="text-align:center; padding: 45px 25px;">
+        <div class="glass-card" style="text-align:center; padding: 50px 30px;">
             <img src="https://a.top4top.io/p_36115ao3o1.jpg" class="auth-logo-modern">
             
-            <h2 style="margin:0 0 5px; font-weight:900; font-size: 24px; color:var(--primary-dark);">نظام الصيانة الذكي</h2>
-            <p style="color:var(--text-muted); font-size:14px; margin-bottom:40px; line-height:1.6;">سجل الدخول للمتابعة إلى بوابة الخدمات</p>
+            <h2 style="margin:0 0 8px; font-weight:900; font-size: 26px; color:var(--primary-dark);">نظام الصيانة الذكي</h2>
+            <p style="color:var(--text-muted); font-size:15px; margin-bottom:45px; line-height:1.7;">سجل الدخول للمتابعة إلى بوابة الخدمات الإلكترونية</p>
 
             <div id="reg-fields" class="hidden">
                 <p class="auth-section-label">البيانات الشخصية:</p>
                 <div class="auth-grid" style="grid-template-columns: 1fr 1fr;">
-                    <label><input type="radio" name="auth-gender" value="male" class="auth-card-input" checked><div class="auth-card"><i class="fa-solid fa-person"></i><span>ذكر</span></div></label>
-                    <label><input type="radio" name="auth-gender" value="female" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-person-dress"></i><span>أنثى</span></div></label>
+                    <label>
+                        <input type="radio" name="auth-gender" value="male" class="auth-card-input" checked>
+                        <div class="auth-card"><i class="fa-solid fa-person"></i><span>ذكر</span></div>
+                    </label>
+                    <label>
+                        <input type="radio" name="auth-gender" value="female" class="auth-card-input">
+                        <div class="auth-card"><i class="fa-solid fa-person-dress"></i><span>أنثى</span></div>
+                    </label>
                 </div>
-                <div class="input-group" style="margin-top:15px;"><input type="text" id="reg-name" placeholder="الاسم الكامل"></div>
-                <div class="input-group"><input type="tel" id="reg-phone" placeholder="رقم الهاتف"></div>
+                <div class="input-group" style="margin-top:20px;">
+                    <input type="text" id="reg-name" placeholder="الاسم الكامل (رباعي)">
+                </div>
+                <div class="input-group">
+                    <input type="tel" id="reg-phone" placeholder="رقم الهاتف (01xxxxxxxxx)">
+                </div>
                 
-                <p class="auth-section-label">نوع الحساب:</p>
-                <div class="auth-grid" style="grid-template-columns: repeat(3, 1fr); gap: 8px;">
-                    <label><input type="radio" name="auth-role" value="employee" class="auth-card-input" checked><div class="auth-card"><i class="fa-solid fa-user-pen"></i><span style="font-size:10px;">موظف</span></div></label>
-                    <label><input type="radio" name="auth-role" value="supervisor" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-user-tie"></i><span style="font-size:10px;">مشرف</span></div></label>
-                    <label><input type="radio" name="auth-role" value="technician" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-helmet-safety"></i><span style="font-size:10px;">مهندس</span></div></label>
-                    <label><input type="radio" name="auth-role" value="worker" class="auth-card-input"><div class="auth-card" style="border-color:#d97706;"><i class="fa-solid fa-screwdriver-wrench" style="color:#d97706;"></i><span style="font-size:10px; color:#d97706; font-weight:bold;">فني (عامل)</span></div></label>
-                    <label><input type="radio" name="auth-role" value="manager" class="auth-card-input"><div class="auth-card"><i class="fa-solid fa-user-shield"></i><span style="font-size:10px;">مدير</span></div></label>
+                <p class="auth-section-label">نوع الحساب والصلاحيات:</p>
+                <div class="auth-grid" style="grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                    <label>
+                        <input type="radio" name="auth-role" value="employee" class="auth-card-input" checked>
+                        <div class="auth-card"><i class="fa-solid fa-user-pen"></i><span style="font-size:11px;">موظف</span></div>
+                    </label>
+                    <label>
+                        <input type="radio" name="auth-role" value="supervisor" class="auth-card-input">
+                        <div class="auth-card"><i class="fa-solid fa-user-tie"></i><span style="font-size:11px;">مشرف</span></div>
+                    </label>
+                    <label>
+                        <input type="radio" name="auth-role" value="technician" class="auth-card-input">
+                        <div class="auth-card"><i class="fa-solid fa-helmet-safety"></i><span style="font-size:11px;">مهندس</span></div>
+                    </label>
+                    <label>
+                        <input type="radio" name="auth-role" value="worker" class="auth-card-input">
+                        <div class="auth-card" style="border-color:var(--gold); color:var(--gold);">
+                            <i class="fa-solid fa-screwdriver-wrench"></i>
+                            <span style="font-size:11px; font-weight:bold;">فني (عامل)</span>
+                        </div>
+                    </label>
+                    <label>
+                        <input type="radio" name="auth-role" value="manager" class="auth-card-input">
+                        <div class="auth-card"><i class="fa-solid fa-user-shield"></i><span style="font-size:11px;">مدير</span></div>
+                    </label>
                 </div>
 
-                <div class="input-group" style="margin-top:15px;"><input type="text" id="reg-job" placeholder="المسمى الوظيفي"></div>
-                <div class="input-group"><input type="text" id="reg-loc" placeholder="مقر العمل الدائم"></div>
+                <div class="input-group" style="margin-top:20px;">
+                    <input type="text" id="reg-job" placeholder="المسمى الوظيفي">
+                </div>
+                <div class="input-group">
+                    <input type="text" id="reg-loc" placeholder="مقر العمل الدائم (مثال: المبنى الإداري)">
+                </div>
             </div>
 
-            <div class="input-group"><input type="email" id="email" placeholder="البريد الإلكتروني الجامعي"></div>
-            <div class="input-group"><input type="password" id="password" placeholder="كلمة المرور"></div>
-            <div id="confirm-pass-field" class="hidden input-group"><input type="password" id="confirm-password" placeholder="تأكيد كلمة المرور"></div>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="البريد الإلكتروني الجامعي">
+            </div>
+            <div class="input-group">
+                <input type="password" id="password" placeholder="كلمة المرور">
+            </div>
+            <div id="confirm-pass-field" class="hidden input-group">
+                <input type="password" id="confirm-password" placeholder="تأكيد كلمة المرور">
+            </div>
             
-            <button onclick="handleAuth()" id="auth-btn" class="btn-main" style="margin-top:25px;">تسجيل الدخول</button>
-            <div onclick="toggleAuth()" style="margin-top:25px; font-size:13px; cursor:pointer; padding:10px; color:var(--text-muted); transition:0.3s;">
+            <button onclick="handleAuth()" id="auth-btn" class="btn-main" style="margin-top:30px;">تسجيل الدخول</button>
+            <div onclick="toggleAuth()" style="margin-top:30px; font-size:14px; cursor:pointer; padding:15px; color:var(--text-muted); transition:0.3s;">
                 <span id="auth-switch-text">ليس لديك حساب؟ <b style="color:var(--primary)">إنشاء حساب جديد</b></span>
             </div>
         </div>
@@ -446,7 +1218,7 @@
                 <div class="user-minimal">
                     <span id="banner-role" class="role-badge">User</span>
                     <h1 id="banner-name">Guest</h1>
-                    <span id="banner-id" style="color:rgba(255,255,255,0.8); font-family:monospace; font-size:13px; background:rgba(0,0,0,0.2); padding:2px 8px; border-radius:10px;">ID: --</span>
+                    <span id="banner-id" style="color:rgba(255,255,255,0.9); font-family:monospace; font-size:13px; background:rgba(0,0,0,0.25); padding:4px 10px; border-radius:12px;">ID: --</span>
                 </div>
             </div>
         </div>
@@ -458,7 +1230,8 @@
                     <button class="tab-btn" onclick="switchTab('history', this)">الأرشيف</button>
                     <button class="tab-btn" onclick="switchTab('trash', this)" style="color:var(--error);">المحذوفات</button>
                 </div>
-                <div id="filter-container" class="hidden" style="padding:0 15px 15px;">
+                
+                <div id="filter-container" class="hidden" style="padding:0 20px 20px;">
                     <select id="feed-filter" onchange="renderFeed()" class="modern-select">
                         <option value="all">عرض كافة المباني</option>
                         <option value="Admin">المبني الاداري</option>
@@ -470,30 +1243,38 @@
                         <option value="Business">إدارة أعمال</option>
                     </select>
                 </div>
-                <div id="archive-actions" class="hidden" style="padding:0 15px 20px;">
+                
+                <div id="archive-actions" class="hidden" style="padding:0 20px 25px;">
                      <button onclick="downloadArchivePDF()" class="btn-main btn-sm" style="background:var(--success); width:100%;"><i class="fa-solid fa-file-pdf"></i> تحميل تقرير الأرشيف (PDF)</button>
                 </div>
-                <div id="requests-feed" style="padding-bottom:120px;"></div>
+                
+                <div id="requests-feed" style="padding-bottom:140px;"></div>
             </div>
             
             <div id="page-news" class="page-section hidden">
                 <div class="glass-card" style="margin-top:0;">
-                    <h3 style="color:var(--primary); margin-bottom:20px; border-right:4px solid var(--gold); padding-right:15px;">البيان (أخبار الجامعة)</h3>
-                    <div id="create-post-container" class="hidden" style="margin-bottom:25px;">
+                    <h3 style="color:var(--primary); margin-bottom:25px; border-right:5px solid var(--gold); padding-right:15px;">البيان (أخبار الجامعة)</h3>
+                    <div id="create-post-container" class="hidden" style="margin-bottom:30px;">
                         <textarea id="new-post-content" rows="3" placeholder="ما الجديد؟ (للمدراء فقط)"></textarea>
-                        <button onclick="createPost()" class="btn-main btn-sm" style="margin-top:12px;">نشر الخبر</button>
+                        <button onclick="createPost()" class="btn-main btn-sm" style="margin-top:15px;">نشر الخبر</button>
                     </div>
-                    <div id="news-feed" style="padding-bottom:100px;"></div>
+                    <div id="news-feed" style="padding-bottom:120px;"></div>
                 </div>
             </div>
 
             <div id="page-create" class="page-section hidden">
                 <div class="glass-card" style="margin-top:0;">
-                    <h3 style="margin:0 0 25px; font-weight:800; color:var(--primary-dark); border-right:5px solid var(--primary); padding-right:15px; font-size:22px;">بلاغ صيانة جديد</h3>
+                    <h3 style="margin:0 0 30px; font-weight:800; color:var(--primary-dark); border-right:6px solid var(--primary); padding-right:15px; font-size:24px;">بلاغ صيانة جديد</h3>
                     
-                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:20px;">
-                        <div class="input-group"><label>التاريخ</label><div class="date-wrapper"><input type="date" id="req-date"></div></div>
-                        <div class="input-group"><label>الوقت</label><div class="time-wrapper"><input type="time" id="req-time"></div></div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr; gap:15px; margin-bottom:25px;">
+                        <div class="input-group">
+                            <label>التاريخ</label>
+                            <div class="date-wrapper"><input type="date" id="req-date"></div>
+                        </div>
+                        <div class="input-group">
+                            <label>الوقت</label>
+                            <div class="time-wrapper"><input type="time" id="req-time"></div>
+                        </div>
                     </div>
 
                     <div class="input-group">
@@ -513,15 +1294,24 @@
                     <div class="input-group">
                         <label>درجة الأهمية</label>
                         <div class="priority-grid">
-                            <label class="prio-label" style="flex:1"><input type="radio" name="prio" value="low" class="prio-radio" checked><div class="prio-card p-low"><i class="fa-regular fa-face-smile"></i><span>عادي</span></div></label>
-                            <label class="prio-label" style="flex:1"><input type="radio" name="prio" value="medium" class="prio-radio"><div class="prio-card p-med"><i class="fa-regular fa-face-meh"></i><span>متوسط</span></div></label>
-                            <label class="prio-label" style="flex:1"><input type="radio" name="prio" value="high" class="prio-radio"><div class="prio-card p-high"><i class="fa-solid fa-fire"></i><span>عاجل</span></div></label>
+                            <label class="prio-label" style="flex:1">
+                                <input type="radio" name="prio" value="low" class="prio-radio" checked>
+                                <div class="prio-card p-low"><i class="fa-regular fa-face-smile"></i><span>عادي</span></div>
+                            </label>
+                            <label class="prio-label" style="flex:1">
+                                <input type="radio" name="prio" value="medium" class="prio-radio">
+                                <div class="prio-card p-med"><i class="fa-regular fa-face-meh"></i><span>متوسط</span></div>
+                            </label>
+                            <label class="prio-label" style="flex:1">
+                                <input type="radio" name="prio" value="high" class="prio-radio">
+                                <div class="prio-card p-high"><i class="fa-solid fa-fire"></i><span>عاجل</span></div>
+                            </label>
                         </div>
                     </div>
 
                     <div class="input-group">
                         <label>بيانات الموقع (إجبارية)</label>
-                        <select id="req-faculty" class="modern-select" style="margin-bottom:12px;">
+                        <select id="req-faculty" class="modern-select" style="margin-bottom:15px;">
                             <option value="">اختر المبنى/الكلية...</option>
                             <option value="Admin">المبني الاداري</option>
                             <option value="Nursing">مبني كلية التمريض</option>
@@ -532,26 +1322,30 @@
                             <option value="Business">مبني كلية ادراة اعمال</option>
                             <option value="Other">موقع آخر...</option>
                         </select>
-                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+                        
+                        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:15px;">
                             <select id="req-floor" class="modern-select">
                                 <option value="">اختر الدور...</option>
-                                <option value="G">الأرضي</option>
-                                <option value="1">الأول</option>
-                                <option value="2">الثاني</option>
-                                <option value="3">الثالث</option>
-                                <option value="4">الرابع</option>
+                                <option value="G">الأرضي (G)</option>
+                                <option value="1">الأول (1)</option>
+                                <option value="2">الثاني (2)</option>
+                                <option value="3">الثالث (3)</option>
+                                <option value="4">الرابع (4)</option>
                                 <option value="Roof">السطح</option>
-                                <option value="External">خارجي</option>
+                                <option value="External">خارجي/ساحة</option>
                             </select>
                             <input type="text" id="req-room" placeholder="رقم القاعة/الغرفة">
                         </div>
                     </div>
 
-                    <div class="input-group"><label>وصف البلاغ التفصيلي</label><textarea id="req-desc" rows="4" placeholder="اشرح المشكلة بدقة..."></textarea></div>
+                    <div class="input-group">
+                        <label>وصف البلاغ التفصيلي</label>
+                        <textarea id="req-desc" rows="4" placeholder="اشرح المشكلة بدقة لمساعدة الفني..."></textarea>
+                    </div>
                     
-                    <div style="display:flex; gap:12px; margin-bottom:25px;">
-                        <div style="flex:1; background:var(--surface-light); padding:20px; border-radius:18px; border:2px dashed var(--border); text-align:center; cursor:pointer; transition:0.3s;" onclick="document.getElementById('req-files').click()" onmouseover="this.style.borderColor=var(--primary); this.style.background='#eff6ff'" onmouseout="this.style.borderColor=var(--border); this.style.background=var(--surface-light)">
-                            <i class="fa-solid fa-cloud-arrow-up fa-2x" style="color:var(--text-muted); margin-bottom:10px;"></i>
+                    <div style="display:flex; gap:15px; margin-bottom:30px;">
+                        <div style="flex:1; background:var(--surface-light); padding:25px; border-radius:20px; border:2px dashed var(--border); text-align:center; cursor:pointer; transition:0.3s;" onclick="document.getElementById('req-files').click()" onmouseover="this.style.borderColor=var(--primary); this.style.background='#eff6ff'" onmouseout="this.style.borderColor=var(--border); this.style.background=var(--surface-light)">
+                            <i class="fa-solid fa-cloud-arrow-up fa-2x" style="color:var(--text-muted); margin-bottom:12px;"></i>
                             <p style="font-size:13px; color:var(--text-muted); margin:0;">إرفاق صور / فيديو</p>
                             <input type="file" id="req-files" hidden multiple accept="image/*,video/*" onchange="handleFiles(this)">
                         </div>
@@ -560,41 +1354,47 @@
                         </div>
                     </div>
                     
-                    <div id="preview-grid" class="media-grid" style="margin-bottom:25px;"></div>
+                    <div id="preview-grid" class="media-grid" style="margin-bottom:30px;"></div>
                     <button onclick="openSupModal()" class="btn-main">التالي: اختيار المشرف <i class="fa-solid fa-arrow-left"></i></button>
                 </div>
             </div>
 
             <div id="page-team" class="page-section hidden">
-                <div class="glass-card" style="border-top: 4px solid var(--gold);">
-                    <h3 style="margin-bottom:20px;">فريق العمل والأصدقاء</h3>
-                    <div style="display:flex; gap:10px; margin-bottom:25px;">
+                <div class="glass-card" style="border-top: 5px solid var(--gold);">
+                    <h3 style="margin-bottom:25px;">فريق العمل والأصدقاء</h3>
+                    <div style="display:flex; gap:12px; margin-bottom:30px;">
                         <input type="text" id="search-query" placeholder="بحث بالـ ID أو البريد..." style="margin:0;">
-                        <button onclick="searchUser()" class="btn-main" style="width:auto; margin:0; padding:0 20px;"><i class="fa-solid fa-search"></i></button>
+                        <button onclick="searchUser()" class="btn-main" style="width:auto; margin:0; padding:0 25px;"><i class="fa-solid fa-search"></i></button>
                     </div>
-                    <div id="search-results" class="hidden" style="margin-bottom:20px;"></div>
-                    <div id="friend-reqs" class="hidden" style="background:#fff7ed; padding:15px; border-radius:18px; margin-bottom:20px; border:1px solid var(--gold);">
-                        <h5 style="margin:0 0 12px; color:var(--gold); display:flex; align-items:center; gap:5px;"><i class="fa-solid fa-user-plus"></i> طلبات صداقة جديدة:</h5>
+                    <div id="search-results" class="hidden" style="margin-bottom:25px;"></div>
+                    
+                    <div id="friend-reqs" class="hidden" style="background:#fff7ed; padding:20px; border-radius:20px; margin-bottom:25px; border:1px solid var(--gold);">
+                        <h5 style="margin:0 0 15px; color:var(--gold); display:flex; align-items:center; gap:8px;">
+                            <i class="fa-solid fa-user-plus"></i> طلبات صداقة جديدة:
+                        </h5>
                         <div id="reqs-list"></div>
                     </div>
-                    <h5 style="color:var(--text-muted); margin-bottom:15px;">قائمة الأصدقاء:</h5>
+                    
+                    <h5 style="color:var(--text-muted); margin-bottom:20px; border-bottom:1px solid var(--border); padding-bottom:10px;">قائمة الأصدقاء:</h5>
                     <div id="team-list"></div>
                 </div>
             </div>
             <div id="page-profile" class="page-section hidden">
                 <div class="glass-card" style="margin-top:20px;">
                     <div style="text-align:center;">
-                        <div class="user-avatar-container" style="margin: 0 auto 30px; width: 110px; height: 110px;">
+                        <div class="user-avatar-container" style="margin: 0 auto 30px; width: 120px; height: 120px;">
                             <img id="edit-current-pic" src="">
                             <div id="edit-frame-overlay" class="frame-overlay"></div>
-                            <div onclick="document.getElementById('edit-profile-file').click()" style="position:absolute; bottom:0; right:0; background:var(--primary); width:40px; height:40px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:3px solid #fff; z-index:3; box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition:0.2s;">
-                                <i class="fa-solid fa-camera" style="color:white; font-size:16px;"></i>
+                            <div onclick="document.getElementById('edit-profile-file').click()" style="position:absolute; bottom:0; right:0; background:var(--primary); width:45px; height:45px; border-radius:50%; display:flex; align-items:center; justify-content:center; cursor:pointer; border:3px solid #fff; z-index:3; box-shadow: 0 5px 15px rgba(0,0,0,0.2); transition:0.3s;">
+                                <i class="fa-solid fa-camera" style="color:white; font-size:18px;"></i>
                             </div>
                         </div>
                         <input type="file" id="edit-profile-file" hidden accept="image/*" onchange="previewProfilePic(this)">
                         
-                        <div style="margin-bottom:25px; background:var(--surface-light); padding:15px; border-radius:20px; border:1px solid var(--border);">
-                             <p style="font-size:13px; font-weight:800; color:var(--text); margin-bottom:10px;">اختر إطار للصورة الشخصية:</p>
+                        <div style="margin-bottom:30px; background:var(--surface-light); padding:20px; border-radius:25px; border:1px solid var(--border);">
+                             <p style="font-size:14px; font-weight:800; color:var(--text); margin-bottom:15px; text-align:right;">
+                                 <i class="fa-solid fa-crop-simple"></i> اختر إطار للصورة الشخصية:
+                             </p>
                              <div class="frame-grid">
                                  <div class="frame-option f-none selected" onclick="selectFrame(this, '')">بدون</div>
                                  <div class="frame-option f-gold" onclick="selectFrame(this, 'f-gold')"></div>
@@ -603,12 +1403,15 @@
                              </div>
                         </div>
 
-                        <div style="font-family:'Courier New', monospace; background:#1e293b; display:inline-block; padding:8px 20px; border-radius:30px; margin-bottom:30px; color:#fff; border:1px solid rgba(255,255,255,0.2); font-weight:bold; letter-spacing:1px; cursor:pointer;" onclick="copyId()">
-                            ID: <span id="edit-id-display">--</span> <i class="fa-regular fa-copy" style="margin-right:8px; font-size:12px;"></i>
+                        <div style="font-family:'Courier New', monospace; background:#1e293b; display:inline-block; padding:10px 25px; border-radius:30px; margin-bottom:35px; color:#fff; border:1px solid rgba(255,255,255,0.2); font-weight:bold; letter-spacing:1px; cursor:pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.1);" onclick="copyId()">
+                            ID: <span id="edit-id-display">--</span> <i class="fa-regular fa-copy" style="margin-right:10px; font-size:14px;"></i>
                         </div>
 
                         <div style="text-align:right;">
-                            <div class="input-group"><label>الاسم الكامل</label><input type="text" id="edit-name"></div>
+                            <div class="input-group">
+                                <label>الاسم الكامل</label>
+                                <input type="text" id="edit-name">
+                            </div>
                             <div class="input-group">
                                 <label>النوع</label>
                                 <select id="edit-gender" class="modern-select">
@@ -616,41 +1419,52 @@
                                     <option value="female">أنثى</option>
                                 </select>
                             </div>
-                            <div class="input-group"><label>رقم الهاتف</label><input type="tel" id="edit-phone"></div>
-                            <div class="input-group"><label>المسمى الوظيفي</label><input type="text" id="edit-job"></div>
-                            <div class="input-group"><label>مقر العمل</label><input type="text" id="edit-loc"></div>
+                            <div class="input-group">
+                                <label>رقم الهاتف</label>
+                                <input type="tel" id="edit-phone">
+                            </div>
+                            <div class="input-group">
+                                <label>المسمى الوظيفي</label>
+                                <input type="text" id="edit-job">
+                            </div>
+                            <div class="input-group">
+                                <label>مقر العمل</label>
+                                <input type="text" id="edit-loc">
+                            </div>
                         </div>
-                        <button onclick="saveProfile()" class="btn-main" id="save-profile-btn" style="margin-top:25px;">حفظ التعديلات <i class="fa-solid fa-check"></i></button>
+                        <button onclick="saveProfile()" class="btn-main" id="save-profile-btn" style="margin-top:30px;">حفظ التعديلات <i class="fa-solid fa-check"></i></button>
                     </div>
                 </div>
             </div>
 
             <div id="page-settings" class="page-section hidden">
                 <div class="glass-card">
-                    <h3 style="margin-bottom:30px; display:flex; align-items:center; gap:10px;">
+                    <h3 style="margin-bottom:35px; display:flex; align-items:center; gap:12px; font-size:20px;">
                         <i class="fa-solid fa-sliders" style="color:var(--primary);"></i> الإعدادات العامة
                     </h3>
                     
                     <div class="input-group">
                         <label>التنبيهات والإشعارات</label>
-                        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-light); padding:18px; border-radius:18px; border:1px solid var(--border);">
-                            <span style="font-weight:600; font-size:13px;">تفعيل التنبيهات الصوتية</span>
-                            <button onclick="reqNotifyPerm()" class="btn-sm btn-main" style="width:auto; padding:8px 15px;">تفعيل</button>
+                        <div style="display:flex; justify-content:space-between; align-items:center; background:var(--surface-light); padding:20px; border-radius:20px; border:1px solid var(--border);">
+                            <span style="font-weight:700; font-size:14px; color:var(--text);">تفعيل التنبيهات الصوتية</span>
+                            <button onclick="reqNotifyPerm()" class="btn-sm btn-main" style="width:auto; padding:10px 20px;">تفعيل</button>
                         </div>
                     </div>
                     
-                    <div id="emp-report-btn-container" class="hidden" style="margin-top:20px;">
-                        <button onclick="openEmpReportModal()" class="btn-main" style="background:linear-gradient(135deg, #4f46e5, #3730a3); box-shadow:0 8px 20px rgba(79, 70, 229, 0.3);"><i class="fa-solid fa-file-contract"></i> إنشاء تقرير إداري</button>
+                    <div id="emp-report-btn-container" class="hidden" style="margin-top:25px;">
+                        <button onclick="openEmpReportModal()" class="btn-main" style="background:linear-gradient(135deg, #4f46e5, #3730a3); box-shadow:0 8px 25px rgba(79, 70, 229, 0.25);"><i class="fa-solid fa-file-contract"></i> إنشاء تقرير إداري</button>
                     </div>
 
-                    <div id="full-report-btn-container" class="hidden" style="margin-top:20px;">
+                    <div id="full-report-btn-container" class="hidden" style="margin-top:25px;">
                         <button onclick="generateFullReport()" class="btn-main" style="background:var(--primary-dark);"><i class="fa-solid fa-chart-pie"></i> التقرير الشامل للنظام</button>
                     </div>
                     
-                    <div id="tech-task-management" class="hidden" style="margin-top:25px; border-top:1px solid var(--border); padding-top:20px;">
-                        <label style="font-weight:800; color:var(--primary); margin-bottom:15px; display:block; font-size:15px;"><i class="fa-solid fa-users-gear"></i> إدارة مهام الفنيين</label>
-                        <div style="background:var(--surface-light); padding:20px; border-radius:18px; border:1px solid var(--border);">
-                            <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">استخرج تقرير أداء لفني معين:</p>
+                    <div id="tech-task-management" class="hidden" style="margin-top:30px; border-top:2px dashed var(--border); padding-top:25px;">
+                        <label style="font-weight:800; color:var(--primary); margin-bottom:15px; display:block; font-size:16px;">
+                            <i class="fa-solid fa-users-gear"></i> إدارة مهام الفنيين
+                        </label>
+                        <div style="background:var(--surface-light); padding:25px; border-radius:20px; border:1px solid var(--border);">
+                            <p style="font-size:13px; color:var(--text-muted); margin-bottom:15px; font-weight:600;">استخراج تقرير أداء لفني (عامل) معين:</p>
                             <div style="display:flex; gap:12px;">
                                 <input type="text" id="sub-tech-name-input" placeholder="اسم الفني (العامل)..." style="margin:0;">
                                 <button onclick="generateSubTechReport()" class="btn-main btn-sm" style="width:auto;"><i class="fa-solid fa-file-invoice"></i> استخراج</button>
@@ -658,14 +1472,14 @@
                         </div>
                     </div>
 
-                    <div style="margin-top:30px; background:linear-gradient(to right, var(--surface-light), #fff); padding:20px; border-radius:20px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
-                        <span style="font-weight:700; font-size:13px;">الدعم الفني</span>
-                        <a href="mailto:support@ryada.edu.eg" style="text-decoration:none; color:var(--primary); font-size:13px; display:flex; align-items:center; gap:8px; font-weight:bold; background:#fff; padding:8px 15px; border-radius:10px; border:1px solid var(--border);">
+                    <div style="margin-top:35px; background:linear-gradient(to right, var(--surface-light), #fff); padding:25px; border-radius:25px; border:1px solid var(--border); display:flex; align-items:center; justify-content:space-between;">
+                        <span style="font-weight:800; font-size:14px; color:var(--text);">الدعم الفني</span>
+                        <a href="mailto:support@ryada.edu.eg" style="text-decoration:none; color:var(--primary); font-size:13px; display:flex; align-items:center; gap:8px; font-weight:bold; background:#fff; padding:10px 20px; border-radius:15px; border:1px solid var(--border); box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
                              <i class="fa-solid fa-headset"></i> تواصل معنا
                         </a>
                     </div>
 
-                    <hr style="border-color:var(--border); margin:30px 0;">
+                    <hr style="border-color:var(--border); margin:35px 0;">
                     <button onclick="document.getElementById('logout-modal').classList.remove('hidden')" class="btn-main btn-danger">تسجيل خروج آمن <i class="fa-solid fa-right-from-bracket"></i></button>
                 </div>
             </div>
@@ -683,16 +1497,16 @@
     
     <div id="media-viewer" class="hidden" style="position:fixed; inset:0; background:rgba(0,0,0,0.96); z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center;">
         <div class="close-btn" style="top:30px; right:30px; left:auto; background:rgba(255,255,255,0.15); color:white; border:none;" onclick="document.getElementById('media-viewer').classList.add('hidden')"><i class="fa-solid fa-xmark"></i></div>
-        <div id="media-content-container" style="max-width:95%; max-height:80vh; border-radius:15px; overflow:hidden; box-shadow: 0 0 50px rgba(0,0,0,0.5);"></div>
+        <div id="media-content-container" style="max-width:95%; max-height:80vh; border-radius:20px; overflow:hidden; box-shadow: 0 0 50px rgba(0,0,0,0.5);"></div>
     </div>
 
     <div id="audio-player-modal" class="modal-overlay hidden" style="z-index: 10001;">
-        <div class="modal-content" style="max-width:350px; text-align:center; padding:40px 25px;">
+        <div class="modal-content" style="max-width:360px; text-align:center; padding:45px 30px;">
             <div class="close-btn" onclick="closeAudioPlayer()"><i class="fa-solid fa-xmark"></i></div>
-            <div style="width:90px; height:90px; background:#e0f2fe; color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 30px; font-size:35px; box-shadow: 0 10px 20px rgba(14, 165, 233, 0.2);">
+            <div style="width:100px; height:100px; background:#e0f2fe; color:var(--primary); border-radius:50%; display:flex; align-items:center; justify-content:center; margin:0 auto 35px; font-size:40px; box-shadow: 0 15px 30px rgba(14, 165, 233, 0.2);">
                 <i class="fa-solid fa-music"></i>
             </div>
-            <h4 style="margin:0 0 25px; color:var(--text); font-weight:800;">تشغيل الملاحظة الصوتية</h4>
+            <h4 style="margin:0 0 25px; color:var(--text); font-weight:800; font-size:18px;">تشغيل الملاحظة الصوتية</h4>
             <audio id="modal-audio-player" controls style="width:100%; border-radius:30px; outline:none;"></audio>
         </div>
     </div>
@@ -700,29 +1514,29 @@
     <div id="friend-profile-modal" class="modal-overlay hidden">
         <div class="modal-content" style="text-align:center; z-index:2001;">
             <div class="close-btn" onclick="closeModal('friend-profile-modal')"><i class="fa-solid fa-xmark"></i></div>
-            <div style="position:relative; margin-bottom:20px; display:inline-block;">
-                <img id="fp-pic" src="" style="width:130px; height:130px; border-radius:50%; border:5px solid var(--surface); object-fit:cover; box-shadow:0 15px 35px rgba(0,0,0,0.15);">
+            <div style="position:relative; margin-bottom:25px; display:inline-block;">
+                <img id="fp-pic" src="" style="width:140px; height:140px; border-radius:50%; border:6px solid var(--surface); object-fit:cover; box-shadow:0 15px 35px rgba(0,0,0,0.15);">
             </div>
-            <h3 id="fp-name" style="margin:0; font-size:24px; font-weight:900; color:var(--text); letter-spacing:-0.5px;">-</h3>
-            <span id="fp-role" style="background:var(--primary); color:white; padding:6px 20px; border-radius:20px; font-size:12px; display:inline-block; margin:12px 0 25px; font-weight:700; letter-spacing:0.5px;">-</span>
+            <h3 id="fp-name" style="margin:0; font-size:26px; font-weight:900; color:var(--text); letter-spacing:-0.5px;">-</h3>
+            <span id="fp-role" style="background:var(--primary); color:white; padding:8px 22px; border-radius:30px; font-size:13px; display:inline-block; margin:15px 0 30px; font-weight:700; letter-spacing:0.5px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">-</span>
             
-            <div id="fp-actions" style="display:flex; justify-content:center; gap:12px; margin-bottom:30px;">
+            <div id="fp-actions" style="display:flex; justify-content:center; gap:15px; margin-bottom:35px;">
                 </div>
             
-            <div style="text-align:right; background:var(--surface-light); padding:25px; border-radius:24px; border:1px solid var(--border);">
-                <p style="margin:15px 0; border-bottom:1px dashed var(--border); padding-bottom:10px;"><i class="fa-solid fa-briefcase" style="color:var(--primary); width:25px;"></i> <span id="fp-job" style="font-weight:600;">-</span></p>
-                <p style="margin:15px 0; border-bottom:1px dashed var(--border); padding-bottom:10px;"><i class="fa-solid fa-location-dot" style="color:var(--primary); width:25px;"></i> <span id="fp-loc" style="font-weight:600;">-</span></p>
-                <p style="margin:15px 0;"><i class="fa-solid fa-envelope" style="color:var(--primary); width:25px;"></i> <span id="fp-email" style="font-size:12px; font-family:sans-serif;">-</span></p>
+            <div style="text-align:right; background:var(--surface-light); padding:30px; border-radius:28px; border:1px solid var(--border);">
+                <p style="margin:18px 0; border-bottom:1px dashed var(--border); padding-bottom:12px;"><i class="fa-solid fa-briefcase" style="color:var(--primary); width:25px;"></i> <span id="fp-job" style="font-weight:600;">-</span></p>
+                <p style="margin:18px 0; border-bottom:1px dashed var(--border); padding-bottom:12px;"><i class="fa-solid fa-location-dot" style="color:var(--primary); width:25px;"></i> <span id="fp-loc" style="font-weight:600;">-</span></p>
+                <p style="margin:18px 0;"><i class="fa-solid fa-envelope" style="color:var(--primary); width:25px;"></i> <span id="fp-email" style="font-size:13px; font-family:sans-serif;">-</span></p>
             </div>
         </div>
     </div>
     
     <div id="confirm-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="text-align:center; max-width:340px;">
+        <div class="modal-content" style="text-align:center; max-width:350px;">
              <div class="confirm-icon-box"><i class="fa-solid fa-triangle-exclamation"></i></div>
-             <h3 style="margin-bottom:15px; color:var(--text); font-weight:800;">تأكيد الإجراء</h3>
-             <p id="confirm-modal-msg" style="color:var(--text-muted); font-size:15px; margin-bottom:30px; line-height:1.5;">هل أنت متأكد؟</p>
-             <div style="display:flex; gap:12px;">
+             <h3 style="margin-bottom:15px; color:var(--text); font-weight:800; font-size:20px;">تأكيد الإجراء</h3>
+             <p id="confirm-modal-msg" style="color:var(--text-muted); font-size:15px; margin-bottom:35px; line-height:1.6;">هل أنت متأكد من تنفيذ هذا الإجراء؟</p>
+             <div style="display:flex; gap:15px;">
                  <button id="confirm-yes-btn" class="btn-main btn-danger">نعم، تنفيذ</button>
                  <button onclick="closeModal('confirm-modal')" class="btn-ghost" style="width:100%;">إلغاء</button>
              </div>
@@ -732,39 +1546,39 @@
     <div id="sup-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('sup-modal')"><i class="fa-solid fa-xmark"></i></div>
-            <h3 style="margin-bottom:25px; border-right:5px solid var(--gold); padding-right:15px; color:var(--text);">اختر المشرف المسؤول</h3>
-            <p style="font-size:12px; color:var(--text-muted); margin-bottom:15px;">سيتم إرسال البلاغ إلى المشرف المختار للموافقة عليه.</p>
-            <div id="sup-list" style="max-height:300px; overflow-y:auto; margin-bottom:25px; padding:5px;"></div>
-            <button onclick="sendRequestFinal()" class="btn-main" id="confirm-send-btn">إرسال البلاغ فوراً <i class="fa-regular fa-paper-plane"></i></button>
+            <h3 style="margin-bottom:25px; border-right:6px solid var(--gold); padding-right:15px; color:var(--text); font-size:22px;">اختر المشرف المسؤول</h3>
+            <p style="font-size:13px; color:var(--text-muted); margin-bottom:20px; background:var(--surface-light); padding:10px; border-radius:10px;">سيتم إرسال البلاغ إلى المشرف المختار للموافقة عليه وتوجيهه.</p>
+            <div id="sup-list" style="max-height:320px; overflow-y:auto; margin-bottom:30px; padding:5px;"></div>
+            <button onclick="sendRequestFinal()" class="btn-main" id="confirm-send-btn">تأكيد وإرسال البلاغ <i class="fa-regular fa-paper-plane"></i></button>
         </div>
     </div>
 
     <div id="action-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('action-modal')"><i class="fa-solid fa-xmark"></i></div>
-            <h3 id="act-title" style="margin-bottom:25px; color:var(--text); font-weight:800;">إجراء</h3>
-            <textarea id="act-comment" rows="4" placeholder="اكتب ملاحظات أو تعليمات..."></textarea>
+            <h3 id="act-title" style="margin-bottom:30px; color:var(--text); font-weight:900; font-size:22px;">إجراء</h3>
+            <textarea id="act-comment" rows="5" placeholder="اكتب ملاحظات، تعليمات، أو سبب الرفض..."></textarea>
             
-            <div id="tech-select-area" class="hidden" style="margin-top:25px;">
-                <p style="font-size:13px; font-weight:800; color:var(--text-muted); margin-bottom:15px;">اختر المهندس المختص:</p>
-                <div id="tech-list-action" class="tech-select-grid" style="max-height:220px; overflow-y:auto; padding:5px;"></div>
+            <div id="tech-select-area" class="hidden" style="margin-top:30px;">
+                <p style="font-size:14px; font-weight:800; color:var(--text-muted); margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:5px;">اختر المهندس المختص:</p>
+                <div id="tech-list-action" class="tech-select-grid" style="max-height:240px; overflow-y:auto; padding:5px;"></div>
             </div>
             
-            <div id="worker-select-area" class="hidden" style="margin-top:25px;">
-                <p style="font-size:13px; font-weight:800; color:var(--text-muted); margin-bottom:15px;">تعيين فني (عامل) للتنفيذ:</p>
-                <div id="worker-list-action" class="tech-select-grid" style="max-height:220px; overflow-y:auto; padding:5px;"></div>
+            <div id="worker-select-area" class="hidden" style="margin-top:30px;">
+                <p style="font-size:14px; font-weight:800; color:var(--text-muted); margin-bottom:15px; border-bottom:1px solid var(--border); padding-bottom:5px;">تعيين فني (عامل) للتنفيذ:</p>
+                <div id="worker-list-action" class="tech-select-grid" style="max-height:240px; overflow-y:auto; padding:5px;"></div>
             </div>
 
-            <button onclick="submitAction()" id="act-submit-btn" class="btn-main" style="margin-top:25px;">تأكيد وتنفيذ</button>
+            <button onclick="submitAction()" id="act-submit-btn" class="btn-main" style="margin-top:30px;">تأكيد وتنفيذ العملية</button>
         </div>
     </div>
 
     <div id="tech-report-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('tech-report-modal')"><i class="fa-solid fa-xmark"></i></div>
-            <h3 style="margin-bottom:25px; color:var(--primary-dark); font-weight:800;">تقرير فني</h3>
-            <div class="input-group"><input type="text" id="tech-report-title" placeholder="عنوان التقرير"></div>
-            <div class="input-group"><textarea id="tech-report-content" rows="6" placeholder="تفاصيل التقرير الفني..."></textarea></div>
+            <h3 style="margin-bottom:30px; color:var(--primary-dark); font-weight:800; border-right:5px solid var(--primary); padding-right:15px;">تقرير فني</h3>
+            <div class="input-group"><input type="text" id="tech-report-title" placeholder="عنوان التقرير الفني"></div>
+            <div class="input-group"><textarea id="tech-report-content" rows="8" placeholder="سرد تفاصيل التقرير الفني..."></textarea></div>
             <button onclick="submitTechReport()" class="btn-main"><i class="fa-solid fa-file-pdf"></i> حفظ وتحميل PDF</button>
         </div>
     </div>
@@ -772,29 +1586,29 @@
     <div id="emp-report-modal" class="modal-overlay hidden">
         <div class="modal-content">
             <div class="close-btn" onclick="closeModal('emp-report-modal')"><i class="fa-solid fa-xmark"></i></div>
-            <h3 style="margin-bottom:25px; color:var(--primary);">تقرير إداري رسمي</h3>
+            <h3 style="margin-bottom:30px; color:var(--primary); font-weight:900;">تقرير إداري رسمي</h3>
             <div class="input-group"><input type="text" id="emp-rep-title" placeholder="عنوان التقرير"></div>
-            <div class="input-group"><textarea id="emp-rep-content" rows="8" placeholder="نص التقرير..."></textarea></div>
-            <p style="font-size:12px; color:var(--text-muted); margin-top:10px;">سيتم إضافة الترويسة والتوقيعات تلقائياً.</p>
-            <button onclick="generateEmpReport()" class="btn-main" style="margin-top:20px;"><i class="fa-solid fa-print"></i> طباعة PDF</button>
+            <div class="input-group"><textarea id="emp-rep-content" rows="10" placeholder="نص التقرير..."></textarea></div>
+            <p style="font-size:12px; color:var(--text-muted); margin-top:15px; background:var(--surface-light); padding:10px; border-radius:10px;">سيتم إضافة الترويسة والتوقيعات تلقائياً عند الطباعة.</p>
+            <button onclick="generateEmpReport()" class="btn-main" style="margin-top:25px;"><i class="fa-solid fa-print"></i> طباعة التقرير (PDF)</button>
         </div>
     </div>
 
     <div id="request-details-modal" class="modal-overlay hidden">
-        <div class="modal-content" style="max-width:550px;">
+        <div class="modal-content" style="max-width:580px;">
             <div class="close-btn" onclick="closeModal('request-details-modal')"><i class="fa-solid fa-xmark"></i></div>
-            <h3 style="text-align:center; color:var(--primary); margin-bottom:5px;">تفاصيل البلاغ</h3>
-            <div id="req-ticket-display" style="text-align:center; margin-bottom:20px;"></div>
+            <h3 style="text-align:center; color:var(--primary); margin-bottom:10px; font-weight:800;">تفاصيل البلاغ</h3>
+            <div id="req-ticket-display" style="text-align:center; margin-bottom:25px;"></div>
             <div id="req-details-content"></div>
         </div>
     </div>
 
     <div id="logout-modal" class="modal-overlay hidden">
         <div class="modal-content" style="text-align:center;">
-            <i class="fa-solid fa-right-from-bracket fa-3x" style="color:var(--error); margin-bottom:20px;"></i>
-            <h3 style="color:var(--text); font-weight:800; margin-bottom:10px;">تسجيل الخروج</h3>
-            <p style="color:var(--text-muted); margin-bottom:30px;">هل تريد الخروج من الحساب؟</p>
-            <div style="display:flex; gap:12px; margin-top:25px;">
+            <i class="fa-solid fa-right-from-bracket fa-3x" style="color:var(--error); margin-bottom:25px;"></i>
+            <h3 style="color:var(--text); font-weight:800; margin-bottom:15px;">تسجيل الخروج</h3>
+            <p style="color:var(--text-muted); margin-bottom:35px; font-size:15px;">هل أنت متأكد أنك تريد الخروج من الحساب؟</p>
+            <div style="display:flex; gap:15px; margin-top:25px;">
                 <button onclick="logout()" class="btn-main btn-danger">نعم، خروج</button>
                 <button onclick="closeModal('logout-modal')" class="btn-ghost" style="width:100%;">إلغاء</button>
             </div>
@@ -805,16 +1619,16 @@
         <div class="modal-content" style="text-align:center;">
             <div class="close-btn" onclick="closeModal('delete-friend-modal')"><i class="fa-solid fa-xmark"></i></div>
             <div class="confirm-icon-box"><i class="fa-solid fa-user-xmark"></i></div>
-            <h3 style="margin-bottom:10px; color:var(--text);">حذف صديق؟</h3>
-            <p style="color:var(--text-muted); margin-bottom:25px; font-size:14px;">هل أنت متأكد من رغبتك في إزالة هذا المستخدم من قائمة الأصدقاء؟</p>
-            <div style="display:flex; gap:12px;">
+            <h3 style="margin-bottom:15px; color:var(--text); font-weight:800;">حذف صديق؟</h3>
+            <p style="color:var(--text-muted); margin-bottom:30px; font-size:15px;">هل أنت متأكد من رغبتك في إزالة هذا المستخدم من قائمة الأصدقاء؟ لا يمكن التراجع عن هذا الإجراء.</p>
+            <div style="display:flex; gap:15px;">
                 <button onclick="confirmRemoveFriend()" class="btn-main btn-danger">نعم، حذف</button>
                 <button onclick="closeModal('delete-friend-modal')" class="btn-ghost" style="width:100%;">إلغاء</button>
             </div>
         </div>
     </div>
 
-    <div id="toast" style="position:fixed; top:30px; left:50%; transform:translateX(-50%); background:rgba(15, 23, 42, 0.95); color:white; padding:14px 35px; border-radius:50px; border:1px solid rgba(255,255,255,0.1); z-index:11000; display:none; font-size:14px; font-weight:bold; box-shadow:0 15px 40px rgba(0,0,0,0.4); font-family:'Cairo'; backdrop-filter:blur(8px); min-width:200px; text-align:center;"></div>
+    <div id="toast" style="position:fixed; top:40px; left:50%; transform:translateX(-50%); background:rgba(15, 23, 42, 0.95); color:white; padding:16px 40px; border-radius:50px; border:1px solid rgba(255,255,255,0.15); z-index:11000; display:none; font-size:15px; font-weight:bold; box-shadow:0 20px 50px rgba(0,0,0,0.5); font-family:'Cairo'; backdrop-filter:blur(10px); min-width:220px; text-align:center;"></div>
 
 </div>
 
@@ -823,9 +1637,11 @@
 <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>
 
 <script>
-    // =========================================================================
-    // 1. CONFIGURATION & INITIALIZATION
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 1. CONFIGURATION & INITIALIZATION (تهيئة التطبيق وقاعدة البيانات)
+     * =========================================================================
+     */
     const firebaseConfig = {
         apiKey: "AIzaSyABwJfEkkbNB8GurZkyj67R8ksVNEXZ11I",
         authDomain: "ryadanur1-375a8.firebaseapp.com",
@@ -834,14 +1650,17 @@
         messagingSenderId: "858244114090",
         appId: "1:858244114090:web:42cee8e98e3984164392d3"
     };
+    
+    // Cloudinary Config for Media Uploads
     const CLOUD_NAME = "djzfruh22"; 
     const CLOUD_PRESET = "udyvggup";
 
+    // Initialize Firebase
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const db = firebase.firestore();
 
-    // --- Global State ---
+    // --- Global State Variables ---
     let currentUser = null;
     let userData = null;
     let isLoginMode = true;
@@ -862,9 +1681,12 @@
     let audioChunks = [];
     let isRecording = false;
 
-    // =========================================================================
-    // 2. TICKET GENERATOR (NEW)
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 2. TICKET GENERATOR (NEW) - توليد كود البلاغ المميز
+     * =========================================================================
+     * يقوم بإنشاء كود فريد لكل بلاغ بصيغة #REQ-YYYY-XXXX
+     */
     function generateTicketId() {
         const chars = "ABCDEF0123456789";
         let randomPart = "";
@@ -876,9 +1698,11 @@
         return `#REQ-${year}-${randomPart}`;
     }
 
-    // =========================================================================
-    // 3. AUTHENTICATION & STARTUP
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 3. AUTHENTICATION & STARTUP (إدارة المصادقة وبدء التشغيل)
+     * =========================================================================
+     */
     auth.onAuthStateChanged(async u => {
         if(u) {
             if(!u.emailVerified) {
@@ -896,13 +1720,14 @@
         }
     });
 
+    // تحميل بيانات المستخدم من قاعدة البيانات
     async function loadUser() {
         try {
             const doc = await db.collection('users').doc(currentUser.uid).get();
             if(doc.exists) {
                 userData = doc.data();
                 
-                // Legacy support
+                // Legacy support code for old accounts
                 if(!userData.shortId) {
                     userData.shortId = Math.random().toString(36).substr(2,6).toUpperCase();
                     await db.collection('users').doc(currentUser.uid).update({shortId: userData.shortId});
@@ -912,12 +1737,14 @@
                 showScreen('app-container');
                 setupRoleUI();
                 
+                // Load core data
                 loadFeed();
                 loadTeam(); 
                 loadFriendReqs();
                 loadProfilePageData();
                 loadPosts();
                 
+                // Set Default Date/Time Inputs
                 document.getElementById('req-date').valueAsDate = new Date();
                 document.getElementById('req-time').value = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
 
@@ -930,6 +1757,7 @@
         }
     }
 
+    // تهيئة واجهة المستخدم بناءً على الصلاحيات
     function setupRoleUI() {
         // Supervisor Filters
         if(userData.role === 'supervisor') {
@@ -948,14 +1776,14 @@
             addBtn.onclick = function() {
                 document.getElementById('tech-report-modal').classList.remove('hidden');
             };
-            document.getElementById('page-create').innerHTML = "<div style='text-align:center; padding:50px;'><i class='fa-solid fa-helmet-safety fa-3x' style='color:#ccc; margin-bottom:15px;'></i><h3 style='color:var(--text-muted)'>حساب مهندس</h3><p>دورك إدارة البلاغات وتوجيه العمال.</p></div>";
+            document.getElementById('page-create').innerHTML = "<div style='text-align:center; padding:50px;'><i class='fa-solid fa-helmet-safety fa-4x' style='color:#cbd5e1; margin-bottom:20px;'></i><h3 style='color:var(--text-muted)'>حساب مهندس</h3><p>دورك إدارة البلاغات وتوجيه العمال.</p></div>";
             document.getElementById('tech-task-management').classList.remove('hidden');
         }
 
-        // Worker: Simplified View
+        // Worker: Simplified View (New Role Logic)
         if(userData.role === 'worker') {
             document.querySelector('.nav-add-btn').classList.add('hidden'); // لا ينشئ بلاغات
-            document.getElementById('page-create').innerHTML = "<div style='text-align:center; padding:50px;'><i class='fa-solid fa-screwdriver-wrench fa-3x' style='color:#ccc; margin-bottom:15px;'></i><h3 style='color:var(--text-muted)'>حساب فني (عامل)</h3><p>استقبل المهام من المهندسين وقم بتنفيذها.</p></div>";
+            document.getElementById('page-create').innerHTML = "<div style='text-align:center; padding:50px;'><i class='fa-solid fa-screwdriver-wrench fa-4x' style='color:#cbd5e1; margin-bottom:20px;'></i><h3 style='color:var(--text-muted)'>حساب فني (عامل)</h3><p>استقبل المهام من المهندسين وقم بتنفيذها.</p></div>";
         }
 
         // Manager: Full Access
@@ -966,9 +1794,11 @@
         }
     }
 
-    // =========================================================================
-    // 4. UI RENDERING & FEED LOGIC (With Worker Flow)
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 4. UI RENDERING & FEED LOGIC (عرض البيانات ومنطق التغذية)
+     * =========================================================================
+     */
     function renderHeader() {
         const roleMap = {'employee':'موظف', 'supervisor':'مشرف', 'technician':'مهندس', 'manager':'مدير', 'worker':'فني صيانة'};
         document.getElementById('banner-name').innerText = userData.fullName;
@@ -985,6 +1815,7 @@
         let shouldPlay = false;
         if(userData.role === 'supervisor' && newRequests.some(r=>r.status === 'pending')) shouldPlay=true;
         if(userData.role === 'technician' && newRequests.some(r=>r.status === 'approved')) shouldPlay=true;
+        // Worker Notification Logic
         if(userData.role === 'worker' && newRequests.some(r=>r.status === 'assigned_to_worker')) shouldPlay=true;
         
         if (shouldPlay) {
@@ -995,6 +1826,7 @@
         }
     }
 
+    // جلب البيانات من Firestore
     function loadFeed() {
         let q = db.collection('requests'); 
         
@@ -1030,6 +1862,7 @@
         });
     }
 
+    // عرض البطاقات في الصفحة
     function renderFeed() {
         const container = document.getElementById('requests-feed'); container.innerHTML = "";
         let list = requestsCache;
@@ -1039,7 +1872,7 @@
             list = list.filter(r => r.isDeleted !== true);
             // تصفية حسب الحالة للتبويبات
             if(currentTab === 'active') {
-                // الحالات النشطة تشمل الآن حالات العامل
+                // الحالات النشطة تشمل الآن حالات العامل الجديدة
                 list = list.filter(r => ['pending','approved','working','assigned_to_worker','worker_accepted','suspended'].includes(r.status));
             }
             else if(currentTab === 'history') {
@@ -1051,7 +1884,7 @@
         if(userData.role === 'supervisor' && facFilter !== 'all') list = list.filter(r => r.faculty === facFilter);
 
         if(list.length === 0) { 
-            container.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text-muted);"><i class="fa-regular fa-folder-open fa-3x" style="opacity:0.3; margin-bottom:15px;"></i><p>لا يوجد بيانات لعرضها حالياً</p></div>`; 
+            container.innerHTML = `<div style="text-align:center; padding:60px 20px; color:var(--text-muted);"><i class="fa-regular fa-folder-open fa-4x" style="opacity:0.3; margin-bottom:20px;"></i><p>لا يوجد بيانات لعرضها حالياً</p></div>`; 
             return; 
         }
 
@@ -1100,22 +1933,24 @@
                              <button onclick="event.stopPropagation(); openAction('${d.id}','tech_reject')" class="btn-main btn-danger btn-sm">رفض</button>
                         </div>`;
                     } 
-                    // إذا العامل شغال، المهندس ممكن ينهي كمان لو عايز (اختياري، هنا هنسيبها للعامل)
+                    // إذا العامل شغال، المهندس يرى ذلك
                     else if (d.status === 'worker_accepted') {
-                         actionBtns = `<span style="font-size:11px; color:var(--warning);"><i class="fa-solid fa-person-digging"></i> الفني يعمل حالياً...</span>`;
+                         actionBtns = `<span style="font-size:12px; color:var(--warning); font-weight:bold;"><i class="fa-solid fa-person-digging"></i> الفني يعمل حالياً...</span>`;
                     }
                 }
 
-                // --- WORKER ACTIONS (New Flow) ---
+                // --- WORKER ACTIONS (New Flow Implementation) ---
                 else if(userData.role === 'worker') {
+                    // الحالة 1: استلام المهمة (قبول أو رفض)
                     if(d.status === 'assigned_to_worker') {
                         actionBtns = `
                         <div style="display:flex; gap:10px;">
                              <button onclick="event.stopPropagation(); openAction('${d.id}','worker_accept')" class="btn-main btn-sm" style="background:var(--success);">قبول المهمة</button>
                              <button onclick="event.stopPropagation(); openAction('${d.id}','worker_reject')" class="btn-main btn-danger btn-sm">رفض</button>
                         </div>`;
-                    } else if (d.status === 'worker_accepted') {
-                         // العامل ينهي المهمة
+                    } 
+                    // الحالة 2: إنهاء المهمة (تم أو لم يتم)
+                    else if (d.status === 'worker_accepted') {
                          actionBtns = `
                          <div style="display:flex; gap:10px;">
                              <button onclick="event.stopPropagation(); openAction('${d.id}','done')" class="btn-main btn-sm" style="background:var(--success);">تم الإصلاح</button>
@@ -1133,37 +1968,37 @@
             let prioColor = d.priority === 'high' ? 'var(--error)' : d.priority === 'medium' ? 'var(--warning)' : 'var(--success)';
             
             // Show assigned info
-            let workerInfo = d.workerName ? `<div style="font-size:11px; color:var(--text-muted); margin-top:5px; display:flex; align-items:center; gap:5px;"><i class="fa-solid fa-user-gear"></i> الفني: <b>${d.workerName}</b></div>` : '';
-            let floorRoom = (d.floor && d.room) ? `<span style="margin-right:10px; background:#eee; padding:2px 6px; border-radius:4px;">الدور: ${d.floor} | ق: ${d.room}</span>` : '';
+            let workerInfo = d.workerName ? `<div style="font-size:12px; color:var(--text-muted); margin-top:8px; display:flex; align-items:center; gap:6px; background:var(--surface-light); padding:5px 10px; border-radius:8px; width:fit-content;"><i class="fa-solid fa-user-gear"></i> الفني المسؤول: <b>${d.workerName}</b></div>` : '';
+            let floorRoom = (d.floor && d.room) ? `<span style="margin-right:10px; background:#f1f5f9; padding:3px 8px; border-radius:6px; border:1px solid #e2e8f0; font-weight:bold;">الدور: ${d.floor} | قاعة: ${d.room}</span>` : '';
 
             container.innerHTML += `
             <div class="glass-card request-card ${cardClass}" onclick="openRequestDetails('${d.id}')" style="border-right-color:${prioColor};">
-                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px;">
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:15px;">
                     <div style="display:flex; align-items:center; gap:12px;">
-                        <img src="${d.userData.photoUrl}" class="avatar clickable-user" onclick="event.stopPropagation(); openUserProfile('${d.userId}')" style="width:45px; height:45px; border-radius:50%; object-fit:cover; border:2px solid var(--surface-light);">
+                        <img src="${d.userData.photoUrl}" class="avatar clickable-user" onclick="event.stopPropagation(); openUserProfile('${d.userId}')" style="width:50px; height:50px; border-radius:50%; object-fit:cover; border:2px solid var(--surface-light);">
                         <div>
-                            <b class="clickable-user" onclick="event.stopPropagation(); openUserProfile('${d.userId}')" style="font-size:14px; display:block; color:var(--text);">${d.userData.fullName}</b>
+                            <b class="clickable-user" onclick="event.stopPropagation(); openUserProfile('${d.userId}')" style="font-size:14px; display:block; color:var(--text); margin-bottom:4px;">${d.userData.fullName}</b>
                             <div class="ticket-badge">${d.ticketId || '#REQ---'}</div>
                         </div>
                     </div>
                     <span class="status-pill ${statusClass}">${statusText}</span>
                 </div>
                 
-                <div style="margin:12px 0; font-size:15px; line-height:1.6; color:var(--text);">
-                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-                        <span style="background:var(--info); color:white; padding:2px 8px; border-radius:6px; font-size:11px; font-weight:bold;">${d.type || 'عام'}</span>
+                <div style="margin:15px 0; font-size:15px; line-height:1.6; color:var(--text);">
+                    <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                        <span style="background:var(--info); color:white; padding:3px 10px; border-radius:8px; font-size:11px; font-weight:bold;">${d.type || 'عام'}</span>
                         ${prioIcon}
                     </div>
                     ${d.description}
                 </div>
                 
-                <div style="font-size:12px; color:var(--text-muted); margin-bottom:15px; background:var(--surface-light); padding:8px; border-radius:8px;">
+                <div style="font-size:12px; color:var(--text-muted); margin-bottom:15px; background:var(--surface-light); padding:10px; border-radius:10px; border:1px solid var(--border);">
                      <i class="fa-solid fa-location-dot" style="color:var(--primary);"></i> ${d.location} ${floorRoom}
-                     <span style="float:left; direction:ltr;">${timeDisplay} | ${d.date}</span>
+                     <span style="float:left; direction:ltr; font-weight:600;">${timeDisplay} | ${d.date}</span>
                 </div>
                 ${workerInfo}
                 
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px; border-top:1px dashed var(--border); padding-top:10px;">
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px; border-top:1px dashed var(--border); padding-top:12px;">
                     ${deleteBtn}
                     <div style="margin-right:auto;">${actionBtns}</div>
                 </div>
@@ -1171,9 +2006,11 @@
         });
     }
 
-    // =========================================================================
-    // 5. ACTIONS & WORKFLOW
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 5. ACTIONS & WORKFLOW (منطق العمليات وسير العمل)
+     * =========================================================================
+     */
     async function openAction(id, type) {
         tempActionData = { id, type };
         document.getElementById('action-modal').classList.remove('hidden');
@@ -1293,7 +2130,7 @@
                 updateData.supervisorComment = `رفض المهندس: ${comment}`; // Reuse field or add new
             }
 
-            // Worker Flow
+            // Worker Flow (المنطق الجديد للفني)
             else if(type === 'worker_accept') {
                 updateData.status = 'worker_accepted'; // In Progress
             }
@@ -1320,9 +2157,11 @@
         } finally { btn.disabled=false; btn.innerText = "تأكيد وتنفيذ"; }
     }
 
-    // =========================================================================
-    // 6. CREATE REQUEST & UPLOADS
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 6. CREATE REQUEST & UPLOADS (إنشاء بلاغ جديد)
+     * =========================================================================
+     */
     async function toggleRecording() {
         const btn = document.getElementById('mic-trigger');
         if (!isRecording) {
@@ -1383,7 +2222,7 @@
     }
 
     async function openSupModal() { 
-        // Validation for new fields
+        // Validation for new fields (تحقق إجباري من الدور والقاعة)
         if(!document.getElementById('req-desc').value) return toast("⚠️ الوصف مطلوب");
         if(!document.getElementById('req-type').value) return toast("⚠️ التخصص مطلوب");
         if(!document.getElementById('req-faculty').value) return toast("⚠️ المبنى مطلوب");
@@ -1405,8 +2244,8 @@
             if(friendIds.includes(d.id)) { 
                 const u=d.data(); 
                 l.innerHTML+=`
-                <div onclick="selectSup(this, '${d.id}')" style="display:flex; align-items:center; gap:12px; padding:15px; border:1px solid var(--border); margin-bottom:10px; border-radius:15px; cursor:pointer; transition:0.2s;">
-                    <img src="${u.photoUrl}" style="width:45px; height:45px; border-radius:50%; object-fit:cover;">
+                <div onclick="selectSup(this, '${d.id}')" style="display:flex; align-items:center; gap:15px; padding:15px; border:1px solid var(--border); margin-bottom:10px; border-radius:15px; cursor:pointer; transition:0.2s;">
+                    <img src="${u.photoUrl}" style="width:50px; height:50px; border-radius:50%; object-fit:cover;">
                     <span style="color:var(--text); font-weight:bold;">${u.fullName}</span>
                 </div>`;
                 count++;
@@ -1440,11 +2279,11 @@
             const room = document.getElementById('req-room').value;
             const loc = `${facText}`;
             
-            // Generate Ticket ID
+            // Generate Unique Ticket ID
             const ticketId = generateTicketId();
 
             await db.collection('requests').add({ 
-                ticketId: ticketId, // NEW
+                ticketId: ticketId, // حفظ كود البلاغ
                 userId:currentUser.uid, 
                 userData:{ fullName:userData.fullName, photoUrl:userData.photoUrl }, 
                 supervisorId:selectedSup, 
@@ -1456,8 +2295,8 @@
                 description: document.getElementById('req-desc').value, 
                 location: loc,
                 faculty: facSelect.value,
-                floor: floor, // NEW
-                room: room,   // NEW
+                floor: floor, // حفظ الدور
+                room: room,   // حفظ القاعة
                 media: mediaLinks,
                 isDeleted: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp() 
@@ -1467,12 +2306,14 @@
             nav('home', document.querySelector('.nav-item:first-child'));
             uploadQueue=[]; document.getElementById('preview-grid').innerHTML=""; document.getElementById('req-desc').value="";
             document.getElementById('req-room').value = "";
-        } catch(e){toast("❌ خطأ"); console.error(e);} finally{btn.disabled=false; btn.innerText="إرسال البلاغ";} 
+        } catch(e){toast("❌ خطأ"); console.error(e);} finally{btn.disabled=false; btn.innerText="تأكيد وإرسال البلاغ";} 
     }
 
-    // =========================================================================
-    // 7. UTILS & HELPERS
-    // =========================================================================
+    /**
+     * =========================================================================
+     * 7. UTILS & HELPERS
+     * =========================================================================
+     */
     function getStatusLabel(s) {
         const map = {
             'pending': 'في الانتظار', 
@@ -1491,7 +2332,7 @@
         document.getElementById('request-details-modal').classList.remove('hidden');
         
         // Show Ticket ID prominently
-        document.getElementById('req-ticket-display').innerHTML = `<div style="font-size:24px; font-weight:900; color:var(--primary); letter-spacing:2px; font-family:'Courier New'; border:2px dashed var(--primary); padding:10px; display:inline-block; border-radius:10px;">${d.ticketId || 'NO-ID'}</div>`;
+        document.getElementById('req-ticket-display').innerHTML = `<div style="font-size:24px; font-weight:900; color:var(--primary); letter-spacing:2px; font-family:'Courier New'; border:2px dashed var(--primary); padding:10px 20px; display:inline-block; border-radius:12px; background:#eff6ff;">${d.ticketId || 'NO-ID'}</div>`;
 
         let mediaHtml = "";
         if(d.media && d.media.length > 0) d.media.forEach(m => {
