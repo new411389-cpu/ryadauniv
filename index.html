@@ -190,7 +190,7 @@
         .req-rejected { border-left: 3px solid var(--error); background: #fef2f2; }
 
         /* ==========================================================================
-           7. FORM ELEMENTS & MODERN SELECTS (التعديل المطلوب: قوائم مودرن)
+           7. FORM ELEMENTS & MODERN SELECTS (القوائم المودرن)
            ==========================================================================
         */
         .input-group { margin-bottom: 20px; position: relative; }
@@ -227,7 +227,6 @@
             box-shadow: 0 2px 10px rgba(0,0,0,0.02);
         }
 
-        /* سهم القائمة المنسدلة المخصص */
         .select-wrapper::after {
             content: '\f107'; /* FontAwesome chevron-down */
             font-family: 'Font Awesome 6 Free';
@@ -252,7 +251,6 @@
             border-color: #cbd5e1;
         }
 
-        /* تخصيص الخيارات داخل القائمة (للمتصفحات التي تدعمها) */
         select option {
             padding: 15px;
             background: #fff;
@@ -369,6 +367,13 @@
 
         #delete-friend-modal, #confirm-modal { z-index: 10000 !important; }
 
+        .status-pill { padding: 6px 14px; border-radius: 20px; font-size: 11px; font-weight: 800; display: flex; align-items: center; gap: 5px; width: fit-content; }
+        .st-pending { background: #e0f2fe; color: var(--info); border: 1px solid #bae6fd; }
+        .st-approved { background: #eff6ff; color: var(--primary); border: 1px solid #bfdbfe; }
+        .st-working { background: #fff7ed; color: var(--warning); border: 1px solid #fed7aa; }
+        .st-done { background: #f0fdf4; color: var(--success); border: 1px solid #bbf7d0; }
+        .st-rejected { background: #fef2f2; color: var(--error); border: 1px solid #fecaca; }
+
         .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
         .media-item { aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border); position: relative; }
         .media-item img, .media-item video { width: 100%; height: 100%; object-fit: contain; background: #000; }
@@ -387,6 +392,7 @@
         .tech-select-card:hover { border-color: var(--primary); background: #fff; }
         .tech-select-card.selected { border-color: var(--primary); background: #eff6ff; box-shadow: 0 4px 12px rgba(0,86,179,0.1); }
         .tech-select-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid white; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+        
         /* Icon container for worker selection */
         .tech-select-card .spec-icon { width: 50px; height: 50px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; color: var(--primary); font-size: 20px; border: 2px solid white; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
 
@@ -404,6 +410,16 @@
         .post-date { font-size: 10px; color: var(--text-muted); display: block; margin-top: 2px; }
         .clickable-user { cursor: pointer; transition: color 0.2s; }
         .clickable-user:hover { color: var(--primary); }
+        
+        /* New Clickable Code Style */
+        .copyable-code {
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .copyable-code:active {
+            transform: scale(0.95);
+            background: var(--primary-dark) !important;
+        }
     </style>
 </head>
 <body>
@@ -588,6 +604,13 @@
                             <p style="font-size:12px; color:var(--text-muted); margin:0;">صور / فيديو</p>
                             <input type="file" id="req-files" hidden multiple accept="image/*,video/*" onchange="handleFiles(this)">
                         </div>
+                        
+                        <div style="flex:0.6; background:#e0f2fe; padding:20px; border-radius:16px; border:2px solid var(--primary); text-align:center; cursor:pointer; color:var(--primary);" onclick="document.getElementById('camera-input').click()">
+                            <i class="fa-solid fa-camera fa-2x" style="margin-bottom:10px;"></i>
+                            <p style="font-size:12px; margin:0; font-weight:bold;">كاميرا</p>
+                            <input type="file" id="camera-input" hidden accept="image/*,video/*" capture="environment" onchange="handleFiles(this)">
+                        </div>
+
                         <div id="mic-trigger" class="mic-btn" onclick="toggleRecording()">
                             <i class="fa-solid fa-microphone"></i>
                         </div>
@@ -857,6 +880,7 @@
     const CLOUD_NAME = "djzfruh22"; 
     const CLOUD_PRESET = "udyvggup";
 
+    // تهيئة التطبيق
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
@@ -884,7 +908,7 @@
     let currentFriendDocId = null;
     let selectedFrameClass = '';
     
-    // --- أيقونات التخصصات (للقوائم الحديثة) ---
+    // --- أيقونات التخصصات (للفنيين Workers فقط) ---
     const specIcons = {
         'electricity': 'fa-solid fa-bolt',           // كهرباء
         'plumbing': 'fa-solid fa-faucet-drip',       // سباكة
@@ -913,6 +937,8 @@
     // =========================================================================
     // 2. AUTHENTICATION & STARTUP (إدارة الدخول وبدء التشغيل)
     // =========================================================================
+    
+    // مراقب حالة تسجيل الدخول
     auth.onAuthStateChanged(async user => {
         if(user) {
             if(!user.emailVerified) {
@@ -930,13 +956,14 @@
         }
     });
 
+    // تحميل بيانات المستخدم
     async function loadUser() {
         try {
             const doc = await db.collection('users').doc(currentUser.uid).get();
             if(doc.exists) {
                 userData = doc.data();
                 
-                // إصلاح الحقول القديمة
+                // تحديث البيانات القديمة
                 if(!userData.shortId) {
                     userData.shortId = Math.random().toString(36).substr(2,6).toUpperCase();
                     await db.collection('users').doc(currentUser.uid).update({shortId: userData.shortId});
@@ -997,7 +1024,7 @@
              document.querySelector('.nav-add-btn').classList.add('hidden');
         }
 
-        // إعدادات فني التنفيذ (Worker)
+        // إعدادات فني التنفيذ
         if(userData.role === 'worker') {
             const addBtn = document.querySelector('.nav-add-btn');
             addBtn.classList.add('hidden'); 
@@ -1067,6 +1094,13 @@
         });
     }
 
+    // --- دالة نسخ الكود ---
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            toast("📋 تم نسخ الكود: " + text);
+        });
+    }
+
     function renderFeed() {
         const container = document.getElementById('requests-feed'); container.innerHTML = "";
         let list = requestsCache;
@@ -1089,6 +1123,17 @@
         list.forEach(d => {
             let statusClass = 'st-' + d.status;
             let statusText = getStatusLabel(d.status);
+            
+            // --- تخصيص حالة "بانتظارك" للمهندس (التعديل المطلوب) ---
+            if (userData.role === 'technician' && d.status === 'approved') {
+                statusText = "⚡ بانتظارك";
+                statusClass = "st-pending"; // استخدام لون مميز (أو يمكنك عمل كلاس خاص)
+            }
+            if (userData.role === 'supervisor' && d.status === 'pending') {
+                 statusText = "⚡ بانتظارك"; // أيضاً للمشرف
+            }
+            // -----------------------------------------------------
+
             let cardClass = "";
             if(d.status === 'pending') cardClass = "req-new";
             else if(d.status === 'done') cardClass = "req-done";
@@ -1098,8 +1143,11 @@
             let dateObj = new Date(); dateObj.setHours(timeParts[0]); dateObj.setMinutes(timeParts[1]);
             let timeDisplay = dateObj.toLocaleTimeString('ar-EG', {hour: 'numeric', minute:'numeric', hour12: true});
 
-            // عرض الكود
-            let displayCode = d.requestCode ? `<span style="background:var(--primary); color:white; padding:2px 8px; border-radius:10px; font-size:10px; margin-left:5px; font-family:monospace;">${d.requestCode}</span>` : '';
+            // عرض الكود القابل للنسخ (التعديل المطلوب)
+            let displayCode = d.requestCode ? 
+                `<span class="copyable-code" onclick="event.stopPropagation(); copyToClipboard('${d.requestCode}')" style="background:var(--primary); color:white; padding:2px 8px; border-radius:10px; font-size:10px; margin-left:5px; font-family:monospace; display:flex; align-items:center; gap:3px;">
+                    ${d.requestCode} <i class="fa-regular fa-copy" style="font-size:8px;"></i>
+                </span>` : '';
 
             let actionBtns = "";
             let deleteBtn = "";
@@ -1108,6 +1156,7 @@
                 if(userData.role === 'employee' || userData.role === 'supervisor' || userData.role === 'manager') {
                       deleteBtn = `<button onclick="event.stopPropagation(); softDelete('${d.id}')" class="btn-ghost btn-sm" style="color:var(--error); border-color:var(--border); margin-left:10px;"><i class="fa-solid fa-trash"></i></button>`;
                 }
+
                 if(userData.role === 'supervisor' && d.status === 'pending') {
                     actionBtns = `
                     <div style="display:flex; gap:10px;">
@@ -1138,8 +1187,10 @@
             let prioIcon = d.priority === 'high' ? '<i class="fa-solid fa-fire" style="color:var(--error)"></i>' : '';
             let prioColor = d.priority === 'high' ? 'var(--error)' : d.priority === 'medium' ? 'var(--warning)' : 'var(--success)';
             
+            // معلومات الفني المسند
             let subTechInfo = "";
             if(d.workerName) {
+                // أيقونة الفني
                 subTechInfo = `<div style="font-size:11px; color:var(--primary); margin-top:5px; font-weight:bold; background:#eff6ff; padding:5px; border-radius:8px; display:inline-flex; align-items:center; gap:5px;">
                     <i class="fa-solid fa-helmet-safety"></i> الفني القائم: ${d.workerName}
                 </div>`;
@@ -1155,7 +1206,7 @@
                             <span style="font-size:10px; color:var(--text-muted); direction:ltr; display:inline-block;"><i class="fa-regular fa-clock"></i> ${timeDisplay} | ${d.date}</span>
                         </div>
                     </div>
-                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:2px;">
+                    <div style="display:flex; flex-direction:column; align-items:flex-end; gap:4px;">
                         <span class="status-pill ${statusClass}">${statusText}</span>
                         ${displayCode}
                     </div>
@@ -1166,7 +1217,9 @@
                     ${prioIcon} ${d.description}
                 </div>
                 
-                <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; margin-top:8px;"><i class="fa-solid fa-location-dot"></i> ${d.location}</div>
+                <div style="font-size:11px; color:var(--text-muted); margin-bottom:10px; margin-top:8px;">
+                     <i class="fa-solid fa-location-dot"></i> ${d.location}
+                </div>
                 ${subTechInfo}
                 
                 <div style="display:flex; justify-content:space-between; align-items:center; margin-top:10px;">
@@ -1213,6 +1266,7 @@
         }
     }
 
+    // --- دالة تحميل المستخدمين (المعدلة لعرض الصور الحقيقية أو الأيقونات) ---
     async function loadUsersForAction(role, containerId) {
         const list = document.getElementById(containerId); 
         list.innerHTML="<small>جاري التحميل...</small>";
@@ -1226,16 +1280,27 @@
 
         snap.forEach(doc => {
              const u = doc.data();
-             const specKey = u.specialty || 'general';
-             const iconClass = specIcons[specKey] || 'fa-solid fa-user-gear';
-             const specName = specLabels[specKey] || 'فني';
+             
+             // --- منطق العرض (صورة أم أيقونة) ---
+             let displayImage = '';
+             
+             if (role === 'worker') {
+                 // إذا كان فني (Worker): اعرض أيقونة التخصص
+                 const specKey = u.specialty || 'general';
+                 const iconClass = specIcons[specKey] || 'fa-solid fa-user-gear';
+                 const specName = specLabels[specKey] || 'فني';
+                 displayImage = `<div class="spec-icon"><i class="${iconClass}"></i></div>`;
+             } else {
+                 // إذا كان مهندس (أو غيره): اعرض الصورة الحقيقية
+                 displayImage = `<img src="${u.photoUrl}" style="width:50px; height:50px; border-radius:50%; object-fit:cover; margin-bottom:8px; border:2px solid white; box-shadow:0 5px 10px rgba(0,0,0,0.05);">`;
+             }
 
              list.innerHTML += `
              <div class="tech-select-card" onclick="selectRoleUser(this, '${doc.id}', '${u.fullName}', '${role}')">
-                <div class="spec-icon"><i class="${iconClass}"></i></div>
+                ${displayImage}
                 <div style="font-size:12px; font-weight:bold; color:var(--text);">${u.fullName}</div>
                 <div style="font-size:10px; color:var(--text-muted);">${u.jobTitle||'غير محدد'}</div>
-                <div style="font-size:9px; color:var(--primary); font-weight:bold; margin-top:4px;">${specName}</div>
+                ${role === 'worker' ? `<div style="font-size:9px; color:var(--primary); font-weight:bold; margin-top:4px;">${specLabels[u.specialty] || 'فني'}</div>` : ''}
              </div>`;
         });
     }
@@ -1355,10 +1420,8 @@
     }
 
     // =========================================================================
-    // 6. REQUEST CREATION (مع كود البلاغ والتحقق الإجباري)
+    // 6. REQUEST CREATION
     // =========================================================================
-    
-    // دالة توليد كود البلاغ
     function generateRequestCode() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const nums = '0123456789';
@@ -1367,23 +1430,22 @@
         code += nums.charAt(Math.floor(Math.random() * nums.length));
         code += chars.charAt(Math.floor(Math.random() * chars.length));
         code += chars.charAt(Math.floor(Math.random() * chars.length));
-        return code; // مثال: 95XK
+        return code; 
     }
 
     async function sendRequestFinal() { 
         if(!selectedSup) return toast("⚠️ اختر مشرف");
         
-        // البيانات
         const dateVal = document.getElementById('req-date').value;
         const typeVal = document.getElementById('req-type').value; 
-        const roomVal = document.getElementById('req-room').value; // رقم القاعة
-        const floorVal = document.getElementById('req-floor').value; // رقم الدور
+        const roomVal = document.getElementById('req-room').value; 
+        const floorVal = document.getElementById('req-floor').value; 
         const descVal = document.getElementById('req-desc').value;
         const facSelect = document.getElementById('req-faculty');
         const facVal = facSelect.value;
         const facText = facSelect.options[facSelect.selectedIndex].text;
 
-        // التحقق الإجباري من الدور والقاعة والمكان
+        // التحقق الإجباري
         if (!facVal || !floorVal || !roomVal || !descVal) {
             return toast("⚠️ يرجى تعبئة جميع الحقول (المبنى، الدور، القاعة، والوصف).");
         }
@@ -1394,7 +1456,7 @@
         btn.disabled = true; btn.innerText = "جاري التحقق...";
 
         try { 
-            // منع التكرار اليومي
+            // منع التكرار
             const checkQuery = await db.collection('requests')
                 .where('userId', '==', currentUser.uid)
                 .where('date', '==', dateVal)
@@ -1425,7 +1487,6 @@
                 mediaLinks.push({url: d.secure_url, type: type});
             }
             
-            // الحفظ
             await db.collection('requests').add({ 
                 userId:currentUser.uid, 
                 userData:{ fullName:userData.fullName, photoUrl:userData.photoUrl }, 
@@ -1438,8 +1499,8 @@
                 description: descVal, 
                 location: loc, 
                 faculty: facVal,
-                floor: floorVal, // حفظ الدور بشكل منفصل
-                room: roomVal,   // حفظ الغرفة بشكل منفصل
+                floor: floorVal, 
+                room: roomVal,  
                 media: mediaLinks,
                 requestCode: newCode, 
                 isDeleted: false,
@@ -1450,7 +1511,6 @@
             closeModal('sup-modal'); 
             nav('home', document.querySelector('.nav-item:first-child'));
             
-            // تنظيف
             uploadQueue=[]; document.getElementById('preview-grid').innerHTML=""; 
             document.getElementById('req-desc').value=""; document.getElementById('req-room').value=""; document.getElementById('req-floor').value="";
             document.getElementById('mic-trigger').classList.remove('recording');
@@ -1515,6 +1575,7 @@
         });
         else mediaHtml = "<p style='color:var(--text-muted); font-size:12px; grid-column:span 3; text-align:center;'>لا توجد مرفقات</p>";
 
+        // Timeline Logic
         let steps = [
             { id: 'pending', label: 'تم الإرسال', desc: 'بانتظار الموافقة' },
             { id: 'approved', label: 'تم التوجيه', desc: d.technicianName ? `مع المهندس: ${d.technicianName}` : 'تعيين مهندس' },
@@ -1548,7 +1609,7 @@
         }
         timelineHtml += '</div>';
         
-        let displayCode = d.requestCode ? `<span style="background:var(--primary); color:white; padding:4px 10px; border-radius:15px; font-weight:bold; font-family:monospace; display:block; margin:0 auto 10px; width:fit-content;">كود البلاغ: ${d.requestCode}</span>` : '';
+        let displayCode = d.requestCode ? `<span onclick="copyToClipboard('${d.requestCode}')" style="cursor:pointer; background:var(--primary); color:white; padding:4px 10px; border-radius:15px; font-weight:bold; font-family:monospace; display:block; margin:0 auto 10px; width:fit-content;">كود البلاغ: ${d.requestCode} <i class="fa-regular fa-copy" style="font-size:10px;"></i></span>` : '';
 
         document.getElementById('req-details-content').innerHTML = `
             ${displayCode}
@@ -1868,19 +1929,12 @@
         toast("✅ تم تحميل التقرير"); closeModal('tech-report-modal');
     }
 
-    // --- دالة تقرير المهندس (المعدلة) ---
     function generateSubTechReport() {
-        // إذا كان الحقل فارغاً، يتم جلب جميع الفنيين
         const techName = document.getElementById('sub-tech-name-input').value.trim();
-        
-        // البحث عن المهام المنجزة (status == done)
         let tasks = [];
-        
         if (techName) {
-            // تصفية حسب اسم الفني المحدد
             tasks = requestsCache.filter(r => r.status === 'done' && (r.workerName === techName || r.assignedSubTech === techName));
         } else {
-            // تصفية لجميع الفنيين (أي مهمة منجزة ولها حقل WorkerName)
             tasks = requestsCache.filter(r => r.status === 'done' && (r.workerName || r.assignedSubTech));
         }
 
@@ -1951,7 +2005,6 @@
         } catch(e) { console.error(e); document.getElementById('loader').classList.add('hidden'); }
     }
 
-    // (بقية دوال المساعدات الصغيرة تم دمجها أعلاه لضمان التدفق المنطقي وتجنب التكرار)
     // --- End of Script ---
     function openSupModal() { 
         if(!document.getElementById('req-desc').value) return toast("⚠️ الوصف مطلوب");
@@ -1984,7 +2037,7 @@
         el.style.background='rgba(37, 99, 235, 0.2)'; selectedSup=id; 
     }
     
-    // --- Upload Handlers ---
+    // --- Upload Handlers (Modified for Camera support) ---
     function handleFiles(input) { 
         const files = Array.from(input.files);
         files.forEach(file => {
