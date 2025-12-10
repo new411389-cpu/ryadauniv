@@ -51,10 +51,7 @@
             font-family: 'Cairo', sans-serif; 
             background-color: var(--dark); 
             color: var(--text); 
-            margin-top: 0; 
-            margin-bottom: 0;
-            margin-right: 0;
-            margin-left: 0;
+            margin: 0; 
             min-height: 100vh;
             background-image: linear-gradient(rgba(248,250,252,0.6), rgba(248,250,252,0.6)), var(--bg-image);
             background-size: cover; 
@@ -86,11 +83,7 @@
            ==========================================================================
         */
         #loader {
-            position: fixed; 
-            top: 0;
-            right: 0;
-            bottom: 0;
-            left: 0;
+            position: fixed; inset: 0; 
             background-color: var(--dark);
             background-image: linear-gradient(rgba(255,255,255,0.9), rgba(255,255,255,0.9)), var(--bg-image);
             background-size: cover; 
@@ -111,10 +104,7 @@
             background: linear-gradient(to bottom, rgba(0,86,179,0.3), rgba(0, 61, 128, 0.9)), url('https://a.top4top.io/p_36115ao3o1.jpg');
             background-size: cover; 
             background-position: center;
-            display: flex; 
-            flex-direction: column; 
-            justify-content: flex-end; 
-            padding: 25px;
+            display: flex; flex-direction: column; justify-content: flex-end; padding: 25px;
             border-bottom-left-radius: 40px; 
             border-bottom-right-radius: 40px; 
             margin-bottom: 25px; 
@@ -123,260 +113,105 @@
         }
 
         .header-top {
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            right: 20px;
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center;
+            position: absolute; top: 20px; left: 20px; right: 20px;
+            display: flex; justify-content: space-between; align-items: center;
         }
 
         .bell-btn {
-            background: rgba(255,255,255,0.2); 
-            width: 40px; 
-            height: 40px; 
-            border-radius: 50%;
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            cursor: pointer; 
-            backdrop-filter: blur(5px); 
-            border: 1px solid rgba(255,255,255,0.3); 
-            position: relative;
+            background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: white; cursor: pointer; 
+            backdrop-filter: blur(5px); border: 1px solid rgba(255,255,255,0.3); position: relative;
         }
 
         .bell-badge {
-            position: absolute; 
-            top: 8px; 
-            right: 8px; 
-            width: 8px; 
-            height: 8px;
-            background: var(--error); 
-            border-radius: 50%; 
-            display: none; 
-            border: 1px solid #fff;
+            position: absolute; top: 8px; right: 8px; width: 8px; height: 8px;
+            background: var(--error); border-radius: 50%; display: none; border: 1px solid #fff;
         }
 
         .header-content { 
-            display: flex; 
-            align-items: flex-end; 
-            justify-content: space-between; 
-            width: 100%; 
-            padding-bottom: 10px; 
+            display: flex; align-items: flex-end; justify-content: space-between; width: 100%; padding-bottom: 10px; 
         }
 
         /* ==========================================================================
            4. USER INFO & AVATAR
            ==========================================================================
         */
-        .user-minimal { 
-            display: flex; 
-            flex-direction: column; 
-            gap: 6px; 
-            text-shadow: 0 2px 5px rgba(0,0,0,0.5); 
-        }
-
-        .user-minimal h1 { 
-            margin: 0; 
-            font-size: 26px; 
-            font-weight: 900; 
-            color: #fff; 
-            line-height: 1.1; 
-            letter-spacing: -0.5px; 
-        }
-
+        .user-minimal { display: flex; flex-direction: column; gap: 6px; text-shadow: 0 2px 5px rgba(0,0,0,0.5); }
+        .user-minimal h1 { margin: 0; font-size: 26px; font-weight: 900; color: #fff; line-height: 1.1; letter-spacing: -0.5px; }
         .user-minimal .role-badge { 
-            background: rgba(255, 255, 255, 0.2); 
-            color: white; 
-            padding-top: 5px; 
-            padding-bottom: 5px;
-            padding-right: 14px;
-            padding-left: 14px;
-            border-radius: 20px; 
-            font-size: 11px; 
-            font-weight: 800; 
-            width: fit-content;
-            border: 1px solid rgba(255,255,255,0.4); 
-            backdrop-filter: blur(4px);
+            background: rgba(255, 255, 255, 0.2); color: white; padding: 5px 14px; 
+            border-radius: 20px; font-size: 11px; font-weight: 800; width: fit-content;
+            border: 1px solid rgba(255,255,255,0.4); backdrop-filter: blur(4px);
         }
 
         .user-avatar-container { 
-            position: relative; 
-            width: 85px; 
-            height: 85px; 
-            border-radius: 50%;
-            margin-bottom: 5px;
+            position: relative; width: 85px; height: 85px; border-radius: 50%; margin-bottom: 5px;
         }
-
         .user-avatar-container img {
-            width: 100%; 
-            height: 100%; 
-            border-radius: 50%;
-            border: 4px solid rgba(255,255,255,0.3); 
-            object-fit: cover;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2); 
-            background: #fff;
-            display: block;
+            width: 100%; height: 100%; border-radius: 50%;
+            border: 4px solid rgba(255,255,255,0.3); object-fit: cover;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: #fff; display: block;
         }
-
         .user-avatar-container .frame-overlay {
-            position: absolute; 
-            inset: -5px; 
-            pointer-events: none; 
-            border-radius: 50%; 
-            z-index: 2;
+            position: absolute; inset: -5px; pointer-events: none; border-radius: 50%; z-index: 2;
         }
         
         /* ==========================================================================
            5. FRAMES & SELECTION GRID
            ==========================================================================
         */
-        .frame-grid { 
-            display: grid; 
-            grid-template-columns: repeat(4, 1fr); 
-            gap: 10px; 
-            margin-top: 15px; 
-        }
-
+        .frame-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-top: 15px; }
         .frame-option { 
-            width: 100%; 
-            aspect-ratio: 1; 
-            border-radius: 50%; 
-            border: 2px solid var(--border); 
-            cursor: pointer; 
-            position: relative; 
-            overflow: hidden;
+            width: 100%; aspect-ratio: 1; border-radius: 50%; border: 2px solid var(--border); 
+            cursor: pointer; position: relative; overflow: hidden;
         }
-
-        .frame-option.selected { 
-            border-color: var(--primary); 
-            box-shadow: 0 0 0 3px rgba(0,86,179,0.2); 
-        }
-
-        .f-gold { 
-            border: 5px solid #ffd700; 
-            box-shadow: inset 0 0 10px #ffd700, 0 0 10px rgba(255, 215, 0, 0.5); 
-        }
-
-        .f-blue { 
-            border: 5px dashed var(--primary); 
-        }
-
-        .f-grad { 
-            background: linear-gradient(45deg, var(--primary), var(--info)); 
-            padding: 4px; 
-        }
-
-        .f-grad-in { 
-            background: transparent; 
-            width: 100%; 
-            height: 100%; 
-            border-radius: 50%; 
-        }
-
-        .f-none { 
-            border: 1px solid #ccc; 
-            background: #eee; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: #777; 
-            font-size: 10px; 
-        }
+        .frame-option.selected { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(0,86,179,0.2); }
+        .f-gold { border: 5px solid #ffd700; box-shadow: inset 0 0 10px #ffd700, 0 0 10px rgba(255, 215, 0, 0.5); }
+        .f-blue { border: 5px dashed var(--primary); }
+        .f-grad { background: linear-gradient(45deg, var(--primary), var(--info)); padding: 4px; }
+        .f-grad-in { background: transparent; width: 100%; height: 100%; border-radius: 50%; }
+        .f-none { border: 1px solid #ccc; background: #eee; display: flex; align-items: center; justify-content: center; color: #777; font-size: 10px; }
 
         /* ==========================================================================
            6. CARDS & CONTAINERS
            ==========================================================================
         */
         .glass-card {
-            background: var(--surface); 
-            border: 1px solid var(--border);
-            border-radius: 24px; 
-            padding: 24px; 
-            margin: 15px;
-            box-shadow: var(--shadow); 
-            position: relative; 
-            overflow: hidden; 
-            transition: 0.2s;
+            background: var(--surface); border: 1px solid var(--border);
+            border-radius: 24px; padding: 24px; margin: 15px;
+            box-shadow: var(--shadow); position: relative; overflow: hidden; transition: 0.2s;
             background: rgba(255, 255, 255, 0.95); 
         }
-
-        .glass-card h2, .glass-card h3 { 
-            color: var(--primary-dark); 
-        }
-
-        .request-card { 
-            cursor: pointer; 
-            border-right: 4px solid transparent; 
-            margin-bottom: 15px; 
-            background: rgba(255,255,255,0.95); 
-            transition: transform 0.2s; 
-            border: 1px solid var(--border); 
-        }
-
-        .request-card:active { 
-            transform: scale(0.98); 
-        }
-
-        .req-new { 
-            border-left: 3px solid var(--info); 
-        }
-
-        .req-done { 
-            border-left: 3px solid var(--success); 
-            background: #f0fdf4; 
-        }
-
-        .req-rejected { 
-            border-left: 3px solid var(--error); 
-            background: #fef2f2; 
-        }
+        .glass-card h2, .glass-card h3 { color: var(--primary-dark); }
+        .request-card { cursor: pointer; border-right: 4px solid transparent; margin-bottom: 15px; background: rgba(255,255,255,0.95); transition: transform 0.2s; border: 1px solid var(--border); }
+        .request-card:active { transform: scale(0.98); }
+        .req-new { border-left: 3px solid var(--info); }
+        .req-done { border-left: 3px solid var(--success); background: #f0fdf4; }
+        .req-rejected { border-left: 3px solid var(--error); background: #fef2f2; }
 
         /* ==========================================================================
-           7. FORM ELEMENTS & MODERN SELECTS
+           7. FORM ELEMENTS & MODERN SELECTS (التعديل المطلوب: قوائم مودرن)
            ==========================================================================
         */
-        .input-group { 
-            margin-bottom: 20px; 
-            position: relative; 
-        }
-
-        .input-group label { 
-            display: block; 
-            font-size: 12px; 
-            color: var(--text-muted); 
-            margin-bottom: 8px; 
-            font-weight: 700; 
-        }
+        .input-group { margin-bottom: 20px; position: relative; }
+        .input-group label { display: block; font-size: 12px; color: var(--text-muted); margin-bottom: 8px; font-weight: 700; }
         
         input, textarea {
-            width: 100%; 
-            padding: 16px; 
-            background: var(--surface-light); 
-            border: 1px solid var(--border); 
-            border-radius: 16px; 
-            color: var(--text); 
-            font-family: 'Cairo', sans-serif; 
-            font-size: 14px; 
-            font-weight: 600; 
-            transition: 0.3s;
+            width: 100%; padding: 16px; background: var(--surface-light); 
+            border: 1px solid var(--border); border-radius: 16px; color: var(--text); 
+            font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 600; transition: 0.3s;
         }
+        input:focus, textarea:focus { border-color: var(--primary); background: #fff; box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1); }
 
-        input:focus, textarea:focus { 
-            border-color: var(--primary); 
-            background: #fff; 
-            box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1); 
+        /* --- MODERN & BEAUTIFUL SELECT --- */
+        .select-wrapper {
+            position: relative;
+            width: 100%;
         }
-
-        /* MODERN SELECT STYLING (تحسين القوائم المنسدلة) */
+        
         select {
             width: 100%;
-            padding-top: 16px;
-            padding-bottom: 16px;
-            padding-right: 16px;
-            padding-left: 16px;
+            padding: 16px 20px;
             background-color: var(--surface-light);
             border: 1px solid var(--border);
             border-radius: 16px;
@@ -387,26 +222,42 @@
             appearance: none;
             -webkit-appearance: none;
             -moz-appearance: none;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230056b3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: left 15px center;
-            background-size: 18px;
-            transition: all 0.3s ease;
             cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.02);
+        }
+
+        /* سهم القائمة المنسدلة المخصص */
+        .select-wrapper::after {
+            content: '\f107'; /* FontAwesome chevron-down */
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            pointer-events: none;
+            transition: 0.3s;
         }
 
         select:focus {
+            background-color: #fff;
             border-color: var(--primary);
-            background-color: #ffffff;
             box-shadow: 0 0 0 4px rgba(0, 86, 179, 0.1);
             outline: none;
         }
 
+        select:hover {
+            border-color: #cbd5e1;
+        }
+
+        /* تخصيص الخيارات داخل القائمة (للمتصفحات التي تدعمها) */
         select option {
-            font-weight: 600;
-            padding: 10px;
-            background-color: #ffffff;
+            padding: 15px;
+            background: #fff;
             color: var(--text);
+            font-weight: 600;
         }
 
         /* ==========================================================================
@@ -414,592 +265,145 @@
            ==========================================================================
         */
         .auth-logo-modern {
-            width: 90px; 
-            height: 90px; 
-            border-radius: 20px; 
-            margin-bottom: 15px; 
-            object-fit: cover; 
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            width: 90px; height: 90px; border-radius: 20px; 
+            margin-bottom: 15px; object-fit: cover; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-
         .auth-section-label {
-            text-align: right; 
-            font-size: 12px; 
-            color: var(--text-muted); 
-            margin-bottom: 8px; 
-            margin-top: 15px; 
-            display: block; 
-            font-weight: 700;
+            text-align: right; font-size: 12px; color: var(--text-muted); 
+            margin-bottom: 8px; margin-top: 15px; display: block; font-weight: 700;
         }
-
-        .auth-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            margin-bottom: 10px; 
-        }
-
-        .auth-card-input { 
-            display: none; 
-        }
-
+        .auth-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 10px; }
+        .auth-card-input { display: none; }
         .auth-card {
-            background: var(--surface-light); 
-            border: 1px solid var(--border);
-            padding: 15px 5px; 
-            border-radius: 14px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: 0.2s;
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 8px;
+            background: var(--surface-light); border: 1px solid var(--border);
+            padding: 15px 5px; border-radius: 14px; text-align: center; cursor: pointer; transition: 0.2s;
+            display: flex; flex-direction: column; align-items: center; gap: 8px;
         }
+        .auth-card-input:checked + .auth-card { background: rgba(0, 86, 179, 0.1); border-color: var(--primary); }
+        .auth-card-input:checked + .auth-card i { color: var(--primary); }
 
-        .auth-card-input:checked + .auth-card { 
-            background: rgba(0, 86, 179, 0.1); 
-            border-color: var(--primary); 
-        }
-
-        .auth-card-input:checked + .auth-card i { 
-            color: var(--primary); 
-        }
-
-        /* ==========================================================================
-           9. UTILITIES (BUTTONS, GRIDS, ETC)
-           ==========================================================================
-        */
-        .priority-grid { 
-            display: flex; 
-            gap: 10px; 
-        }
-
+        /* Priority Grid */
+        .priority-grid { display: flex; gap: 10px; }
         .prio-card {
-            flex: 1; 
-            padding: 15px 5px; 
-            background: var(--surface-light); 
-            border: 1px solid var(--border);
-            border-radius: 16px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: 0.3s; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-            gap: 5px; 
-            color: var(--text-muted);
+            flex: 1; padding: 15px 5px; background: var(--surface-light); border: 1px solid var(--border);
+            border-radius: 16px; text-align: center; cursor: pointer; transition: 0.3s; 
+            display: flex; flex-direction: column; align-items: center; gap: 5px; color: var(--text-muted);
         }
-
         .prio-radio:checked + .prio-card.p-low { background: #ecfdf5; border-color: var(--success); color: var(--success); }
         .prio-radio:checked + .prio-card.p-med { background: #fff7ed; border-color: var(--warning); color: var(--warning); }
         .prio-radio:checked + .prio-card.p-high { background: #fef2f2; border-color: var(--error); color: var(--error); }
 
+        /* Buttons */
         .btn-main {
-            width: 100%; 
-            padding: 16px; 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border: none; 
-            border-radius: 16px; 
-            color: white; 
-            font-weight: 700; 
-            cursor: pointer;
-            display: flex; 
-            justify-content: center; 
-            align-items: center; 
-            gap: 10px;
-            box-shadow: 0 8px 20px rgba(0, 86, 179, 0.2); 
-            font-size: 15px; 
-            font-family: 'Cairo', sans-serif; 
-            transition: 0.1s;
+            width: 100%; padding: 16px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border: none; border-radius: 16px; color: white; font-weight: 700; cursor: pointer;
+            display: flex; justify-content: center; align-items: center; gap: 10px;
+            box-shadow: 0 8px 20px rgba(0, 86, 179, 0.2); font-size: 15px; font-family: 'Cairo', sans-serif; transition: 0.1s;
         }
-
-        .btn-main:active { 
-            transform: scale(0.97); 
-        }
-
-        .btn-ghost { 
-            background: transparent; 
-            border: 1px solid var(--border); 
-            color: var(--text-muted); 
-            border-radius: 14px; 
-            font-family: 'Cairo', sans-serif; 
-            cursor: pointer;
-        }
-
-        .btn-danger { 
-            background: linear-gradient(135deg, var(--error), #b91c1c); 
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2); 
-        }
-
-        .btn-sm { 
-            padding: 8px 16px; 
-            font-size: 12px; 
-            width: auto; 
-            margin: 0; 
-            border-radius: 10px; 
-            min-height: 35px; 
-        }
+        .btn-main:active { transform: scale(0.97); }
+        .btn-ghost { background: transparent; border: 1px solid var(--border); color: var(--text-muted); border-radius: 14px; font-family: 'Cairo', sans-serif; cursor: pointer;}
+        .btn-danger { background: linear-gradient(135deg, var(--error), #b91c1c); box-shadow: 0 8px 20px rgba(239, 68, 68, 0.2); }
+        .btn-sm { padding: 8px 16px; font-size: 12px; width: auto; margin: 0; border-radius: 10px; min-height: 35px; }
         
-        .support-fab { 
-            display: none !important; 
-        }
+        .support-fab { display: none !important; }
 
         /* ==========================================================================
            10. ANIMATIONS & MEDIA
            ==========================================================================
         */
         .mic-btn {
-            background: var(--surface-light); 
-            border: 2px solid var(--border); 
-            color: var(--text-muted);
-            width: 60px; 
-            height: 60px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            cursor: pointer; 
-            transition: 0.3s; 
-            font-size: 20px;
+            background: var(--surface-light); border: 2px solid var(--border); color: var(--text-muted);
+            width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; transition: 0.3s; font-size: 20px;
         }
-
         .mic-btn.recording {
-            background: #fef2f2; 
-            border-color: var(--error); 
-            color: var(--error);
+            background: #fef2f2; border-color: var(--error); color: var(--error);
             animation: pulse 1.5s infinite;
         }
-
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
             70% { box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
             100% { box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
         }
 
-        .timeline { 
-            margin-top: 20px;
-            margin-bottom: 20px; 
-            padding: 0 10px; 
-        }
-
-        .timeline-item { 
-            display: flex; 
-            gap: 15px; 
-            padding-bottom: 25px; 
-            position: relative; 
-        }
-
-        .timeline-item::before { 
-            content: ''; 
-            position: absolute; 
-            right: 14px; 
-            top: 30px; 
-            bottom: 0; 
-            width: 2px; 
-            background: var(--border); 
-        }
-
-        .timeline-item:last-child::before { 
-            display: none; 
-        }
-
+        .timeline { margin: 20px 0; padding: 0 10px; }
+        .timeline-item { display: flex; gap: 15px; padding-bottom: 25px; position: relative; }
+        .timeline-item::before { content: ''; position: absolute; right: 14px; top: 30px; bottom: 0; width: 2px; background: var(--border); }
+        .timeline-item:last-child::before { display: none; }
         .tl-icon {
-            width: 30px; 
-            height: 30px; 
-            border-radius: 50%; 
-            background: var(--surface-light); 
-            border: 2px solid var(--border); 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            font-size: 12px; 
-            color: var(--text-muted); 
-            z-index: 2; 
-            flex-shrink: 0;
+            width: 30px; height: 30px; border-radius: 50%; background: var(--surface-light); 
+            border: 2px solid var(--border); display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: var(--text-muted); z-index: 2; flex-shrink: 0;
         }
+        .tl-content h4 { margin: 0 0 5px; font-size: 14px; font-weight: 700; color: var(--text); }
+        .tl-content p { margin: 0; font-size: 12px; color: var(--text-muted); }
+        .timeline-item.active .tl-icon { background: var(--primary); border-color: var(--primary); color: white; box-shadow: 0 0 15px rgba(0, 86, 179, 0.3); }
+        .timeline-item.rejected .tl-icon { background: var(--error); border-color: var(--error); color: white; }
 
-        .tl-content h4 { 
-            margin: 0 0 5px; 
-            font-size: 14px; 
-            font-weight: 700; 
-            color: var(--text); 
-        }
-
-        .tl-content p { 
-            margin: 0; 
-            font-size: 12px; 
-            color: var(--text-muted); 
-        }
-
-        .timeline-item.active .tl-icon { 
-            background: var(--primary); 
-            border-color: var(--primary); 
-            color: white; 
-            box-shadow: 0 0 15px rgba(0, 86, 179, 0.3); 
-        }
-
-        .timeline-item.rejected .tl-icon { 
-            background: var(--error); 
-            border-color: var(--error); 
-            color: white; 
-        }
-
-        .tabs-container { 
-            display: flex; 
-            margin: 15px; 
-            background: #fff; 
-            padding: 6px; 
-            border-radius: 20px; 
-            border: 1px solid var(--border); 
-            box-shadow: var(--shadow); 
-        }
-
-        .tab-btn { 
-            flex: 1; 
-            padding: 12px; 
-            color: var(--text-muted); 
-            font-size: 13px; 
-            font-weight: 700; 
-            cursor: pointer; 
-            border-radius: 14px; 
-            background: transparent; 
-            border: none; 
-            font-family: 'Cairo', sans-serif; 
-            transition: 0.3s; 
-        }
-
-        .tab-btn.active { 
-            background: var(--primary); 
-            color: white; 
-            box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2); 
-        }
+        .tabs-container { display: flex; margin: 15px; background: #fff; padding: 6px; border-radius: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); }
+        .tab-btn { flex: 1; padding: 12px; color: var(--text-muted); font-size: 13px; font-weight: 700; cursor: pointer; border-radius: 14px; background: transparent; border: none; font-family: 'Cairo', sans-serif; transition: 0.3s; }
+        .tab-btn.active { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(0, 86, 179, 0.2); }
 
         .bottom-nav { 
-            position: fixed; 
-            bottom: 0; 
-            left: 0; 
-            right: 0; 
-            max-width: 600px; 
-            margin: 0 auto; 
-            background: rgba(255, 255, 255, 0.95); 
-            backdrop-filter: blur(10px);
-            border-top: 1px solid var(--border); 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: flex-end; 
-            padding: 10px 20px 25px; 
-            z-index: 900; 
-            border-top-left-radius: 30px; 
-            border-top-right-radius: 30px;
+            position: fixed; bottom: 0; left: 0; right: 0; max-width: 600px; margin: 0 auto; 
+            background: rgba(255, 255, 255, 0.95); backdrop-filter: blur(10px);
+            border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: flex-end; 
+            padding: 10px 20px 25px; z-index: 900; border-top-left-radius: 30px; border-top-right-radius: 30px;
             box-shadow: 0 -5px 20px rgba(0,0,0,0.05);
         }
-
-        .nav-item { 
-            text-align: center; 
-            color: #94a3b8; 
-            font-size: 10px; 
-            cursor: pointer; 
-            width: 60px; 
-        }
-
-        .nav-item i { 
-            font-size: 20px; 
-            margin-bottom: 6px; 
-            display: block; 
-        }
-
-        .nav-item.active { 
-            color: var(--primary); 
-        }
-
+        .nav-item { text-align: center; color: #94a3b8; font-size: 10px; cursor: pointer; width: 60px; }
+        .nav-item i { font-size: 20px; margin-bottom: 6px; display: block; }
+        .nav-item.active { color: var(--primary); }
         .nav-add-btn {
-            width: 60px; 
-            height: 60px; 
-            background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: white; 
-            font-size: 26px;
-            box-shadow: 0 10px 25px rgba(0, 86, 179, 0.4); 
-            transform: translateY(-25px); 
-            border: 5px solid var(--dark);
+            width: 60px; height: 60px; background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 26px;
+            box-shadow: 0 10px 25px rgba(0, 86, 179, 0.4); transform: translateY(-25px); border: 5px solid var(--dark);
         }
 
-        .friend-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            padding: 15px; 
-            background: #fff; 
-            border-radius: 18px; 
-            margin-bottom: 10px; 
-            cursor: pointer; 
-            border: 1px solid var(--border); 
-            transition: 0.2s; 
-        }
-
-        .friend-item:hover { 
-            border-color: var(--primary); 
-            background: #f8fafc; 
-        }
+        .friend-item { display: flex; align-items: center; gap: 15px; padding: 15px; background: #fff; border-radius: 18px; margin-bottom: 10px; cursor: pointer; border: 1px solid var(--border); transition: 0.2s; }
+        .friend-item:hover { border-color: var(--primary); background: #f8fafc; }
         
-        .modal-overlay { 
-            position: fixed; 
-            inset: 0; 
-            background: rgba(0,0,0,0.6); 
-            z-index: 2000; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 20px; 
-            backdrop-filter: blur(5px); 
-        }
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 20px; backdrop-filter: blur(5px); }
+        .modal-content { width: 100%; max-width: 450px; background: #fff; border: 1px solid var(--border); border-radius: 30px; padding: 30px; max-height: 90vh; overflow-y: auto; position: relative; box-shadow: 0 25px 50px rgba(0,0,0,0.15); }
+        .close-btn { position: absolute; top: 20px; left: 20px; background: #f1f5f9; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; color: var(--text-muted); }
 
-        .modal-content { 
-            width: 100%; 
-            max-width: 450px; 
-            background: #fff; 
-            border: 1px solid var(--border); 
-            border-radius: 30px; 
-            padding: 30px; 
-            max-height: 90vh; 
-            overflow-y: auto; 
-            position: relative; 
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15); 
-        }
+        #delete-friend-modal, #confirm-modal { z-index: 10000 !important; }
 
-        .close-btn { 
-            position: absolute; 
-            top: 20px; 
-            left: 20px; 
-            background: #f1f5f9; 
-            width: 35px; 
-            height: 35px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            color: var(--text-muted); 
-        }
+        .media-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 15px; }
+        .media-item { aspect-ratio: 1; border-radius: 14px; overflow: hidden; background: #f8fafc; border: 1px solid var(--border); position: relative; }
+        .media-item img, .media-item video { width: 100%; height: 100%; object-fit: contain; background: #000; }
+        .remove-file { position: absolute; top: 4px; right: 4px; background: var(--error); color: white; width: 22px; height: 22px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 10px; }
+        .archive-thumbs { display: flex; gap: 5px; margin-top: 10px; flex-wrap: wrap; }
+        .archive-thumbs img { width: 45px; height: 45px; border-radius: 10px; object-fit: cover; border: 1px solid var(--border); background: #fff; }
 
-        #delete-friend-modal, #confirm-modal { 
-            z-index: 10000 !important; 
-        }
-
-        .media-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 10px; 
-            margin-top: 15px; 
-        }
-
-        .media-item { 
-            aspect-ratio: 1; 
-            border-radius: 14px; 
-            overflow: hidden; 
-            background: #f8fafc; 
-            border: 1px solid var(--border); 
-            position: relative; 
-        }
-
-        .media-item img, .media-item video { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
-            background: #000; 
-        }
-
-        .remove-file { 
-            position: absolute; 
-            top: 4px; 
-            right: 4px; 
-            background: var(--error); 
-            color: white; 
-            width: 22px; 
-            height: 22px; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            cursor: pointer; 
-            font-size: 10px; 
-        }
-
-        .confirm-icon-box { 
-            width: 70px; 
-            height: 70px; 
-            margin: 0 auto 20px; 
-            background: #fef2f2; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            color: var(--error); 
-            font-size: 30px; 
-            border: 4px solid #fff; 
-            box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1); 
-        }
+        .confirm-icon-box { width: 70px; height: 70px; margin: 0 auto 20px; background: #fef2f2; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--error); font-size: 30px; border: 4px solid #fff; box-shadow: 0 10px 20px rgba(239, 68, 68, 0.1); }
 
         /* ==========================================================================
-           11. NEW STYLES FOR WORKER ICONS & SELECTION
+           11. WORKER & TECH SELECTION STYLES
            ==========================================================================
         */
-        .tech-select-grid { 
-            display: grid; 
-            grid-template-columns: repeat(2, 1fr); 
-            gap: 10px; 
-        }
+        .tech-select-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .tech-select-card { border: 1px solid var(--border); border-radius: 16px; padding: 15px; text-align: center; cursor: pointer; transition: 0.2s; background: var(--surface-light); }
+        .tech-select-card:hover { border-color: var(--primary); background: #fff; }
+        .tech-select-card.selected { border-color: var(--primary); background: #eff6ff; box-shadow: 0 4px 12px rgba(0,86,179,0.1); }
+        .tech-select-card img { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-bottom: 8px; border: 2px solid white; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
+        /* Icon container for worker selection */
+        .tech-select-card .spec-icon { width: 50px; height: 50px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px; color: var(--primary); font-size: 20px; border: 2px solid white; box-shadow: 0 5px 10px rgba(0,0,0,0.05); }
 
-        .tech-select-card { 
-            border: 1px solid var(--border); 
-            border-radius: 16px; 
-            padding: 15px; 
-            text-align: center; 
-            cursor: pointer; 
-            transition: 0.2s; 
-            background: var(--surface-light); 
-        }
-
-        .tech-select-card:hover { 
-            border-color: var(--primary); 
-            background: #fff; 
-        }
-
-        .tech-select-card.selected { 
-            border-color: var(--primary); 
-            background: #eff6ff; 
-            box-shadow: 0 4px 12px rgba(0,86,179,0.1); 
-        }
-
-        .tech-select-card img { 
-            width: 50px; 
-            height: 50px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            margin-bottom: 8px; 
-            border: 2px solid white; 
-            box-shadow: 0 5px 10px rgba(0,0,0,0.05); 
-        }
-
-        /* Icon Container for Worker Selection */
-        .tech-select-card .spec-icon { 
-            width: 50px; 
-            height: 50px; 
-            background: #e0f2fe; 
-            border-radius: 50%; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin: 0 auto 8px; 
-            color: var(--primary); 
-            font-size: 20px; 
-            border: 2px solid white; 
-            box-shadow: 0 5px 10px rgba(0,0,0,0.05); 
-        }
-
-        .news-card { 
-            background: #fff; 
-            border-radius: 20px; 
-            padding: 20px; 
-            margin-bottom: 20px; 
-            border: 1px solid var(--border); 
-            box-shadow: var(--shadow); 
-            position: relative; 
-        }
-
-        .post-header { 
-            display: flex; 
-            gap: 10px; 
-            margin-bottom: 15px; 
-        }
-
-        .post-avatar { 
-            width: 45px; 
-            height: 45px; 
-            border-radius: 50%; 
-            object-fit: cover; 
-            cursor: pointer; 
-        }
-
-        .post-content { 
-            font-size: 14px; 
-            line-height: 1.6; 
-            margin-bottom: 15px; 
-            color: var(--text); 
-            white-space: pre-wrap; 
-        }
-
-        .post-actions { 
-            display: flex; 
-            justify-content: space-between; 
-            border-top: 1px solid var(--surface-light); 
-            padding-top: 10px; 
-        }
-
-        .p-btn { 
-            border: none; 
-            background: transparent; 
-            cursor: pointer; 
-            color: var(--text-muted); 
-            font-size: 13px; 
-            display: flex; 
-            gap: 5px; 
-            align-items: center; 
-            font-family: 'Cairo', sans-serif; 
-        }
-
-        .p-btn.liked { 
-            color: var(--error); 
-        }
-
-        .comment-section { 
-            margin-top: 15px; 
-            background: var(--surface-light); 
-            padding: 10px; 
-            border-radius: 15px; 
-        }
-
-        .comment-item { 
-            display: flex; 
-            gap: 8px; 
-            margin-bottom: 10px; 
-            font-size: 12px; 
-        }
-
-        .comment-del { 
-            color: var(--error); 
-            cursor: pointer; 
-            font-size: 10px; 
-            margin-right: auto; 
-        }
-
-        .post-delete-btn { 
-            position: absolute; 
-            top: 15px; 
-            left: 15px; 
-            color: var(--text-muted); 
-            cursor: pointer; 
-        }
-
-        .post-date { 
-            font-size: 10px; 
-            color: var(--text-muted); 
-            display: block; 
-            margin-top: 2px; 
-        }
-
-        .clickable-user { 
-            cursor: pointer; 
-            transition: color 0.2s; 
-        }
-
-        .clickable-user:hover { 
-            color: var(--primary); 
-        }
+        .news-card { background: #fff; border-radius: 20px; padding: 20px; margin-bottom: 20px; border: 1px solid var(--border); box-shadow: var(--shadow); position: relative; }
+        .post-header { display: flex; gap: 10px; margin-bottom: 15px; }
+        .post-avatar { width: 45px; height: 45px; border-radius: 50%; object-fit: cover; cursor: pointer; }
+        .post-content { font-size: 14px; line-height: 1.6; margin-bottom: 15px; color: var(--text); white-space: pre-wrap; }
+        .post-actions { display: flex; justify-content: space-between; border-top: 1px solid var(--surface-light); padding-top: 10px; }
+        .p-btn { border: none; background: transparent; cursor: pointer; color: var(--text-muted); font-size: 13px; display: flex; gap: 5px; align-items: center; font-family: 'Cairo', sans-serif; }
+        .p-btn.liked { color: var(--error); }
+        .comment-section { margin-top: 15px; background: var(--surface-light); padding: 10px; border-radius: 15px; }
+        .comment-item { display: flex; gap: 8px; margin-bottom: 10px; font-size: 12px; }
+        .comment-del { color: var(--error); cursor: pointer; font-size: 10px; margin-right: auto; }
+        .post-delete-btn { position: absolute; top: 15px; left: 15px; color: var(--text-muted); cursor: pointer; }
+        .post-date { font-size: 10px; color: var(--text-muted); display: block; margin-top: 2px; }
+        .clickable-user { cursor: pointer; transition: color 0.2s; }
+        .clickable-user:hover { color: var(--primary); }
     </style>
 </head>
 <body>
@@ -1041,14 +445,16 @@
 
                 <div id="spec-select-container" class="input-group hidden" style="margin-top:10px;">
                     <label>التخصص (للفنيين فقط):</label>
-                    <select id="reg-specialty">
-                        <option value="general">عام</option>
-                        <option value="electricity">كهرباء</option>
-                        <option value="plumbing">سباكة</option>
-                        <option value="carpentry">نجارة</option>
-                        <option value="ac">تكييف</option>
-                        <option value="it">دعم فني (IT)</option>
-                    </select>
+                    <div class="select-wrapper">
+                        <select id="reg-specialty">
+                            <option value="general">عام</option>
+                            <option value="electricity">كهرباء</option>
+                            <option value="plumbing">سباكة</option>
+                            <option value="carpentry">نجارة</option>
+                            <option value="ac">تكييف</option>
+                            <option value="it">دعم فني (IT)</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="input-group" style="margin-top:15px;"><input type="text" id="reg-job" placeholder="المسمى الوظيفي"></div>
@@ -1095,7 +501,18 @@
                     <button class="tab-btn" onclick="switchTab('trash', this)" style="color:var(--error);">المحذوفات</button>
                 </div>
                 <div id="filter-container" class="hidden" style="padding:0 15px 10px;">
-                    <select id="feed-filter" onchange="renderFeed()" style="padding:10px;"><option value="all">عرض الكل</option><option value="Admin">المبني الاداري</option><option value="Nursing">تمريض</option><option value="CS">حاسبات</option><option value="PT">علاج طبيعي</option><option value="Pharmacy">صيدلة</option><option value="Dentistry">أسنان</option><option value="Business">إدارة أعمال</option></select>
+                    <div class="select-wrapper">
+                        <select id="feed-filter" onchange="renderFeed()">
+                            <option value="all">عرض الكل</option>
+                            <option value="Admin">المبني الاداري</option>
+                            <option value="Nursing">تمريض</option>
+                            <option value="CS">حاسبات</option>
+                            <option value="PT">علاج طبيعي</option>
+                            <option value="Pharmacy">صيدلة</option>
+                            <option value="Dentistry">أسنان</option>
+                            <option value="Business">إدارة أعمال</option>
+                        </select>
+                    </div>
                 </div>
                 <div id="archive-actions" class="hidden" style="padding:0 15px 15px;">
                       <button onclick="downloadArchivePDF()" class="btn-main btn-sm" style="background:var(--success); width:100%;"><i class="fa-solid fa-file-pdf"></i> تحميل تقرير الأرشيف (PDF)</button>
@@ -1123,14 +540,16 @@
                     </div>
                     <div class="input-group">
                         <label>نوع العطل</label>
-                        <select id="req-type">
-                            <option value="">اختر التخصص...</option>
-                            <option value="كهرباء">كهرباء</option>
-                            <option value="سباكة">سباكة</option>
-                            <option value="نجارة">نجارة</option>
-                            <option value="تكييف">تكييف</option>
-                            <option value="IT">دعم فني (IT)</option>
-                        </select>
+                        <div class="select-wrapper">
+                            <select id="req-type">
+                                <option value="">اختر التخصص...</option>
+                                <option value="كهرباء">كهرباء</option>
+                                <option value="سباكة">سباكة</option>
+                                <option value="نجارة">نجارة</option>
+                                <option value="تكييف">تكييف</option>
+                                <option value="IT">دعم فني (IT)</option>
+                            </select>
+                        </div>
                     </div>
                     <div class="input-group">
                         <label>الأهمية</label>
@@ -1142,18 +561,24 @@
                     </div>
                     <div class="input-group">
                         <label>الموقع</label>
-                        <select id="req-faculty" style="margin-bottom:12px;">
-                            <option value="">اختر المبنى/الكلية...</option>
-                            <option value="Admin">المبني الاداري</option>
-                            <option value="Nursing">مبني كلية التمريض</option>
-                            <option value="CS">مبني كليه الحاسبات والمعلومات</option>
-                            <option value="PT">مبني كلية العلاج الطبيعي</option>
-                            <option value="Pharmacy">مبني كليه الصيدلة</option>
-                            <option value="Dentistry">مبني كلية الاسنان</option>
-                            <option value="Business">مبني كلية ادراة اعمال</option>
-                            <option value="Other">إضافة أخرى...</option>
-                        </select>
-                        <input type="text" id="req-room" placeholder="رقم الغرفة / القاعة">
+                        <div class="select-wrapper" style="margin-bottom:12px;">
+                            <select id="req-faculty">
+                                <option value="">اختر المبنى/الكلية...</option>
+                                <option value="Admin">المبني الاداري</option>
+                                <option value="Nursing">مبني كلية التمريض</option>
+                                <option value="CS">مبني كليه الحاسبات والمعلومات</option>
+                                <option value="PT">مبني كلية العلاج الطبيعي</option>
+                                <option value="Pharmacy">مبني كليه الصيدلة</option>
+                                <option value="Dentistry">مبني كلية الاسنان</option>
+                                <option value="Business">مبني كلية ادراة اعمال</option>
+                                <option value="Other">إضافة أخرى...</option>
+                            </select>
+                        </div>
+                        
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <input type="text" id="req-floor" placeholder="رقم الدور (مثال: الثاني)" style="flex:1;">
+                            <input type="text" id="req-room" placeholder="رقم القاعة/الغرفة" style="flex:1;">
+                        </div>
                     </div>
                     <div class="input-group"><label>وصف البلاغ</label><textarea id="req-desc" rows="4" placeholder="تفاصيل المشكلة..."></textarea></div>
                     
@@ -1213,7 +638,11 @@
                         <div style="font-family:monospace; background:var(--surface-light); display:inline-block; padding:10px 25px; border-radius:30px; margin-bottom:30px; color:var(--primary-dark); border:1px solid var(--border);" onclick="copyId()">ID: <span id="edit-id-display">--</span> <i class="fa-regular fa-copy"></i></div>
                         <div style="text-align:right;">
                             <div class="input-group"><label>الاسم الكامل</label><input type="text" id="edit-name"></div>
-                            <div class="input-group"><label>النوع</label><select id="edit-gender"><option value="male">ذكر</option><option value="female">أنثى</option></select></div>
+                            <div class="input-group"><label>النوع</label>
+                            <div class="select-wrapper">
+                                <select id="edit-gender"><option value="male">ذكر</option><option value="female">أنثى</option></select>
+                            </div>
+                            </div>
                             <div class="input-group"><label>رقم الهاتف</label><input type="tel" id="edit-phone"></div>
                             <div class="input-group"><label>المسمى الوظيفي</label><input type="text" id="edit-job"></div>
                             <div class="input-group"><label>مقر العمل</label><input type="text" id="edit-loc"></div>
@@ -1245,7 +674,7 @@
                     <div id="tech-task-management" class="hidden" style="margin-top:20px; border-top:1px solid var(--border); padding-top:15px;">
                         <label style="font-weight:bold; color:var(--primary); margin-bottom:10px; display:block;">إدارة مهام الفنيين</label>
                         <div style="display:flex; gap:10px;">
-                            <input type="text" id="sub-tech-name-input" placeholder="اسم الفني (اتركه فارغاً لتقرير الكل)...">
+                            <input type="text" id="sub-tech-name-input" placeholder="اسم الفني (اتركه فارغاً للكل)...">
                             <button onclick="generateSubTechReport()" class="btn-main btn-sm" style="width:auto;"><i class="fa-solid fa-file-invoice"></i> تقرير</button>
                         </div>
                     </div>
@@ -1425,11 +854,9 @@
         appId: "1:858244114090:web:42cee8e98e3984164392d3"
     };
 
-    // إعدادات Cloudinary لرفع الصور والفيديو
     const CLOUD_NAME = "djzfruh22"; 
     const CLOUD_PRESET = "udyvggup";
 
-    // تهيئة التطبيق (تجنب إعادة التهيئة إذا كانت محملة مسبقاً)
     if (!firebase.apps.length) {
         firebase.initializeApp(firebaseConfig);
     }
@@ -1456,10 +883,8 @@
     let isFirstLoad = true;
     let currentFriendDocId = null;
     let selectedFrameClass = '';
-    let pendingConfirmAction = null; 
-
-    // --- أيقونات التخصصات (تستخدم في القوائم وعند عرض الفنيين) ---
-    // هذه الأيقونات ستظهر للمهندس عند اختيار الفني
+    
+    // --- أيقونات التخصصات (للقوائم الحديثة) ---
     const specIcons = {
         'electricity': 'fa-solid fa-bolt',           // كهرباء
         'plumbing': 'fa-solid fa-faucet-drip',       // سباكة
@@ -1470,7 +895,6 @@
         'none': 'fa-solid fa-user'                   // غير محدد
     };
 
-    // مسميات التخصصات بالعربية
     const specLabels = {
         'electricity': 'فني كهرباء',
         'plumbing': 'فني سباكة',
@@ -1489,11 +913,8 @@
     // =========================================================================
     // 2. AUTHENTICATION & STARTUP (إدارة الدخول وبدء التشغيل)
     // =========================================================================
-    
-    // مراقب حالة تسجيل الدخول
     auth.onAuthStateChanged(async user => {
         if(user) {
-            // التحقق من تفعيل البريد الإلكتروني إلزامي
             if(!user.emailVerified) {
                 document.getElementById('loader').classList.add('hidden');
                 toast("⚠️ يجب تفعيل البريد الإلكتروني أولاً.");
@@ -1504,48 +925,38 @@
             currentUser = user;
             await loadUser();
         } else {
-            // لا يوجد مستخدم مسجل، إظهار شاشة الدخول
             document.getElementById('loader').classList.add('hidden');
             showScreen('auth-screen');
         }
     });
 
-    // دالة تحميل بيانات المستخدم من قاعدة البيانات
     async function loadUser() {
         try {
             const doc = await db.collection('users').doc(currentUser.uid).get();
             if(doc.exists) {
                 userData = doc.data();
                 
-                // إصلاح الحقول القديمة (Legacy Data Migration)
+                // إصلاح الحقول القديمة
                 if(!userData.shortId) {
                     userData.shortId = Math.random().toString(36).substr(2,6).toUpperCase();
                     await db.collection('users').doc(currentUser.uid).update({shortId: userData.shortId});
                 }
-                if(!userData.gender) {
-                    await db.collection('users').doc(currentUser.uid).update({gender: 'male'});
-                }
-                if(!userData.specialty) {
-                    await db.collection('users').doc(currentUser.uid).update({specialty: 'none'});
-                }
+                if(!userData.gender) await db.collection('users').doc(currentUser.uid).update({gender: 'male'});
+                if(!userData.specialty) await db.collection('users').doc(currentUser.uid).update({specialty: 'none'});
 
-                // عرض الواجهة الرئيسية
                 renderHeader();
                 showScreen('app-container');
-                setupRoleUI(); // إعداد الواجهة حسب الصلاحيات
+                setupRoleUI(); 
                 
-                // بدء تحميل البيانات في الخلفية
                 loadFeed(); 
                 loadTeam(); 
                 loadFriendReqs();
                 loadProfilePageData();
                 loadPosts(); 
                 
-                // تعيين التاريخ والوقت الافتراضي في نموذج الإنشاء
                 document.getElementById('req-date').valueAsDate = new Date();
                 document.getElementById('req-time').value = new Date().toLocaleTimeString('en-GB', {hour:'2-digit', minute:'2-digit'});
 
-                // إخفاء شاشة التحميل
                 setTimeout(() => { document.getElementById('loader').classList.add('hidden'); }, 500);
             }
         } catch(e) { 
@@ -1555,60 +966,48 @@
         }
     }
 
-    // دالة إعداد الواجهة بناءً على دور المستخدم
     function setupRoleUI() {
-        // إظهار/إخفاء العناصر حسب الدور
         if(userData.role === 'supervisor') {
             document.getElementById('filter-container').classList.remove('hidden');
         }
-        
         if(userData.role === 'employee') {
             document.getElementById('emp-report-btn-container').classList.remove('hidden');
         }
         
-        // --- إعدادات المهندس (Technician) ---
+        // إعدادات المهندس
         if(userData.role === 'technician') {
-            // تغيير زر (+) ليصبح زر تقرير للمهندس
             const addBtn = document.querySelector('.nav-add-btn');
             addBtn.innerHTML = '<i class="fa-solid fa-file-pdf"></i>';
             addBtn.onclick = function() {
                 document.getElementById('tech-report-modal').classList.remove('hidden');
             };
-            
-            // تخصيص صفحة "إنشاء" للمهندس (لأنه لا ينشئ بلاغات بل يديرها)
             document.getElementById('page-create').innerHTML = `
                 <div style="text-align:center; padding:60px 20px;">
                     <i class="fa-solid fa-helmet-safety fa-3x" style="color:var(--text-muted); margin-bottom:15px;"></i>
                     <h3 style="color:var(--text-muted)">حساب مهندس</h3>
                     <p style="color:var(--text-muted); font-size:13px;">لا يمكنك إنشاء بلاغات من هنا.<br>مهمتك هي إدارة البلاغات وتعيين فنيين التنفيذ.</p>
                 </div>`;
-            
-            // إظهار أدوات إدارة المهام والتقارير في الإعدادات
             document.getElementById('tech-task-management').classList.remove('hidden');
         }
 
-        // --- إعدادات المدير (Manager) ---
+        // إعدادات المدير
         if(userData.role === 'manager') {
              document.getElementById('create-post-container').classList.remove('hidden');
              document.getElementById('full-report-btn-container').classList.remove('hidden');
-             // المدير لا يرى زر الإضافة (+)
              document.querySelector('.nav-add-btn').classList.add('hidden');
         }
 
-        // --- إعدادات فني التنفيذ (Worker) ---
+        // إعدادات فني التنفيذ (Worker)
         if(userData.role === 'worker') {
-            // الفني لا ينشئ بلاغات
             const addBtn = document.querySelector('.nav-add-btn');
             addBtn.classList.add('hidden'); 
-            
-            // تخصيص صفحة "إنشاء" لتظهر كصفحة معلومات
             document.getElementById('page-create').innerHTML = `
                 <div style="text-align:center; padding:60px 20px;">
                     <i class="fa-solid fa-toolbox fa-3x" style="color:var(--gold); margin-bottom:15px;"></i>
                     <h3 style="color:var(--text)">حساب فني تنفيذ</h3>
                     <div style="background:var(--surface-light); padding:15px; border-radius:15px; margin-top:20px; text-align:right;">
                         <p><strong>التخصص:</strong> ${specLabels[userData.specialty] || 'عام'}</p>
-                        <p style="font-size:12px; color:var(--text-muted);">ستظهر المهام المسندة إليك من المهندس في صفحة "المهام الجارية".</p>
+                        <p style="font-size:12px; color:var(--text-muted);">ستظهر المهام المسندة إليك في صفحة "المهام الجارية".</p>
                     </div>
                 </div>`;
         }
@@ -1619,25 +1018,16 @@
     // =========================================================================
     function renderHeader() {
         const roleMap = {
-            'employee':'موظف', 
-            'supervisor':'مشرف', 
-            'technician':'مهندس', 
-            'manager':'مدير',
-            'worker': 'فني تنفيذ'
+            'employee':'موظف', 'supervisor':'مشرف', 'technician':'مهندس', 'manager':'مدير', 'worker': 'فني تنفيذ'
         };
-        
         document.getElementById('banner-name').innerText = userData.fullName;
         document.getElementById('banner-role').innerText = roleMap[userData.role] || userData.role;
         document.getElementById('banner-id').innerText = "ID: " + userData.shortId;
         document.getElementById('banner-img').src = userData.photoUrl;
-        
-        // تطبيق الإطار المختار للصورة
-        const frameEl = document.getElementById('banner-frame');
-        frameEl.className = 'frame-overlay ' + (userData.frame || '');
+        document.getElementById('banner-frame').className = 'frame-overlay ' + (userData.frame || '');
     }
 
     function checkAndPlaySound(newRequests) {
-        // تشغيل صوت فقط إذا كان الطلب موجهاً للمستخدم الحالي
         const hasIncoming = newRequests.some(r => {
             if(userData.role === 'supervisor') return r.supervisorId === currentUser.uid;
             if(userData.role === 'technician') return r.technicianId === currentUser.uid;
@@ -1655,62 +1045,41 @@
 
     function loadFeed() {
         let q = db.collection('requests'); 
-        
-        // منطق الصلاحيات لعرض البيانات (من يرى ماذا)
         if(userData.role === 'employee') q = q.where('userId','==',currentUser.uid);
         else if(userData.role === 'supervisor') q = q.where('supervisorId','==',currentUser.uid);
         else if(userData.role === 'technician') q = q.where('technicianId','==',currentUser.uid);
         else if(userData.role === 'worker') q = q.where('workerId','==',currentUser.uid);
-        // المدير يرى كل شيء (لا يوجد فلتر)
         
         q.onSnapshot(snap => {
             const currentIds = requestsCache.map(r => r.id);
             let newItems = [];
             let updatedCache = [];
-
             snap.forEach(doc => {
                 const data = {id: doc.id, ...doc.data()};
                 updatedCache.push(data);
-                if (!isFirstLoad && !currentIds.includes(doc.id)) {
-                    newItems.push(data);
-                }
+                if (!isFirstLoad && !currentIds.includes(doc.id)) { newItems.push(data); }
             });
-
             requestsCache = updatedCache;
-            // ترتيب البيانات: الأحدث أولاً
             requestsCache.sort((a,b) => (b.createdAt?.seconds||0)-(a.createdAt?.seconds||0));
-            
-            if(!isFirstLoad && newItems.length > 0) {
-                checkAndPlaySound(newItems);
-            }
+            if(!isFirstLoad && newItems.length > 0) { checkAndPlaySound(newItems); }
             isFirstLoad = false;
-            
             renderFeed();
         });
     }
 
     function renderFeed() {
-        const container = document.getElementById('requests-feed'); 
-        container.innerHTML = "";
+        const container = document.getElementById('requests-feed'); container.innerHTML = "";
         let list = requestsCache;
 
-        // فلترة حسب التبويب (جاري / أرشيف / محذوفات)
-        if(currentTab === 'trash') {
-            list = list.filter(r => r.isDeleted === true);
-        } else {
+        if(currentTab === 'trash') list = list.filter(r => r.isDeleted === true);
+        else {
             list = list.filter(r => r.isDeleted !== true);
-            if(currentTab === 'active') {
-                list = list.filter(r => ['pending','approved','working','suspended'].includes(r.status));
-            } else if(currentTab === 'history') {
-                list = list.filter(r => ['done','rejected'].includes(r.status));
-            }
+            if(currentTab === 'active') list = list.filter(r => ['pending','approved','working','suspended'].includes(r.status));
+            else if(currentTab === 'history') list = list.filter(r => ['done','rejected'].includes(r.status));
         }
 
-        // فلترة إضافية للمشرف (حسب المبنى)
         const facFilter = document.getElementById('feed-filter').value;
-        if(userData.role === 'supervisor' && facFilter !== 'all') {
-            list = list.filter(r => r.faculty === facFilter);
-        }
+        if(userData.role === 'supervisor' && facFilter !== 'all') list = list.filter(r => r.faculty === facFilter);
 
         if(list.length === 0) { 
             container.innerHTML = `<div style="text-align:center; padding:50px 20px; color:var(--text-muted);"><i class="fa-regular fa-clipboard fa-3x" style="opacity:0.5; margin-bottom:10px;"></i><p>لا يوجد بيانات للعرض</p></div>`; 
@@ -1720,35 +1089,25 @@
         list.forEach(d => {
             let statusClass = 'st-' + d.status;
             let statusText = getStatusLabel(d.status);
-            
-            // تنسيق ألوان الكارت حسب الحالة
             let cardClass = "";
             if(d.status === 'pending') cardClass = "req-new";
             else if(d.status === 'done') cardClass = "req-done";
             else if(d.status === 'rejected') cardClass = "req-rejected";
 
-            // تنسيق وقت العرض
             let timeParts = d.time.split(':');
-            let dateObj = new Date(); 
-            dateObj.setHours(timeParts[0]); 
-            dateObj.setMinutes(timeParts[1]);
+            let dateObj = new Date(); dateObj.setHours(timeParts[0]); dateObj.setMinutes(timeParts[1]);
             let timeDisplay = dateObj.toLocaleTimeString('ar-EG', {hour: 'numeric', minute:'numeric', hour12: true});
 
-            // عرض كود البلاغ الجديد
-            // إذا كان البلاغ قديماً ولا يحتوي على كود، نعرض "-"
+            // عرض الكود
             let displayCode = d.requestCode ? `<span style="background:var(--primary); color:white; padding:2px 8px; border-radius:10px; font-size:10px; margin-left:5px; font-family:monospace;">${d.requestCode}</span>` : '';
 
-            // الأزرار والإجراءات
             let actionBtns = "";
             let deleteBtn = "";
 
             if(currentTab !== 'trash') {
-                // زر الحذف (Soft Delete)
                 if(userData.role === 'employee' || userData.role === 'supervisor' || userData.role === 'manager') {
                       deleteBtn = `<button onclick="event.stopPropagation(); softDelete('${d.id}')" class="btn-ghost btn-sm" style="color:var(--error); border-color:var(--border); margin-left:10px;"><i class="fa-solid fa-trash"></i></button>`;
                 }
-
-                // أزرار المشرف (قبول/رفض)
                 if(userData.role === 'supervisor' && d.status === 'pending') {
                     actionBtns = `
                     <div style="display:flex; gap:10px;">
@@ -1756,7 +1115,6 @@
                         <button onclick="event.stopPropagation(); openAction('${d.id}','reject')" class="btn-main btn-danger btn-sm">رفض</button>
                     </div>`;
                 }
-                // أزرار المهندس (تعيين فني تنفيذ)
                 else if(userData.role === 'technician') {
                     if(d.status === 'approved') {
                         actionBtns = `
@@ -1768,22 +1126,18 @@
                         actionBtns = `<span style="font-size:10px; color:var(--warning);">قيد التنفيذ لدى: ${d.workerName || 'الفني'}</span>`;
                     }
                 }
-                // أزرار فني التنفيذ (إتمام المهمة)
                 else if(userData.role === 'worker') {
                     if(d.status === 'working') {
                         actionBtns = `<button onclick="event.stopPropagation(); openAction('${d.id}','done')" class="btn-main btn-sm" style="background:var(--success); width:100%;"><i class="fa-solid fa-check"></i> إتمام المهمة</button>`;
                     }
                 }
             } else {
-                // في سلة المحذوفات
                 actionBtns = `<div style="display:flex; gap:5px;"><button onclick="event.stopPropagation(); restoreReq('${d.id}')" class="btn-main btn-sm">استعادة</button><button onclick="event.stopPropagation(); hardDelete('${d.id}')" class="btn-danger btn-sm">حذف نهائي</button></div>`;
             }
 
-            // أيقونة الأولوية
             let prioIcon = d.priority === 'high' ? '<i class="fa-solid fa-fire" style="color:var(--error)"></i>' : '';
             let prioColor = d.priority === 'high' ? 'var(--error)' : d.priority === 'medium' ? 'var(--warning)' : 'var(--success)';
             
-            // معلومات الفني المسند
             let subTechInfo = "";
             if(d.workerName) {
                 subTechInfo = `<div style="font-size:11px; color:var(--primary); margin-top:5px; font-weight:bold; background:#eff6ff; padding:5px; border-radius:8px; display:inline-flex; align-items:center; gap:5px;">
@@ -1824,7 +1178,7 @@
     }
 
     // =========================================================================
-    // 4. ACTIONS & MODALS (التعيين، الرفض، الإتمام)
+    // 4. ACTIONS & MODALS
     // =========================================================================
     async function openAction(id, type) {
         tempActionData = { id, type };
@@ -1832,7 +1186,6 @@
         const commBox = document.getElementById('act-comment');
         commBox.value = "";
         
-        // إخفاء جميع قوائم الاختيار أولاً
         document.getElementById('tech-select-area').classList.add('hidden');
         document.getElementById('sub-tech-select-area').classList.add('hidden');
         
@@ -1848,23 +1201,21 @@
         if(type === 'approve') {
             commBox.placeholder = "ملاحظات للمهندس (اختياري)...";
             document.getElementById('tech-select-area').classList.remove('hidden');
-            loadUsersForAction('technician', 'tech-list-action'); // تحميل المهندسين
+            loadUsersForAction('technician', 'tech-list-action');
         } 
         else if (type === 'assignWorker') {
             commBox.placeholder = "تعليمات لفني التنفيذ (اختياري)...";
             document.getElementById('sub-tech-select-area').classList.remove('hidden');
-            loadUsersForAction('worker', 'sub-tech-list'); // تحميل الفنيين (Workers)
+            loadUsersForAction('worker', 'sub-tech-list');
         } 
         else {
             commBox.placeholder = "سبب الرفض / ملاحظات...";
         }
     }
 
-    // دالة موحدة لتحميل المستخدمين (مهندسين أو فنيين) مع الأيقونات
     async function loadUsersForAction(role, containerId) {
         const list = document.getElementById(containerId); 
         list.innerHTML="<small>جاري التحميل...</small>";
-        
         const snap = await db.collection('users').where('role','==',role).get();
         list.innerHTML="";
         
@@ -1875,7 +1226,6 @@
 
         snap.forEach(doc => {
              const u = doc.data();
-             // تحديد الأيقونة بناءً على التخصص
              const specKey = u.specialty || 'general';
              const iconClass = specIcons[specKey] || 'fa-solid fa-user-gear';
              const specName = specLabels[specKey] || 'فني';
@@ -1890,16 +1240,12 @@
         });
     }
     
-    // دالة موحدة لاختيار المستخدم من القائمة
     function selectRoleUser(el, id, name, role) {
         el.parentElement.querySelectorAll('.tech-select-card').forEach(d=>d.classList.remove('selected'));
         el.classList.add('selected');
         
-        if(role === 'technician') {
-            selectedTech = {id, name};
-        } else if (role === 'worker') {
-            selectedWorker = {id, name};
-        }
+        if(role === 'technician') selectedTech = {id, name};
+        else if (role === 'worker') selectedWorker = {id, name};
     }
 
     async function submitAction() {
@@ -1914,8 +1260,6 @@
         btn.disabled=true;
         try {
             let updateData = {};
-            
-            // إضافة التعليقات حسب الدور
             if(comment) {
                 if(userData.role === 'supervisor') updateData.supervisorComment = comment;
                 if(userData.role === 'technician') updateData.engineerComment = comment;
@@ -1933,9 +1277,8 @@
             }
             else if(type === 'assignWorker') {
                 updateData.status = 'working';
-                updateData.workerId = selectedWorker.id; // تعيين ID الفني الحقيقي
-                updateData.workerName = selectedWorker.name; // تعيين اسم الفني
-                // حقل إضافي للتقارير القديمة إذا لزم الأمر
+                updateData.workerId = selectedWorker.id;
+                updateData.workerName = selectedWorker.name; 
                 updateData.assignedSubTech = selectedWorker.name; 
             }
             else if(type === 'tech_reject') {
@@ -1955,16 +1298,13 @@
     }
 
     // =========================================================================
-    // 5. REGISTRATION HELPERS (للتخصصات)
+    // 5. REGISTRATION HELPERS
     // =========================================================================
     function toggleSpec() {
         const role = document.querySelector('input[name="auth-role"]:checked').value;
         const container = document.getElementById('spec-select-container');
-        if(role === 'worker') {
-            container.classList.remove('hidden');
-        } else {
-            container.classList.add('hidden');
-        }
+        if(role === 'worker') container.classList.remove('hidden');
+        else container.classList.add('hidden');
     }
 
     async function handleAuth() {
@@ -1975,7 +1315,7 @@
 
         if(!isLoginMode) {
              if(pass !== confirmPass) return toast("❌ كلمة المرور غير متطابقة");
-             if(pass.length < 6) return toast("❌ كلمة المرور ضعيفة (6 أحرف على الأقل)");
+             if(pass.length < 6) return toast("❌ كلمة المرور ضعيفة");
         }
 
         btn.disabled=true; btn.innerText = "جاري المعالجة...";
@@ -1984,33 +1324,26 @@
                 await auth.signInWithEmailAndPassword(email, pass);
             } else {
                 const role = document.querySelector('input[name="auth-role"]:checked').value;
-                
-                // التحقق من عدد المديرين
                 if(role === 'manager') {
                       const managerSnap = await db.collection('users').where('role', '==', 'manager').get();
-                      if(managerSnap.size >= 4) {
-                          throw new Error("⛔ نأسف، تم اكتمال عدد المديرين المسموح به (4).");
-                      }
+                      if(managerSnap.size >= 4) throw new Error("⛔ نأسف، تم اكتمال عدد المديرين المسموح به.");
                 }
 
                 const cred = await auth.createUserWithEmailAndPassword(email, pass);
                 await cred.user.sendEmailVerification();
-                toast("✅ تم إنشاء الحساب. يجب تفعيل الرابط المرسل للإيميل قبل الدخول.");
+                toast("✅ تم إنشاء الحساب. يجب تفعيل الرابط.");
                 
                 const gender = document.querySelector('input[name="auth-gender"]:checked').value;
                 const defaultPic = gender === 'male' ? 'https://cdn-icons-png.flaticon.com/512/4140/4140048.png' : 'https://cdn-icons-png.flaticon.com/512/4140/4140047.png';
                 
-                // تحديد التخصص
                 let spec = 'none';
-                if(role === 'worker') {
-                    spec = document.getElementById('reg-specialty').value;
-                }
+                if(role === 'worker') spec = document.getElementById('reg-specialty').value;
 
                 await db.collection('users').doc(cred.user.uid).set({
                     email, role: role, fullName:document.getElementById('reg-name').value, 
                     gender: gender, photoUrl: defaultPic,
                     shortId: Math.random().toString(36).substr(2,6).toUpperCase(),
-                    specialty: spec, // حفظ التخصص
+                    specialty: spec,
                     jobTitle: document.getElementById('reg-job').value, 
                     location: document.getElementById('reg-loc').value, 
                     phone: document.getElementById('reg-phone').value
@@ -2022,47 +1355,46 @@
     }
 
     // =========================================================================
-    // 6. REQUEST CREATION (مع كود البلاغ الجديد ومنع التكرار)
+    // 6. REQUEST CREATION (مع كود البلاغ والتحقق الإجباري)
     // =========================================================================
     
-    // دالة توليد كود البلاغ (رقمين وحرفين عشوائياً)
+    // دالة توليد كود البلاغ
     function generateRequestCode() {
         const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
         const nums = '0123456789';
         let code = '';
-        code += nums.charAt(Math.floor(Math.random() * nums.length)); // رقم 1
-        code += nums.charAt(Math.floor(Math.random() * nums.length)); // رقم 2
-        code += chars.charAt(Math.floor(Math.random() * chars.length)); // حرف 1
-        code += chars.charAt(Math.floor(Math.random() * chars.length)); // حرف 2
-        
-        // خلط الكود لجعله عشوائياً أكثر (اختياري، هنا الترتيب ثابت: رقم رقم حرف حرف)
-        // إذا أردت خلطه:
-        // return code.split('').sort(() => 0.5 - Math.random()).join('');
+        code += nums.charAt(Math.floor(Math.random() * nums.length));
+        code += nums.charAt(Math.floor(Math.random() * nums.length));
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
         return code; // مثال: 95XK
     }
 
     async function sendRequestFinal() { 
         if(!selectedSup) return toast("⚠️ اختر مشرف");
         
-        // تجهيز البيانات
+        // البيانات
         const dateVal = document.getElementById('req-date').value;
         const typeVal = document.getElementById('req-type').value; 
-        const roomVal = document.getElementById('req-room').value;
+        const roomVal = document.getElementById('req-room').value; // رقم القاعة
+        const floorVal = document.getElementById('req-floor').value; // رقم الدور
         const descVal = document.getElementById('req-desc').value;
-        
         const facSelect = document.getElementById('req-faculty');
         const facVal = facSelect.value;
         const facText = facSelect.options[facSelect.selectedIndex].text;
-        const loc = `${facText} - ${roomVal}`;
+
+        // التحقق الإجباري من الدور والقاعة والمكان
+        if (!facVal || !floorVal || !roomVal || !descVal) {
+            return toast("⚠️ يرجى تعبئة جميع الحقول (المبنى، الدور، القاعة، والوصف).");
+        }
+
+        const loc = `${facText} - الدور: ${floorVal} - غرفة: ${roomVal}`;
         
         const btn = document.getElementById('confirm-send-btn'); 
-        btn.disabled = true; 
-        btn.innerText = "جاري التحقق...";
+        btn.disabled = true; btn.innerText = "جاري التحقق...";
 
         try { 
-            // ============================================================
-            // كود منع التكرار (Daily Duplicate Check)
-            // ============================================================
+            // منع التكرار اليومي
             const checkQuery = await db.collection('requests')
                 .where('userId', '==', currentUser.uid)
                 .where('date', '==', dateVal)
@@ -2072,16 +1404,12 @@
             const alreadyExists = checkQuery.docs.some(doc => !doc.data().isDeleted);
 
             if (alreadyExists) {
-                toast(`⚠️ تنبيه: لقد قمت بإرسال بلاغ (${typeVal}) في هذا التاريخ (${dateVal}) مسبقاً!`);
-                btn.disabled = false;
-                btn.innerText = "إرسال البلاغ";
+                toast(`⚠️ تنبيه: لقد قمت بإرسال بلاغ (${typeVal}) في هذا التاريخ مسبقاً!`);
+                btn.disabled = false; btn.innerText = "إرسال البلاغ";
                 return; 
             }
-            // ============================================================
 
             btn.innerText = "جاري الإرسال...";
-            
-            // توليد كود البلاغ الجديد
             const newCode = generateRequestCode();
 
             // رفع الملفات
@@ -2110,8 +1438,10 @@
                 description: descVal, 
                 location: loc, 
                 faculty: facVal,
+                floor: floorVal, // حفظ الدور بشكل منفصل
+                room: roomVal,   // حفظ الغرفة بشكل منفصل
                 media: mediaLinks,
-                requestCode: newCode, // حفظ كود البلاغ
+                requestCode: newCode, 
                 isDeleted: false,
                 createdAt: firebase.firestore.FieldValue.serverTimestamp() 
             }); 
@@ -2120,17 +1450,15 @@
             closeModal('sup-modal'); 
             nav('home', document.querySelector('.nav-item:first-child'));
             
-            uploadQueue=[]; 
-            document.getElementById('preview-grid').innerHTML=""; 
-            document.getElementById('req-desc').value="";
+            // تنظيف
+            uploadQueue=[]; document.getElementById('preview-grid').innerHTML=""; 
+            document.getElementById('req-desc').value=""; document.getElementById('req-room').value=""; document.getElementById('req-floor').value="";
             document.getElementById('mic-trigger').classList.remove('recording');
 
         } catch(e){
-            toast("❌ خطأ في النظام"); 
-            console.error(e);
+            toast("❌ خطأ في النظام"); console.error(e);
         } finally{
-            btn.disabled=false; 
-            btn.innerText="إرسال البلاغ";
+            btn.disabled=false; btn.innerText="إرسال البلاغ";
         } 
     }
 
